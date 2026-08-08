@@ -1,234 +1,523 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#6db7d6">
-<title>Damn Giraffe — Endless Runner</title>
-<style>
-*{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif}
-body{background:#78bdd8;touch-action:none}
-button{font:inherit;border:0;cursor:pointer;user-select:none}
-.hidden{display:none!important}
-#app,#game{position:relative;width:100%;height:100%;overflow:hidden}
-#menu{position:absolute;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;background:linear-gradient(#77c8e7 0 62%,#89ad61 62%)}
-.menu-card{width:min(94vw,520px);padding:26px;border-radius:28px;background:#fffffff2;text-align:center;box-shadow:0 18px 55px #0004}
-.logo{font-size:clamp(40px,10vw,70px);font-weight:950;letter-spacing:-3px;color:#24333b}
-.sub{color:#5c6c75;margin:7px 0 4px}
-.watermark{font-size:12px;font-weight:800;color:#68757b;opacity:.75;margin-bottom:18px}
-#chars{display:flex;gap:9px;margin:12px 0 18px}
-.char{flex:1;padding:12px 5px;border:3px solid transparent;border-radius:17px;background:#edf2f4;color:#24343d;transition:all 0.2s}
-.char.selected{border-color:#edae20;background:#fff4d3;box-shadow:0 4px 0 #d8b45c}
-.char .emoji{display:block;font-size:43px;margin-bottom:5px}
-.char b{font-size:13px}
-.btn{width:100%;padding:15px;margin:6px 0;border-radius:15px;font-weight:900}
-.play{background:#ffb51b;color:#342400;box-shadow:0 5px #c68300}
-.play:active{transform:translateY(2px);box-shadow:0 3px #c68300}
-.help{background:#293b49;color:#fff}
-#game{background:#82c9e6}
-#sky{position:absolute;inset:0;background:linear-gradient(#69c3e8,#dff6ff 72%);transition:background 1.4s}
-#sun,#moon{position:absolute;width:78px;height:78px;border-radius:50%;right:12%;top:9%;transition:all 1.4s}
-#sun{background:#ffd94d;box-shadow:0 0 48px #fff6}
-#moon{background:#edf3ff;box-shadow:0 0 28px #d8e8ff;opacity:0}
-.cloud{position:absolute;font-size:58px;opacity:.6;animation:cloud 34s linear infinite;pointer-events:none}
-.c1{top:12%;left:-15%}.c2{top:29%;left:45%;animation-duration:42s}
-@keyframes cloud{to{transform:translateX(130vw)}}
-#mountains{position:absolute;left:-10%;bottom:24%;width:120%;height:28%;background:#789c68;clip-path:polygon(0 100%,0 62%,12% 32%,23% 58%,36% 15%,51% 60%,63% 28%,78% 57%,91% 18%,100% 50%,100% 100%);opacity:.8}
-#ground{position:absolute;left:0;bottom:0;width:100%;height:24%;background:linear-gradient(#86a95d,#678b48);border-top:6px solid #4f7339}
-#ground:after{content:"";position:absolute;inset:35% 0 0;background:repeating-linear-gradient(90deg,transparent 0 45px,#5d823e 46px 49px);opacity:.65}
-#hud{position:absolute;z-index:20;top:12px;left:12px;right:12px;display:flex;gap:6px;justify-content:space-between;flex-wrap:wrap;font-weight:900}
-.badge{padding:8px 11px;border-radius:12px;background:#ffffffe8;color:#1c2d35;box-shadow:0 2px 8px #0002}
-#phase{position:absolute;z-index:20;top:65px;left:50%;transform:translateX(-50%);padding:7px 13px;border-radius:20px;background:#ffffffb8;color:#263d46;font-weight:900}
-#player,#tiger,#obstacle{position:absolute;z-index:8;user-select:none;pointer-events:none}
-#player,#tiger{bottom:24%;font-size:clamp(56px,12vw,94px);line-height:1;filter:drop-shadow(0 8px 2px #0004);transform-origin:center bottom}
-#player{left:13%;z-index:8}
-#tiger{left:-100px;font-size:clamp(50px,10vw,82px);z-index:7;transform:scaleX(-1)}
-#obstacle{bottom:24%;left:110%;font-size:clamp(43px,9vw,70px);line-height:1;filter:drop-shadow(0 7px 2px #0004)}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aplikasi Belajar Interaktif SMA (20 Level) - Anung Anindito</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-dark: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.95);
+            --text-light: #f8fafc;
+        }
 
-.running{animation:runCycle .34s infinite}
-@keyframes runCycle{
-  0%{transform:translateY(0) rotate(-2deg) scaleY(1)}
-  25%{transform:translateY(-5px) rotate(2deg) scaleY(.98)}
-  50%{transform:translateY(0) rotate(-2deg) scaleY(1)}
-  75%{transform:translateY(-5px) rotate(2deg) scaleY(.98)}
-  100%{transform:translateY(0) rotate(-2deg) scaleY(1)}
-}
-.tiger-running{animation:tigerRun .28s infinite}
-@keyframes tigerRun{
-  0%{transform:scaleX(-1) translateY(0) rotate(1deg)}
-  50%{transform:scaleX(-1) translateY(-7px) rotate(-2deg)}
-  100%{transform:scaleX(-1) translateY(0) rotate(1deg)}
-}
-.jumping{animation:jump .60s cubic-bezier(.2,.75,.3,1)}
-.tiger-jumping{animation:tigerJump .60s cubic-bezier(.2,.75,.3,1)}
-@keyframes jump{0%{bottom:24%}45%{bottom:56%}100%{bottom:24%}}
-@keyframes tigerJump{0%{bottom:24%;transform:scaleX(-1)}45%{bottom:51%;transform:scaleX(-1) rotate(-3deg)}100%{bottom:24%;transform:scaleX(-1)}}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-#pause{position:absolute;z-index:30;right:64px;top:65px;width:44px;height:44px;border-radius:12px;background:#ffffffdf;font-weight:900}
-#homeBtn{position:absolute;z-index:30;right:12px;top:65px;width:44px;height:44px;border-radius:12px;background:#ffffffdf;font-weight:900}
-#controls{position:absolute;z-index:30;left:16px;right:16px;bottom:16px;display:flex;justify-content:flex-end;pointer-events:none}
-#jumpBtn{width:110px;height:72px;border-radius:20px;background:#ffbf36df;color:#3b2a00;font-weight:950;box-shadow:0 5px #aa7410;pointer-events:auto}
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            touch-action: manipulation;
+            user-select: none;
+        }
 
-#overlay{position:absolute;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:18px;background:#102e2859;backdrop-filter:blur(3px)}
-.modal{width:min(92vw,430px);background:#fff;border-radius:25px;padding:25px;text-align:center;box-shadow:0 18px 50px #0005}
-.modal h2{margin:4px;font-size:32px;color:#254434}.small{color:#61716c;line-height:1.5;margin:12px 0 20px;font-weight:bold;font-size:16px}
-@media(max-width:600px){#phase{top:104px;font-size:12px}.badge{font-size:12px;padding:7px 8px}#player{left:10%}}
-</style>
+        /* Canvas Latar Belakang */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 15px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Header Watermark */
+        .header-brand {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .watermark {
+            display: inline-block;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            margin-bottom: 6px;
+        }
+
+        .motto {
+            font-style: italic;
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        /* Kartu Utama */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Grid Pilihan Pelajaran */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .cat-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 10px 5px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            outline: none;
+        }
+
+        .cat-btn i {
+            font-size: 1.4rem;
+            color: #38bdf8;
+        }
+
+        .cat-btn.selected {
+            background: rgba(99, 102, 241, 0.3);
+            border-color: var(--primary);
+            box-shadow: 0 0 12px rgba(79, 70, 229, 0.4);
+        }
+
+        /* Mode Selector */
+        .mode-section {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .mode-options {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .mode-btn {
+            flex: 1;
+            max-width: 180px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            outline: none;
+        }
+
+        .mode-btn.selected {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* Action Buttons */
+        .btn-action {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-start {
+            flex: 2;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .btn-info {
+            flex: 1;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* HUD Kuis */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            width: 10%;
+            transition: width 0.3s ease;
+        }
+
+        .lives {
+            color: var(--danger);
+        }
+
+        .question-box {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            text-align: center;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.25);
+            padding: 15px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .opt-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 15px;
+            border-radius: 12px;
+            color: white;
+            font-size: 0.95rem;
+            cursor: pointer;
+            text-align: left;
+            outline: none;
+        }
+
+        .essay-box {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .essay-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .reaction-emoji {
+            font-size: 5rem;
+            margin-bottom: 10px;
+        }
+
+        .reaction-text {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .info-card {
+            background: #1e293b;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 20px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .hidden { display: none !important; }
+
+        @media (min-width: 600px) {
+            .options-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
 </head>
 <body>
-<div id="app">
 
-<section id="menu">
- <div class="menu-card">
-  <div class="logo">DAMN GIRAFFE</div>
-  <div class="sub">Realistic-style endless runner</div>
-  <div class="watermark">© Anung anindito.sman1cijeruk</div>
-  <div id="chars">
-   <button class="char selected" data-char="🦒"><span class="emoji">🦒</span><b>Jerapah</b></button>
-   <button class="char" data-char="🦖"><span class="emoji">🦖</span><b>Dino</b></button>
-   <button class="char" data-char="🏃"><span class="emoji">🏃</span><b>Manusia</b></button>
-  </div>
-  <button id="startBtn" class="btn play">▶ MULAI BERMAIN</button>
-  <button id="helpBtn" class="btn help">❓ CARA BERMAIN</button>
- </div>
-</section>
+    <canvas id="bgCanvas"></canvas>
 
-<section id="game" class="hidden">
- <div id="sky">
-  <div id="sun"></div><div id="moon"></div>
-  <div class="cloud c1">☁️</div><div class="cloud c2">☁️</div>
- </div>
- <div id="mountains"></div><div id="ground"></div>
- <div id="hud">
-  <span class="badge">🏆 Skor <span id="score">0</span></span>
-  <span class="badge">⭐ Level <span id="level">1</span></span>
-  <span class="badge">👑 Rekor <span id="best">0</span></span>
- </div>
- <div id="phase">☀️ SIANG</div>
- <button id="pause">Ⅱ</button>
- <button id="homeBtn" title="Kembali ke Home">⌂</button>
- <div id="player">🦒</div>
- <div id="tiger">🐅</div>
- <div id="obstacle">🌵</div>
- <div id="controls"><button id="jumpBtn">LOMPAT</button></div>
-</section>
+    <div class="container">
+        <div class="header-brand">
+            <div class="watermark"><i class="fa-solid fa-graduation-cap"></i> Anung anindito.sman1cijeruk</div>
+            <div class="motto">"belajar untuk hidup, hidup untuk belajar"</div>
+        </div>
 
-<div id="overlay" class="hidden">
- <div class="modal">
-  <h2 id="modalTitle">TERTANGKAP!</h2>
-  <div id="modalText" class="small"></div>
-  <button id="againBtn" class="btn play">🔄 MAIN LAGI</button>
-  <button id="menuBtn" class="btn help">🏠 MENU UTAMA</button>
- </div>
-</div>
+        <div id="menuScreen" class="card">
+            <h1 class="title">Kuis Pembelajaran SMA</h1>
+            
+            <p style="text-align: center; margin-bottom: 10px; color: #cbd5e1; font-size:0.9rem;">Pilih Mata Pelajaran (16 Pelajaran):</p>
+            
+            <div class="category-grid" id="categoryGrid">
+                <div class="cat-btn selected" data-cat="informatika"><i class="fa-solid fa-laptop-code"></i><span>Informatika</span></div>
+                <div class="cat-btn" data-cat="biologi"><i class="fa-solid fa-dna"></i><span>Biologi</span></div>
+                <div class="cat-btn" data-cat="kimia"><i class="fa-solid fa-flask"></i><span>Kimia</span></div>
+                <div class="cat-btn" data-cat="fisika"><i class="fa-solid fa-atom"></i><span>Fisika</span></div>
+                <div class="cat-btn" data-cat="matematika"><i class="fa-solid fa-calculator"></i><span>Matematika</span></div>
+                <div class="cat-btn" data-cat="ekonomi"><i class="fa-solid fa-chart-line"></i><span>Ekonomi</span></div>
+                <div class="cat-btn" data-cat="geografi"><i class="fa-solid fa-earth-americas"></i><span>Geografi</span></div>
+                <div class="cat-btn" data-cat="sosiologi"><i class="fa-solid fa-users"></i><span>Sosiologi</span></div>
+                <div class="cat-btn" data-cat="sejarah"><i class="fa-solid fa-landmark"></i><span>Sejarah</span></div>
+                <div class="cat-btn" data-cat="indo"><i class="fa-solid fa-book"></i><span>B. Indonesia</span></div>
+                <div class="cat-btn" data-cat="inggris"><i class="fa-solid fa-language"></i><span>B. Inggris</span></div>
+                <div class="cat-btn" data-cat="pkn"><i class="fa-solid fa-scale-balanced"></i><span>PKN</span></div>
+                <div class="cat-btn" data-cat="sunda"><i class="fa-solid fa-feather-pointed"></i><span>B. Sunda</span></div>
+                <div class="cat-btn" data-cat="jepang"><i class="fa-solid fa-torii-gate"></i><span>B. Jepang</span></div>
+                <div class="cat-btn" data-cat="china"><i class="fa-solid fa-dragon"></i><span>Mandarin</span></div>
+                <div class="cat-btn" data-cat="germany"><i class="fa-solid fa-beer-mug-empty"></i><span>B. Jerman</span></div>
+            </div>
 
-<script>
-(function(){
-"use strict";
+            <div class="mode-section">
+                <p style="color: #cbd5e1; font-size:0.9rem;">Pilih Mode Kuis:</p>
+                <div class="mode-options">
+                    <button class="mode-btn selected" data-mode="pg">Pilihan Ganda</button>
+                    <button class="mode-btn" data-mode="uraian">Uraian / Isian</button>
+                </div>
+            </div>
 
-const $=id=>document.getElementById(id);
-const menu=$("menu"), game=$("game"), overlay=$("overlay");
-const player=$("player"), tiger=$("tiger"), obstacle=$("obstacle");
+            <div class="btn-action">
+                <button class="btn-start" id="btnStartGame">Mulai Belajar <i class="fa-solid fa-play"></i></button>
+                <button class="btn-info" id="btnShowInfo"><i class="fa-solid fa-circle-info"></i> Bantuan</button>
+            </div>
+        </div>
 
-let selected="🦒";
-let running=false, paused=false, jumping=false;
-let score=0, level=1, speed=6;
-let obstacleX=0, tigerX=-100, last=0, raf=0;
-let tigerJumpClock=0;
-let best=Number(localStorage.getItem("damnGiraffeBest")||0);
-$("best").textContent=best;
+        <div id="quizScreen" class="card hidden">
+            <div class="quiz-header">
+                <button id="btnBack" style="background:none; border:none; color:white; cursor:pointer; font-size:0.9rem;">
+                    <i class="fa-solid fa-arrow-left"></i> Menu Utama
+                </button>
+                <div class="badge" id="levelBadge">Level 1/20</div>
+                <div class="badge" id="questionNumBadge">Soal 1/10</div>
+                <div class="badge lives" id="livesBadge"><i class="fa-solid fa-heart"></i> <i class="fa-solid fa-heart"></i> <i class="fa-solid fa-heart"></i></div>
+            </div>
 
-// Pemilihan Karakter
-document.querySelectorAll(".char").forEach(btn=>{
- btn.addEventListener("click",()=>{
-  document.querySelectorAll(".char").forEach(x=>x.classList.remove("selected"));
-  btn.classList.add("selected");
-  selected=btn.dataset.char;
- });
-});
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
 
-function reset(){
- cancelAnimationFrame(raf);
- score=0; level=1; speed=6; tigerJumpClock=0;
- obstacleX=window.innerWidth+150;
- tigerX=-100;
- jumping=false; paused=false;
- 
- $("score").textContent="0";
- $("level").textContent="1";
- $("best").textContent=best;
- 
- player.textContent=selected;
- player.classList.remove("running","jumping");
- tiger.classList.remove("tiger-running","tiger-jumping");
- 
- obstacle.textContent=chooseObstacle();
- obstacle.style.left=obstacleX+"px";
- tiger.style.left=tigerX+"px";
- 
- $("pause").textContent="Ⅱ";
- updateTime();
-}
+            <div class="question-box" id="questionText">
+                Pertanyaan akan muncul di sini...
+            </div>
 
-function startGame(){
- menu.classList.add("hidden");
- overlay.classList.add("hidden");
- game.classList.remove("hidden");
- 
- reset();
- running=true;
- player.classList.add("running");
- tiger.classList.add("tiger-running");
- 
- last=performance.now();
- raf=requestAnimationFrame(loop);
-}
+            <div class="options-grid" id="pgOptions"></div>
 
-function jump(){
- if(!running || paused || jumping) return;
- jumping=true;
- player.classList.remove("jumping");
- void player.offsetWidth; // Trigger reflow
- player.classList.add("jumping");
- 
- window.setTimeout(()=>{
-  player.classList.remove("jumping");
-  jumping=false;
- }, 600);
-}
+            <div class="essay-box hidden" id="essayOptions">
+                <input type="text" id="essayAnswer" class="essay-input" placeholder="Ketik jawaban Anda..." autocomplete="off">
+                <button class="btn-start" id="btnSubmitEssay">Kirim Jawaban</button>
+            </div>
+        </div>
+    </div>
 
-// Deteksi Tabrakan Presisi
-function collision(){
- const a=player.getBoundingClientRect();
- const b=obstacle.getBoundingClientRect();
- 
- const padX = a.width * 0.28;
- const padY = a.height * 0.22;
- 
- return (a.left + padX < b.right - padX) &&
-        (a.right - padX > b.left + padX) &&
-        (a.top + padY < b.bottom - padY) &&
-        (a.bottom - padY > b.top + padY);
-}
+    <div class="modal-overlay" id="reactionOverlay">
+        <div class="reaction-emoji" id="reactionEmoji">😊</div>
+        <div class="reaction-text" id="reactionText">Jawaban Benar!</div>
+        <button class="btn-start" id="btnNextLevel" style="max-width: 220px;">Lanjut <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
 
-function chooseObstacle(){
- const items=["🌵","🪨","🪵","🌳"];
- return items[Math.floor(Math.random()*items.length)];
-}
+    <div class="modal-overlay" id="infoOverlay">
+        <div class="info-card">
+            <h3 style="color:#38bdf8; margin-bottom:10px;"><i class="fa-solid fa-graduation-cap"></i> Tentang Aplikasi</h3>
+            <p>Dikembangkan oleh <strong>Anung Anindito (SMAN 1 Cijeruk)</strong> dengan motto <em>"belajar untuk hidup, hidup untuk belajar"</em>.</p>
+            <br>
+            <h3 style="color:#38bdf8; margin-bottom:10px;"><i class="fa-solid fa-gamepad"></i> Aturan Kuis</h3>
+            <ul>
+                <li><strong>20 Level</strong> tantangan di tiap mata pelajaran.</li>
+                <li>Setiap level terdiri dari <strong>10 Soal</strong>.</li>
+                <li>Mode PG dibekali 3 Nyawa (❤️). Mode Uraian melatih hafalan kata kunci.</li>
+            </ul>
+            <button class="btn-start" id="btnCloseInfo" style="margin-top:15px; width:100%;">Tutup</button>
+        </div>
+    </div>
 
-function updateTime(){
- const phase=(score % 800) / 800;
- if(phase < 0.38){
-  $("sky").style.background="linear-gradient(#69c3e8,#dff6ff 72%)";
-  $("sun").style.opacity="1"; $("moon").style.opacity="0";
-  $("phase").textContent="☀️ SIANG";
- } else if(phase < 0.62){
-  $("sky").style.background="linear-gradient(#ee936d,#ffd19d 72%)";
-  $("sun").style.opacity=".55"; $("moon").style.opacity="0";
-  $("phase").textContent="🌇 SORE";
- } else {
-  $("sky").style.background="linear-gradient(#14264b,#354e72 72%)";
-  $("sun").style.opacity="0"; $("moon").style.opacity="1";
-  $("
-    
+    <script>
+    // Memastikan seluruh DOM telah dimuat sempurna sebelum JS dieksekusi (Mencegah Stuck)
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        /* === METADATA MATAPELAJARAN === */
+        const subjectMeta = {
+            informatika: { name: "Informatika", topics: ["Berpikir Komputasional", "Algoritma & Pemrograman", "Struktur Data", "Jaringan Komputer", "Sistem Basis Data", "Keamanan Siber"] },
+            biologi: { name: "Biologi", topics: ["Biologi Sel", "Genetika & DNA", "Metabolisme & Enzim", "Anatomi Manusia", "Ekologi"] },
+            kimia: { name: "Kimia", topics: ["Struktur Atom", "Ikatan Kimia", "Stoikiometri", "Termokimia", "Asam Basa"] },
+            fisika: { name: "Fisika", topics: ["Kinematika", "Dinamika Newton", "Termodinamika", "Listrik Magnet", "Optika"] },
+            matematika: { name: "Matematika", topics: ["Aljabar", "Fungsi Kuadrat", "Trigonometri", "Kalkulus", "Matriks"] },
+            ekonomi: { name: "Ekonomi", topics: ["Kebutuhan & Kelangkaan", "Permintaan & Penawaran", "Akuntansi", "Kebijakan Moneter"] },
+            geografi: { name: "Geografi", topics: ["Lithosfer", "Atmosfer", "Penginderaan Jauh", "Oseanografi"] },
+            sosiologi: { name: "Sosiologi", topics: ["Interaksi Sosial", "Sosialisasi", "Deviasi Sosial", "Konflik Sosial"] },
+            sejarah: { name: "Sejarah", topics: ["Praaksara", "Kerajaan Hindu-Buddha", "Kerajaan Islam", "Proklamasi"] },
+            indo: { name: "B. Indonesia", topics: ["Teks LHO", "Teks Eksposisi", "Puisi & Majas", "PUEBI/EYD"] },
+            inggris: { name: "B. Inggris", topics: ["Grammar", "Reading", "Passive Voice", "Conditional Sentences"] },
+            pkn: { name: "PKN", topics: ["Pancasila", "UUD 1945", "Sistem Hukum", "HAM"] },
+            sunda: { name: "B. Sunda", topics: ["Ragam Basa", "Pupuh", "Pakeman Basa", "Sastra Sunda"] },
+            jepang: { name: "B. Jepang", topics: ["Hiragana & Katakana", "Kanji Dasar", "Tata Bahasa", "Vocabulary"] },
+            china: { name: "Mandarin", topics: ["Pinyin", "Hanzi Dasar", "Tata Bahasa", "Vocabulary"] },
+            germany: { name: "B. Jerman", topics: ["Artikel", "Konjugasi Verba", "Akkusativ", "Vocabulary"] }
+        };
+
+        function createQuestion(sub, lvl, qNum) {
+            if (sub === 'informatika') {
+                if (lvl === 1 && qNum === 1) return { level: 1, qNum: 1, q: "Struktur data LIFO (Last In First Out) adalah?", opts: ["Stack", "Queue", "Array", "Tree"], a: "Stack", keywords: ["stack"] };
+                if (lvl === 1 && qNum === 2) return { level: 1, qNum: 2, q: "Simbol belah ketupat pada flowchart menunjukkan?", opts: ["Keputusan (Decision)", "Input/Output", "Proses", "Start/End"], a: "Keputusan (Decision)", keywords: ["keputusan", "decision"] };
+            }
+            if (sub === 'biologi' && lvl === 1 && qNum === 1) {
+                return { level: 1, qNum: 1, q: "Organel penghasil energi ATP melalui respirasi sel?", opts: ["Mitokondria", "Ribosom", "Lisosom", "Kloroplas"], a: "Mitokondria", keywords: ["mitokondria"] };
+            }
+
+            const topicList = subjectMeta[sub].topics;
+            const topic = topicList[(lvl + qNum) % topicList.length];
+            const correctOpt = `${topic} A`;
+            return {
+                level: lvl,
+                qNum: qNum,
+                q: `[${subjectMeta[sub].name} Lvl ${lvl}] Mengenai konsep ${topic}, jawaban yang tepat adalah? (#${qNum})`,
+                opts: [correctOpt, `${topic} B`, `${topic} C`, `${topic} D`],
+                a: correctOpt,
+                keywords: [topic.toLowerCase(), "a"]
+            };
+        }
+
+        const quizData = {};
+        Object.keys(subjectMeta).forEach(subKey => {
+            quizData[subKey] = [];
+            for (let level = 1; level <= 20; level++) {
+                for (let qNum = 1; qNum <= 10; qNum++) {
+                    quizData[subKey].push(createQuestion(subKey, level, qNum));
+                }
+            }
+        });
+
+        /* === STATE APLIKASI === */
+        let currentCategory = 'informatika';
+        let currentMode = 'pg';
+        let currentLevel = 1;
+        let currentQuestionNum = 1;
+        let lives = 3;
+        let activeQuestion = null;
+
+        // HELPER SENTUHAN & KLIK UNIVERSAL (ANTI STUCK ON MOBILE)
+        function bindTouchClick(elem, fn) {
+            if (!elem) return;
+            let handled = false;
+            elem.addEventListener("touchstart", function(e) {
+                handled = true;
+                fn.call(this, e);
+            }, {passive: true});
+            elem.addEventListener("click", function(e) {
+                if (!handled) fn.call(this, e);
+                handled = false;
+            });
+        }
+
+        /* === HANDLER MENU UTAMA === */
+        const catBtns = document.que
