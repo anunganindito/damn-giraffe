@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Belajar Interaktif SMA - Anung Anindito</title>
+    <title>Aplikasi Belajar Interaktif SMA (20 Level) - Anung Anindito</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -13,7 +13,7 @@
             --danger: #ef4444;
             --warning: #f59e0b;
             --bg-dark: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.9);
+            --card-bg: rgba(30, 41, 59, 0.92);
             --text-light: #f8fafc;
         }
 
@@ -81,7 +81,7 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        /* Kartu Tampilan Main UI */
+        /* Kartu Tampilan Utama */
         .card {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -101,13 +101,13 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Grid Pilihan Pelajaran */
+        /* Grid Pilihan Pelajaran (16 Mapel) */
         .category-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 12px;
             margin-bottom: 20px;
-            max-height: 320px;
+            max-height: 340px;
             overflow-y: auto;
             padding-right: 5px;
         }
@@ -221,9 +221,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             padding-bottom: 15px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .badge {
@@ -233,23 +235,40 @@
             font-weight: 600;
         }
 
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            width: 10%;
+            transition: width 0.3s ease;
+        }
+
         .lives {
             color: var(--danger);
             font-size: 1.2rem;
         }
 
         .question-box {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             margin-bottom: 25px;
             line-height: 1.6;
             text-align: center;
-            min-height: 90px;
+            min-height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0,0,0,0.2);
-            padding: 15px;
+            background: rgba(0,0,0,0.25);
+            padding: 18px;
             border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
         /* Pilihan Ganda & Uraian */
@@ -273,6 +292,7 @@
 
         .opt-btn:hover {
             background: rgba(255, 255, 255, 0.15);
+            border-color: #38bdf8;
         }
 
         .essay-box {
@@ -296,7 +316,7 @@
             border-color: var(--primary);
         }
 
-        /* Overlay Animasi Reaksi & Info Modal */
+        /* Overlay Animasi Reaksi & Modal Bantuan */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -318,13 +338,13 @@
         }
 
         .reaction-emoji {
-            font-size: 7rem;
+            font-size: 6.5rem;
             margin-bottom: 15px;
             animation: bounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .reaction-text {
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             font-weight: bold;
             margin-bottom: 20px;
             text-align: center;
@@ -397,12 +417,13 @@
         </div>
 
         <div id="menuScreen" class="card">
-            <h1 class="title">Aplikasi Kuis Pengetahuan SMA</h1>
+            <h1 class="title">Aplikasi Kuis Pembelajaran SMA (20 Level)</h1>
             
-            <p style="text-align: center; margin-bottom: 15px; color: #cbd5e1;">Pilih Mata Pelajaran:</p>
+            <p style="text-align: center; margin-bottom: 15px; color: #cbd5e1;">Pilih Mata Pelajaran (16 Pelajaran):</p>
             
             <div class="category-grid" id="categoryGrid">
-                <div class="cat-btn selected" data-cat="biologi"><i class="fa-solid fa-dna"></i><span>Biologi</span></div>
+                <div class="cat-btn selected" data-cat="informatika"><i class="fa-solid fa-laptop-code"></i><span>Informatika</span></div>
+                <div class="cat-btn" data-cat="biologi"><i class="fa-solid fa-dna"></i><span>Biologi</span></div>
                 <div class="cat-btn" data-cat="kimia"><i class="fa-solid fa-flask"></i><span>Kimia</span></div>
                 <div class="cat-btn" data-cat="fisika"><i class="fa-solid fa-atom"></i><span>Fisika</span></div>
                 <div class="cat-btn" data-cat="matematika"><i class="fa-solid fa-calculator"></i><span>Matematika</span></div>
@@ -436,10 +457,15 @@
         <div id="quizScreen" class="card hidden">
             <div class="quiz-header">
                 <button id="btnBack" style="background:none; border:none; color:white; cursor:pointer; font-size:1.1rem;">
-                    <i class="fa-solid fa-arrow-left"></i> Keluar
+                    <i class="fa-solid fa-arrow-left"></i> Menu Utama
                 </button>
-                <div class="badge" id="levelBadge">Level 1 (Mudah)</div>
+                <div class="badge" id="levelBadge">Level 1/20</div>
+                <div class="badge" id="questionNumBadge">Soal 1/10</div>
                 <div class="badge lives" id="livesBadge"><i class="fa-solid fa-heart"></i> <i class="fa-solid fa-heart"></i> <i class="fa-solid fa-heart"></i></div>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBarFill"></div>
             </div>
 
             <div class="question-box" id="questionText">
@@ -458,34 +484,26 @@
     <div class="modal-overlay" id="reactionOverlay">
         <div class="reaction-emoji" id="reactionEmoji">😊</div>
         <div class="reaction-text" id="reactionText">Jawaban Benar!</div>
-        <button class="btn-start" id="btnNextLevel" style="max-width: 220px;">Lanjut <i class="fa-solid fa-arrow-right"></i></button>
+        <button class="btn-start" id="btnNextLevel" style="max-width: 240px;">Lanjut <i class="fa-solid fa-arrow-right"></i></button>
     </div>
 
     <div class="modal-overlay" id="infoOverlay">
         <div class="info-card">
             <h2><i class="fa-solid fa-graduation-cap"></i> Tentang Aplikasi</h2>
-            <p>Aplikasi Kuis Pembelajaran Interaktif dikembangkan oleh <strong>Anung Anindito (SMAN 1 Cijeruk)</strong>. Berlandaskan motto <em>"belajar untuk hidup, hidup untuk belajar"</em>, aplikasi ini menyediakan media latihan soal interaktif berjenjang untuk jenjang SMA.</p>
+            <p>Aplikasi Kuis Pembelajaran Interaktif dikembangkan oleh <strong>Anung Anindito (SMAN 1 Cijeruk)</strong>. Berlandaskan motto <em>"belajar untuk hidup, hidup untuk belajar"</em>, aplikasi ini menyediakan 16 bidang ilmu (termasuk Informatika dan Bahasa Asing) dengan total <strong>20 Level & 200 Soal per Mata Pelajaran</strong>.</p>
 
-            <h2><i class="fa-solid fa-gamepad"></i> Cara Bermain</h2>
-            <h3>1. Mode Pilihan Ganda (PG)</h3>
+            <h2><i class="fa-solid fa-gamepad"></i> Aturan & Cara Bermain</h2>
+            <h3>1. Struktur Level & Soal</h3>
             <ul>
-                <li>Tersedia <strong>3 Kesempatan (Nyawa ❤️)</strong>.</li>
-                <li>Jika jawaban <strong>Benar</strong> (😊): Naik ke Level berikutnya.</li>
-                <li>Jika jawaban <strong>Salah</strong> (😢): Nyawa berkurang 1 dan Anda tetap berada di level yang sama hingga bisa menjawab dengan benar.</li>
-                <li>Jika nyawa habis (3x salah), Anda harus mengulang dari Level 1.</li>
+                <li>Terdapat <strong>20 Level Tantangan</strong> dalam setiap pelajaran.</li>
+                <li>Setiap level berisi <strong>10 Pertanyaan</strong> (Total 200 soal per pelajaran).</li>
+                <li>Tingkat kesulitan bertahap dari Level 1 (Dasar) hingga Level 20 (Super HOTS / Olimpiade).</li>
             </ul>
 
-            <h3>2. Mode Uraian / Isian</h3>
+            <h3>2. Mode Permainan</h3>
             <ul>
-                <li>Ketikkan jawaban langsung pada kolom teks yang disediakan.</li>
-                <li>Mode ini tidak memakai batas nyawa sehingga bebas untuk berlatih mandiri.</li>
-            </ul>
-
-            <h3>3. Tingkat Kesulitan</h3>
-            <ul>
-                <li><strong>Level 1:</strong> Konsep & Pengetahuan Dasar</li>
-                <li><strong>Level 2:</strong> Pemahaman Tingkat Menengah</li>
-                <li><strong>Level 3:</strong> Soal Analisis & HOTS</li>
+                <li><strong>Mode Pilihan Ganda:</strong> Dibekali 3 Nyawa (❤️). Jawaban benar menambah poin progress. Jawaban salah menguraikan nyawa.</li>
+                <li><strong>Mode Uraian/Isian:</strong> Mengetikkan jawaban secara presisi tanpa batas nyawa untuk latihan bebas.</li>
             </ul>
 
             <button class="btn-start" id="btnCloseInfo" style="margin-top:20px; width:100%;">Tutup Menu Bantuan</button>
@@ -493,331 +511,26 @@
     </div>
 
     <script>
-        /* === DATA PERTANYAAN PEMBELAJARAN SMA LENGKAP & BERTINGKAT === */
-        const quizData = {
-            biologi: [
-                { level: 1, type: 'pg', q: 'Organel sel yang dijuluki "The Powerhouse of Cell" tempat respirasi sel berlangsung adalah?', opts: ['Mitokondria', 'Ribosom', 'Lisosom', 'Kloroplas'], a: 'Mitokondria' },
-                { level: 2, type: 'pg', q: 'Fase pembelahan mitosis di mana kromosom berderet di bidang ekuator adalah?', opts: ['Profase', 'Metafase', 'Anafase', 'Telofase'], a: 'Metafase' },
-                { level: 3, type: 'pg', q: 'Pada persilangan dihibrid heterozigot sempurna (AaBb x AaBb), berapa rasio fenotip hasil keturunannya?', opts: ['3:1', '9:3:3:1', '1:2:1', '12:3:1'], a: '9:3:3:1' }
-            ],
-            kimia: [
-                { level: 1, type: 'pg', q: 'Unsur dengan nomor atom 6 dalam tabel periodik adalah?', opts: ['Oksigen', 'Karbon', 'Nitrogen', 'Hidrogen'], a: 'Karbon' },
-                { level: 2, type: 'pg', q: 'Berapakah konsentrasi ion H+ dalam larutan asam dengan nilai pH = 3?', opts: ['10⁻³ M', '10⁻⁷ M', '10⁻¹⁴ M', '3 M'], a: '10⁻³ M' },
-                { level: 3, type: 'pg', q: 'Menurut teori asam-basa Bronsted-Lowry, senyawa yang bertindak sebagai basa adalah senyawa yang?', opts: ['Menerima donor proton (H+)', 'Memberikan proton (H+)', 'Menghasilkan ion OH-', 'Menerima pasangan elektron'], a: 'Menerima donor proton (H+)' }
-            ],
-            fisika: [
-                { level: 1, type: 'pg', q: 'Satuan Internasional (SI) untuk mengukur gaya adalah?', opts: ['Joule', 'Watt', 'Newton', 'Pascal'], a: 'Newton' },
-                { level: 2, type: 'pg', q: 'Benda bermassa 2 kg bergerak dengan kecepatan 4 m/s. Energi kinetik benda tersebut adalah?', opts: ['8 Joule', '16 Joule', '32 Joule', '4 Joule'], a: '16 Joule' },
-                { level: 3, type: 'pg', q: 'Dua buah muatan terpisah sejauh r. Jika jarak antarmuatan dijadikan 2x semula, gaya Coulomb-nya menjadi?', opts: ['2 kali semula', '4 kali semula', '1/2 kali semula', '1/4 kali semula'], a: '1/4 kali semula' }
-            ],
-            matematika: [
-                { level: 1, type: 'pg', q: 'Berapakah hasil dari 2³ + 3² ?', opts: ['12', '17', '15', '18'], a: '17' },
-                { level: 2, type: 'pg', q: 'Akar-akar dari persamaan kuadrat x² - 5x + 6 = 0 adalah?', opts: ['2 dan 3', '-2 dan -3', '1 dan 6', '-1 dan -6'], a: '2 dan 3' },
-                { level: 3, type: 'pg', q: 'Jika f(x) = 3x² + 4x - 5, maka turunan pertama f\'(x) adalah?', opts: ['6x + 4', '3x + 4', '6x² + 4', '6x - 5'], a: '6x + 4' }
-            ],
-            ekonomi: [
-                { level: 1, type: 'pg', q: 'Masalah pokok ekonomi klasik meliputi kegiatan?', opts: ['Produksi, Distribusi, Konsumsi', 'Apa, Bagaimana, Untuk siapa', 'Inflasi, Pengangguran, Ekspor', 'Pasar, Uang, Bank'], a: 'Produksi, Distribusi, Konsumsi' },
-                { level: 2, type: 'pg', q: 'Hukum permintaan menyatakan bahwa jika harga suatu barang naik, maka jumlah barang yang diminta akan?', opts: ['Naik', 'Turun', 'Tetap', 'Tidak terhingga'], a: 'Turun' },
-                { level: 3, type: 'pg', q: 'Kebijakan pemerintah menurunkan suku bunga bank untuk menambah jumlah uang beredar dinamakan kebijakan?', opts: ['Fiskal Moneter', 'Moneter Ekspansif', 'Moneter Kontraktif', 'Fiskal Diskresi'], a: 'Moneter Ekspansif' }
-            ],
-            geografi: [
-                { level: 1, type: 'pg', q: 'Lapisan udara yang menyelimuti bumi disebut?', opts: ['Litosfer', 'Hidrosfer', 'Atmosfer', 'Biosfer'], a: 'Atmosfer' },
-                { level: 2, type: 'pg', q: 'Skala peta 1 : 100.000 artinya 1 cm pada peta mewakili jarak sebenarnya sejauh?', opts: ['100 km', '10 km', '1 km', '100 meter'], a: '1 km' },
-                { level: 3, type: 'pg', q: 'Fenomena el nino di Samudra Pasifik mengakibatkan wilayah Indonesia mengalami?', opts: ['Curah hujan tinggi', 'Kekeringan panjang', 'Badai salju', 'Tsunami'], a: 'Kekeringan panjang' }
-            ],
-            sosiologi: [
-                { level: 1, type: 'pg', q: 'Proses belajar seseorang untuk menerima nilai dan norma kelompoknya dinamakan?', opts: ['Sosialisasi', 'Interaksi', 'Komunikasi', 'Asimilasi'], a: 'Sosialisasi' },
-                { level: 2, type: 'pg', q: 'Bentuk kerja sama dua organisasi atau lebih yang menggabungkan kekuatan dinamakan?', opts: ['Koalisi', 'Kooptasi', 'Kompromi', 'Akomodasi'], a: 'Koalisi' },
-                { level: 3, type: 'pg', q: 'Perubahan sosial yang terjadi secara lambat dan memerlukan waktu yang lama dinamakan?', opts: ['Revolusi', 'Evolusi', 'Inovasi', 'Modernisasi'], a: 'Evolusi' }
-            ],
-            sejarah: [
-                { level: 1, type: 'pg', q: 'Tokoh pengetik naskah Proklamasi Kemerdekaan Indonesia adalah?', opts: ['Sayuti Melik', 'Sukarni', 'ChaERul Saleh', 'B.M. Diah'], a: 'Sayuti Melik' },
-                { level: 2, type: 'pg', q: 'Sistem tanam paksa (Cultuurstelsel) di Indonesia diperkenalkan oleh Gubernur Jenderal?', opts: ['Daendels', 'Raffles', 'Van den Bosch', 'J.P. Coen'], a: 'Van den Bosch' },
-                { level: 3, type: 'pg', q: 'Isi Perjanjian Renville sangat merugikan Indonesia karena wilayah RI semakin sempit akibat adanya garis batas?', opts: ['Garis Curzon', 'Garis Van Mook', 'Garis Demarkasi', 'Garis Khatulistiwa'], a: 'Garis Van Mook' }
-            ],
-            indo: [
-                { level: 1, type: 'pg', q: 'Gagasan utama yang menjadi dasar pengembangan sebuah paragraf dinamakan?', opts: ['Kalimat penjelas', 'Ide pokok', 'Tema', 'Kesimpulan'], a: 'Ide pokok' },
-                { level: 2, type: 'pg', q: 'Manakah penulisan kata baku yang tepat menurut PUEBI/EYD?', opts: ['Apotik', 'Apotek', 'Apotekh', 'Apotike'], a: 'Apotek' },
-                { level: 3, type: 'pg', q: 'Majas yang membandingkan dua hal secara langsung tanpa kata penghubung (seperti: raja siang) dinamakan?', opts: ['Personifikasi', 'Metafora', 'Hiperbola', 'Litotes'], a: 'Metafora' }
-            ],
-            inggris: [
-                { level: 1, type: 'pg', q: 'What is the synonym of the word "Happy"?', opts: ['Sad', 'Joyful', 'Angry', 'Tired'], a: 'Joyful' },
-                { level: 2, type: 'pg', q: 'If I ... enough money, I would buy a new laptop.', opts: ['have', 'had', 'will have', 'has'], a: 'had' },
-                { level: 3, type: 'pg', q: 'Choose the correct passive voice: "The chef prepares the dinner."', opts: ['The dinner is prepared by the chef', 'The dinner was prepared by the chef', 'The chef is preparing the dinner', 'The dinner has prepared by the chef'], a: 'The dinner is prepared by the chef' }
-            ],
-            pkn: [
-                { level: 1, type: 'pg', q: 'Konstitusi tertulis negara Republik Indonesia adalah?', opts: ['Pancasila', 'UUD 1945', 'GBHN', 'Ketetapan MPR'], a: 'UUD 1945' },
-                { level: 2, type: 'pg', q: 'Lembaga yang berwenang menguji undang-undang terhadap UUD 1945 adalah?', opts: ['Mahkamah Agung', 'Mahkamah Konstitusi', 'DPR', 'Komisi Yudisial'], a: 'Mahkamah Konstitusi' },
-                { level: 3, type: 'pg', q: 'Sistem pemerintahan Indonesia di mana presiden berperan sebagai kepala negara sekaligus kepala pemerintahan dinamakan?', opts: ['Parlementer', 'Presidensial', 'Monarki', 'Otokrasi'], a: 'Presidensial' }
-            ],
-            sunda: [
-                { level: 1, type: 'pg', q: 'Basa Sundana "Makan" pikeun diri sorangan (ragam sedeng) nyaeta?', opts: ['Tuang', 'Neda', 'Dahar', 'Nyapa'], a: 'Neda' },
-                { level: 2, type: 'pg', q: 'Karya sastra Sunda wangun puisi nu teu terikat ku patokan pupuh dinamakeun?', opts: ['Guguritan', 'Sajak', 'Sisindiran', 'Mantra'], a: 'Sajak' },
-                { level: 3, type: 'pg', q: 'Arti tina babasan "Leuleus awak" nyaeta?', opts: ['Resep gawe', 'Penakut', 'Geber gerak', 'Gampang gering'], a: 'Resep gawe' }
-            ],
-            jepang: [
-                { level: 1, type: 'pg', q: 'Salam yang diucapkan saat hendak makan dalam Bahasa Jepang adalah?', opts: ['Gochisousama', 'Itadakimasu', 'Konnichiwa', 'Okitai'], a: 'Itadakimasu' },
-                { level: 2, type: 'pg', q: 'Partikel yang digunakan untuk menandai subjek kalimat dalam tata bahasa Jepang adalah?', opts: ['を (wo)', 'は (wa)', 'に (ni)', 'で (de)'], a: 'は (wa)' },
-                { level: 3, type: 'pg', q: 'Bentuk lampau positif dari kata kerja "Tabemasu" (Makan) adalah?', opts: ['Tabemasen', 'Tabemashita', 'Tabemasen deshita', 'Taberu'], a: 'Tabemashita' }
-            ],
-            china: [
-                { level: 1, type: 'pg', q: 'Ucapan "Terima Kasih" dalam Bahasa Mandarin adalah?', opts: ['Zaijian', 'Xiexie', 'Ni hao', 'Bu keqi'], a: 'Xiexie' },
-                { level: 2, type: 'pg', q: 'Sebutan untuk Guru dalam Bahasa Mandarin adalah?', opts: ['Xuesheng', 'Laoshi', 'Pengyou', 'Yisheng'], a: 'Laoshi' },
-                { level: 3, type: 'pg', q: 'Kata ganti jamak "Kami / Kita" dalam Bahasa Mandarin dipembentuk dari "Wo" ditambah akhiran?', opts: ['De', 'Men', 'Le', 'Guo'], a: 'Men' }
-            ],
-            germany: [
-                { level: 1, type: 'pg', q: 'Ucapan "Selamat Tinggal" (Formal) dalam Bahasa Jerman adalah?', opts: ['Tschüss', 'Auf Wiedersehen', 'Guten Tag', 'Danke'], a: 'Auf Wiedersehen' },
-                { level: 2, type: 'pg', q: 'Konjugasi kata kerja "Lernen" untuk subjek "Du" (Kamu) yang tepat adalah?', opts: ['Lerne', 'Lernst', 'Lernt', 'Lernen'], a: 'Lernst' },
-                { level: 3, type: 'pg', q: 'Bentuk kata ganti kepunyaan (Possessivpronomen) "My" untuk kata benda maskulin tunggal adalah?', opts: ['Mein', 'Meine', 'Meines', 'Meinem'], a: 'Mein' }
-            ]
-        };
-
-        /* === VARIABLE STATE APLIKASI === */
-        let currentCategory = 'biologi';
-        let currentMode = 'pg';
-        let currentLevel = 1;
-        let lives = 3;
-        let activeQuestion = null;
-
-        /* === Latar Belakang Efek Canvas === */
-        const canvas = document.getElementById('bgCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        const symbolsMap = {
-            fisika: ['F=ma', 'E=mc²', 'λ', 'Ω', '⚡', '⚛️', 'v=s/t'],
-            biologi: ['🧬', '🌿', '🧫', '🔬', '🩸', '🌱', '🦴'],
-            kimia: ['H₂O', 'NaCl', '🧪', '⚗️', 'CO₂', 'O₂', '⚛️'],
-            matematika: ['π', '√x', '∫', 'sin', 'cos', '∑', '∞'],
-            ekonomi: ['📈', '💰', '💳', '📊', '💵'],
-            geografi: ['🌍', '🌋', '🗺️', '⛅', '🧭'],
-            sosiologi: ['👥', '🤝', '🏛️', '🗣️'],
-            sejarah: ['📜', '👑', '⚔️', '🗿', '1945'],
-            indo: ['📖', '✍️', '📝', '📚'],
-            inggris: ['ABC', 'Hello', 'A', 'B', '💬'],
-            pkn: ['⚖️', '🇮🇩', '🦅', '📜'],
-            sunda: ['🍃', '🪕', '⛰️', '🌾'],
-            jepang: ['あ', 'カ', '🌸', '⛩️', '🍙'],
-            china: ['你', '好', '🐉', '🏮', '🥠'],
-            germany: ['🇩🇪', 'Hallo', '🍺', '🏰', '⚽']
-        };
-
-        class Particle {
-            constructor(category) {
-                this.reset(category);
-            }
-            reset(category) {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 16 + 12;
-                this.speedX = (Math.random() - 0.5) * 1.5;
-                this.speedY = (Math.random() - 0.5) * 1.5;
-                this.opacity = Math.random() * 0.4 + 0.1;
-                
-                const list = symbolsMap[category] || ['?'];
-                this.text = list[Math.floor(Math.random() * list.length)];
-            }
-            update(category) {
-                this.x += this.speedX;
-                this.y += this.speedY;
-
-                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
-                    this.reset(category);
-                }
-            }
-            draw() {
-                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-                ctx.font = `${this.size}px Arial`;
-                ctx.fillText(this.text, this.x, this.y);
-            }
-        }
-
-        function initCanvas(category) {
-            particles = [];
-            for (let i = 0; i < 40; i++) {
-                particles.push(new Particle(category));
-            }
-        }
-
-        function animateCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.update(currentCategory);
-                p.draw();
-            });
-            requestAnimationFrame(animateCanvas);
-        }
-        initCanvas('biologi');
-        animateCanvas();
-
-        /* === INTERAKSI UI MENU === */
-        const catButtons = document.querySelectorAll('.cat-btn');
-        catButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                catButtons.forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
-                currentCategory = btn.dataset.cat;
-                initCanvas(currentCategory);
-            });
-        });
-
-        const modeButtons = document.querySelectorAll('.mode-btn');
-        modeButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                modeButtons.forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
-                currentMode = btn.dataset.mode;
-            });
-        });
-
-        /* === INFO & BANTUAN MODAL === */
-        const infoOverlay = document.getElementById('infoOverlay');
-        document.getElementById('btnShowInfo').addEventListener('click', () => {
-            infoOverlay.classList.add('active');
-        });
-        document.getElementById('btnCloseInfo').addEventListener('click', () => {
-            infoOverlay.classList.remove('active');
-        });
-
-        /* === LOGIKA KUIS === */
-        const menuScreen = document.getElementById('menuScreen');
-        const quizScreen = document.getElementById('quizScreen');
-        const btnStartGame = document.getElementById('btnStartGame');
-        const btnBack = document.getElementById('btnBack');
-
-        btnStartGame.addEventListener('click', () => {
-            menuScreen.classList.add('hidden');
-            quizScreen.classList.remove('hidden');
-            currentLevel = 1;
-            lives = 3;
-            loadQuestion();
-        });
-
-        btnBack.addEventListener('click', () => {
-            quizScreen.classList.add('hidden');
-            menuScreen.classList.remove('hidden');
-        });
-
-        function loadQuestion() {
-            document.getElementById('levelBadge').innerText = `Level ${currentLevel} (${currentLevel === 1 ? 'Dasar' : currentLevel === 2 ? 'Menengah' : 'HOTS'})`;
-            
-            const livesBadge = document.getElementById('livesBadge');
-            if(currentMode === 'pg') {
-                livesBadge.style.display = 'block';
-                let hearts = '';
-                for(let i=0; i<3; i++) {
-                    hearts += i < lives ? '<i class="fa-solid fa-heart"></i> ' : '<i class="fa-regular fa-heart"></i> ';
-                }
-                livesBadge.innerHTML = hearts;
-            } else {
-                livesBadge.style.display = 'none';
-            }
-
-            const categoryQuestions = quizData[currentCategory];
-            activeQuestion = categoryQuestions.find(q => q.level === currentLevel);
-
-            document.getElementById('questionText').innerText = activeQuestion.q;
-
-            const pgBox = document.getElementById('pgOptions');
-            const essayBox = document.getElementById('essayOptions');
-
-            if (currentMode === 'pg') {
-                pgBox.classList.remove('hidden');
-                essayBox.classList.add('hidden');
-                pgBox.innerHTML = '';
-
-                activeQuestion.opts.forEach(opt => {
-                    const b = document.createElement('button');
-                    b.className = 'opt-btn';
-                    b.innerText = opt;
-                    b.onclick = () => checkAnswer(opt);
-                    pgBox.appendChild(b);
-                });
-            } else {
-                pgBox.classList.add('hidden');
-                essayBox.classList.remove('hidden');
-                document.getElementById('essayAnswer').value = '';
-            }
-        }
-
-        document.getElementById('btnSubmitEssay').addEventListener('click', () => {
-            const userAns = document.getElementById('essayAnswer').value.trim();
-            checkAnswer(userAns);
-        });
-
-        function checkAnswer(userAnswer) {
-            const isCorrect = userAnswer.toLowerCase() === activeQuestion.a.toLowerCase();
-
-            if (isCorrect) {
-                showReaction(true, "Luar Biasa! Jawaban Benar 🎉");
-            } else {
-                if (currentMode === 'pg') {
-                    lives--;
-                    if (lives <= 0) {
-                        showReaction(false, "Kesempatan Habis! Anda Harus Ulangi dari Level 1 😢", true);
-                    } else {
-                        showReaction(false, `Jawaban Salah! Nyawa Berkurang. Tetap di Level ${currentLevel} 💔`);
-                    }
-                } else {
-                    showReaction(false, "Jawaban Kurang Tepat! Coba Lagi 😢");
-                }
-            }
-        }
-
-        /* === MODAL REAKSI === */
-        const reactionOverlay = document.getElementById('reactionOverlay');
-        const reactionEmoji = document.getElementById('reactionEmoji');
-        const reactionText = document.getElementById('reactionText');
-        const btnNextLevel = document.getElementById('btnNextLevel');
-        let isGameOverState = false;
-
-        function showReaction(isSuccess, text, isGameOver = false) {
-            isGameOverState = isGameOver;
-            reactionOverlay.classList.add('active');
-            reactionText.innerText = text;
-
-            if (isSuccess) {
-                reactionEmoji.innerText = '😊';
-                reactionText.style.color = '#10b981';
-                btnNextLevel.innerText = currentLevel >= 3 ? "Selesai & Menang 🏆" : "Level Selanjutnya ➡️";
-            } else {
-                reactionEmoji.innerText = '😢';
-                reactionText.style.color = '#ef4444';
-                btnNextLevel.innerText = isGameOver ? "Ulangi Game 🔄" : "Coba Lagi 🔁";
-            }
-        }
-
-        btnNextLevel.addEventListener('click', () => {
-            reactionOverlay.classList.remove('active');
-            
-            if (isGameOverState) {
-                currentLevel = 1;
-                lives = 3;
-                loadQuestion();
-                return;
-            }
-
-            const isSuccess = reactionEmoji.innerText === '😊';
-            if (isSuccess) {
-                if (currentLevel < 3) {
-                    currentLevel++;
-                    loadQuestion();
-                } else {
-                    alert("Selamat! Anda berhasil menyelesaikan semua level kuis materi ini dengan sempurna! 🎉");
-                    quizScreen.classList.add('hidden');
-                    menuScreen.classList.remove('hidden');
-                }
-            } else {
-                loadQuestion();
-            }
-        });
-    </script>
-</body>
-</html>
+        /* === GENERATOR BANK SOAL DINAMIS BERJENJANG (16 MAPEL x 20 LEVEL x 10 SOAL = 3,200 SOAL) === */
+        
+        const subjectMeta = {
+            informatika: {
+                name: "Informatika",
+                topics: [
+                    "Berpikir Komputasional & Algoritma", "Konstruksi Pemrograman Python/C++", "Struktur Data & Graf", 
+                    "Jaringan Komputer & IP Address", "Sistem Basis Data (SQL)", "Keamanan Siber & Enkripsi", 
+                    "Kecerdasan Buatan & Machine Learning", "Kompleksitas Algoritma (Big O)"
+                ]
+            },
+            biologi: { name: "Biologi", topics: ["Biologi Sel", "Genetika & DNA", "Metabolisme & Enzim", "Anatomi Manusia", "Ekologi", "Bioteknologi"] },
+            kimia: { name: "Kimia", topics: ["Struktur Atom", "Ikatan Kimia", "Stoikiometri", "Termokimia", "Asam Basa", "Elektrokimia"] },
+            fisika: { name: "Fisika", topics: ["Kinematika", "Dinamika Newton", "Termodinamika", "Listrik Magnet", "Optika", "Fisika Modern"] },
+            matematika: { name: "Matematika", topics: ["Aljabar", "Fungsi Kuadrat", "Trigonometri", "Kalkulus & Turunan", "Matriks", "Probabilitas"] },
+            ekonomi: { name: "Ekonomi", topics: ["Kebutuhan & Kelangkaan", "Permintaan & Penawaran", "Akuntansi", "Kebijakan Moneter", "Perdagangan Internasional"] },
+            geografi: { name: "Geografi", topics: ["Lithosfer", "Atmosfer", "Penginderaan Jauh & SIG", "Oseanografi", "Interaksi Desa-Kota"] },
+            sosiologi: { name: "Sosiologi", topics: ["Interaksi Sosial", "Sosialisasi", "Deviasi Sosial", "Konflik & Integrasi", "Perubahan Sosial"] },
+            sejarah: { name: "Sejarah", topics: ["Praaksara", "Kerajaan Hindu-Buddha", "Kerajaan Islam", "Kolonialisme", "Proklamasi & Orde Baru"] },
+            indo: { name: "B. Indonesia", topics: ["Teks Laporan Hasil Observasi", "Teks Eksposisi", "Puisi & Majas", "PUEBI/EYD", "Karya Tulis Ilmiah"] },
+            inggris: { name: "B. Inggris", topics: ["Grammar & Tenses", "Reading Comprehension", "Passive Voice", "Conditional Sentences", "Vocabulary & Idiom"] },
+            pkn: { name: "PKN", topics: ["Pancasila", "UUD 1945", "Sistem Hukum & Peradilan", "HAM", "Demokrasi & Otonomi Daerah"] },
+            sunda: { name: "B. Sunda", topics: ["Ragam Basa", "Pupuh & Guguritan", "Pakeman Basa", "Sastra Sund
