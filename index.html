@@ -1,349 +1,395 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#6db7d6">
-<title>Damn Tiger — Endless Runner</title>
-<style>
-*{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif}
-body{background:#78bdd8;touch-action:none;user-select:none;-webkit-user-select:none}
-button{font:inherit;border:0;cursor:pointer}
-.hidden{display:none!important}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Belajar Interaktif - Anung Anindito</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-dark: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.88);
+            --text-light: #f8fafc;
+        }
 
-#app,#game{position:relative;width:100%;height:100%;overflow:hidden}
-#menu{position:absolute;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;background:linear-gradient(#77c8e7 0 62%,#89ad61 62%)}
-.menu-card{width:min(94vw,520px);padding:26px;border-radius:28px;background:#fffffff2;text-align:center;box-shadow:0 18px 55px #0004}
-.logo{font-size:clamp(40px,10vw,70px);font-weight:950;letter-spacing:-3px;color:#24333b}
-.sub{color:#5c6c75;margin:7px 0 4px}
-.watermark{font-size:12px;font-weight:800;color:#68757b;opacity:.75;margin-bottom:18px}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-#chars{display:flex;gap:9px;margin:12px 0 18px}
-.char{flex:1;padding:12px 5px;border:3px solid transparent;border-radius:17px;background:#edf2f4;color:#24343d}
-.char.selected{border-color:#edae20;background:#fff4d3;box-shadow:0 4px 0 #d8b45c}
-.char .emoji{display:block;font-size:43px;margin-bottom:5px}
-.char b{font-size:13px}
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-.btn{width:100%;padding:15px;margin:6px 0;border-radius:15px;font-weight:900}
-.play{background:#ffb51b;color:#342400;box-shadow:0 5px #c68300}
-.play:active{transform:translateY(2px);box-shadow:0 3px #c68300}
-.help{background:#293b49;color:#fff}
+        /* Canvas Latar Belakang Dinamis */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
 
-#game{background:#82c9e6}
-#sky{position:absolute;inset:0;background:linear-gradient(#69c3e8,#dff6ff 72%);transition:background 1.4s}
-#sun,#moon{position:absolute;width:78px;height:78px;border-radius:50%;right:12%;top:9%;transition:all 1.4s}
-#sun{background:#ffd94d;box-shadow:0 0 48px #fff6}
-#moon{background:#edf3ff;box-shadow:0 0 28px #d8e8ff;opacity:0}
-.cloud{position:absolute;font-size:58px;opacity:.6;animation:cloud 34s linear infinite;pointer-events:none}
-.c1{top:12%;left:-15%}.c2{top:29%;left:45%;animation-duration:42s}
-@keyframes cloud{to{transform:translateX(130vw)}}
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-#mountains{position:absolute;left:-10%;bottom:24%;width:120%;height:28%;background:#789c68;clip-path:polygon(0 100%,0 62%,12% 32%,23% 58%,36% 15%,51% 60%,63% 28%,78% 57%,91% 18%,100% 50%,100% 100%);opacity:.8}
-#ground{position:absolute;left:0;bottom:0;width:100%;height:24%;background:linear-gradient(#86a95d,#678b48);border-top:6px solid #4f7339}
-#ground:after{content:"";position:absolute;inset:35% 0 0;background:repeating-linear-gradient(90deg,transparent 0 45px,#5d823e 46px 49px);opacity:.65}
+        /* Header Watermark & Motto */
+        .header-brand {
+            text-align: center;
+            margin-bottom: 20px;
+            animation: fadeInDown 0.8s ease;
+        }
 
-#hud{position:absolute;z-index:20;top:12px;left:12px;right:12px;display:flex;gap:6px;justify-content:space-between;flex-wrap:wrap;font-weight:900}
-.badge{padding:8px 11px;border-radius:12px;background:#ffffffe8;color:#1c2d35;box-shadow:0 2px 8px #0002}
-#phase{position:absolute;z-index:20;top:65px;left:50%;transform:translateX(-50%);padding:7px 13px;border-radius:20px;background:#ffffffb8;color:#263d46;font-weight:900}
+        .watermark {
+            display: inline-block;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            margin-bottom: 8px;
+        }
 
-/* POSISI & PENGATURAN KARAKTER MENDAHULUI HARIMAU */
-#player,#tiger,#obstacle{position:absolute;z-index:8;user-select:none}
-#player,#tiger{bottom:24%;font-size:clamp(56px,12vw,94px);line-height:1;filter:drop-shadow(0 8px 2px #0004);transform-origin:center bottom}
+        .motto {
+            font-style: italic;
+            color: #94a3b8;
+            font-size: 1.1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
 
-/* Pemain di Depan (Lari ke Kanan) */
-#player{left:24%;z-index:8;transform:scaleX(-1)}
+        /* Kartu Tampilan Main UI */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 0.8s ease;
+        }
 
-/* Harimau Mengejar di Belakang (Lari ke Kanan) */
-#tiger{left:4%;font-size:clamp(50px,10vw,82px);z-index:7;transform:scaleX(-1)}
+        .title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-#obstacle{bottom:24%;left:110%;font-size:clamp(43px,9vw,70px);line-height:1;filter:drop-shadow(0 7px 2px #0004)}
+        /* Grid Pilihan Pelajaran */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
 
-/* ANIMASI BERLARI KE KANAN */
-.running{animation:runCycle .28s infinite alternate ease-in-out}
-@keyframes runCycle{
-  from{transform:scaleX(-1) translateY(0) rotate(-1deg)}
-  to{transform:scaleX(-1) translateY(-6px) rotate(2deg)}
-}
+        .cat-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 14px 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
 
-.tiger-running{animation:tigerRun .22s infinite alternate ease-in-out}
-@keyframes tigerRun{
-  from{transform:scaleX(-1) translateY(0) rotate(1deg)}
-  to{transform:scaleX(-1) translateY(-8px) rotate(-2deg)}
-}
+        .cat-btn i {
+            font-size: 1.8rem;
+            color: #38bdf8;
+        }
 
-#pause,#homeBtn{position:absolute;z-index:30;top:65px;width:44px;height:44px;border-radius:12px;background:#ffffffdf;font-weight:900}
-#pause{right:64px}
-#homeBtn{right:12px}
+        .cat-btn:hover, .cat-btn.selected {
+            background: rgba(99, 102, 241, 0.25);
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 18px rgba(79, 70, 229, 0.3);
+        }
 
-#controls{position:absolute;z-index:30;left:16px;right:16px;bottom:16px;display:flex;justify-content:flex-end}
-#jumpBtn{width:100px;height:72px;border-radius:20px;background:#ffbf36df;color:#3b2a00;font-weight:950;box-shadow:0 5px #aa7410}
-#jumpBtn:active{transform:translateY(3px);box-shadow:0 2px #aa7410}
+        /* Mode Selector */
+        .mode-section {
+            margin-top: 15px;
+            text-align: center;
+        }
 
-#overlay{position:absolute;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:18px;background:#102e2859;backdrop-filter:blur(3px)}
-.modal{width:min(92vw,430px);background:#fff;border-radius:25px;padding:25px;text-align:center;box-shadow:0 18px 50px #0005}
-.modal h2{margin:4px;font-size:32px;color:#254434}.small{color:#61716c;line-height:1.5;margin:12px 0 20px}
+        .mode-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 12px 0;
+        }
 
-@media(max-width:600px){#phase{top:104px;font-size:12px}.badge{font-size:12px;padding:7px 8px}#player{left:22%}#tiger{left:2%}}
-</style>
+        .mode-btn {
+            flex: 1;
+            max-width: 200px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .mode-btn.selected {
+            background: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(79, 70, 229, 0.5);
+        }
+
+        /* Button Action */
+        .btn-action {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-start {
+            flex: 2;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-info {
+            flex: 1;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-start:hover, .btn-info:hover {
+            transform: scale(1.02);
+        }
+
+        /* HUD Kuis */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .lives {
+            color: var(--danger);
+            font-size: 1.2rem;
+        }
+
+        .question-box {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Pilihan Ganda & Uraian */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .opt-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 20px;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: left;
+            transition: 0.2s;
+        }
+
+        .opt-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .essay-box {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .essay-input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            font-size: 1.1rem;
+            outline: none;
+        }
+
+        .essay-input:focus {
+            border-color: var(--primary);
+        }
+
+        /* Overlay Animasi Reaksi & Info Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .reaction-emoji {
+            font-size: 7rem;
+            margin-bottom: 15px;
+            animation: bounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .reaction-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .info-card {
+            background: #1e293b;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .info-card h2 {
+            color: #38bdf8;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+        }
+
+        .info-card h3 {
+            color: white;
+            margin: 14px 0 6px;
+        }
+
+        .info-card ul {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .hidden { display: none !important; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 600px) {
+            .options-grid { grid-template-columns: 1fr; }
+            .title { font-size: 1.6rem; }
+            .category-grid { grid-template-columns: repeat(2, 1fr); }
+            .btn-action { flex-direction: column; }
+        }
+    </style>
 </head>
 <body>
-<div id="app">
 
-<section id="menu">
- <div class="menu-card">
-  <div class="logo">DAMN TIGER</div>
-  <div class="sub">Endless Runner — Chase Game</div>
-  <div class="watermark">© Anung anindito.sman1cijeruk</div>
-  <div id="chars">
-   <button class="char selected" data-char="🦒"><span class="emoji">🦒</span><b>Jerapah</b></button>
-   <button class="char" data-char="🦖"><span class="emoji">🦖</span><b>Dino</b></button>
-   <button class="char" data-char="🏃"><span class="emoji">🏃</span><b>Manusia</b></button>
-  </div>
-  <button id="startBtn" class="btn play">▶ MULAI BERMAIN</button>
-  <button id="helpBtn" class="btn help">❓ CARA BERMAIN</button>
- </div>
-</section>
+    <canvas id="bgCanvas"></canvas>
 
-<section id="game" class="hidden">
- <div id="sky">
-  <div id="sun"></div><div id="moon"></div>
-  <div class="cloud c1">☁️</div><div class="cloud c2">☁️</div>
- </div>
- <div id="mountains"></div><div id="ground"></div>
- <div id="hud">
-  <span class="badge">🏆 Skor <span id="score">0</span></span>
-  <span class="badge">⭐ Level <span id="level">1</span></span>
-  <span class="badge">👑 Rekor <span id="best">0</span></span>
- </div>
- <div id="phase">☀️ SIANG</div>
- <button id="pause">Ⅱ</button>
- <button id="homeBtn" title="Kembali ke Home">⌂</button>
- <div id="player">🦒</div>
- <div id="tiger">🐅</div>
- <div id="obstacle">🌵</div>
- <div id="controls"><button id="jumpBtn">LOMPAT</button></div>
-</section>
+    <div class="container">
+        <div class="header-brand">
+            <div class="watermark"><i class="fa-solid fa-graduation-cap"></i> Anung anindito.sman1cijeruk</div>
+            <div class="motto">"belajar untuk hidup, hidup untuk belajar"</div>
+        </div>
 
-<div id="overlay" class="hidden">
- <div class="modal">
-  <h2 id="modalTitle">TERTABRAK!</h2>
-  <div id="modalText" class="small"></div>
-  <button id="againBtn" class="btn play">🔄 MAIN LAGI</button>
-  <button id="menuBtn" class="btn help">🏠 MENU UTAMA</button>
- </div>
-</div>
-
-<script>
-(function(){
-"use strict";
-
-const $=id=>document.getElementById(id);
-const menu=$("menu"), game=$("game"), overlay=$("overlay");
-const player=$("player"), tiger=$("tiger"), obstacle=$("obstacle");
-
-let selected="🦒";
-let running=false, paused=false;
-let score=0, level=1, speed=3.5; 
-let obstacleX=0, last=0, raf=0;
-
-// FISIKA LOMPATAN
-let playerY = 0;
-let velocityY = 0;
-const gravity = 0.65;
-const jumpForce = 14;
-
-let best=Number(localStorage.getItem("damnTigerBest")||0);
-$("best").textContent=best;
-
-document.querySelectorAll(".char").forEach(btn=>{
- btn.addEventListener("click",()=>{
-  document.querySelectorAll(".char").forEach(x=>x.classList.remove("selected"));
-  btn.classList.add("selected");
-  selected=btn.dataset.char;
- });
-});
-
-function reset(){
- cancelAnimationFrame(raf);
- score=0; level=1; speed=3.5;
- playerY=0; velocityY=0;
- obstacleX=window.innerWidth + 100;
- 
- running=false; paused=false;
- $("score").textContent="0"; $("level").textContent="1"; $("best").textContent=best;
- player.textContent=selected;
- player.classList.remove("running");
- tiger.classList.remove("tiger-running");
- 
- player.style.transform = `scaleX(-1) translateY(0px)`;
- obstacle.textContent="🌵";
- obstacle.style.left=obstacleX+"px";
- 
- // Reset posisi harimau aman di belakang
- tiger.style.left = "4%";
- 
- $("pause").textContent="Ⅱ";
- updateTime();
-}
-
-function startGame(){
- menu.classList.add("hidden"); overlay.classList.add("hidden"); game.classList.remove("hidden");
- reset(); running=true;
- player.classList.add("running");
- tiger.classList.add("tiger-running");
- last=performance.now(); raf=requestAnimationFrame(loop);
-}
-
-function jump(){
- if(!running || paused) return;
- if(playerY === 0){
-  velocityY = jumpForce;
- }
-}
-
-function collision(){
- const p = player.getBoundingClientRect();
- const o = obstacle.getBoundingClientRect();
- 
- const padX = p.width * 0.28;
- const padY = p.height * 0.20;
- 
- return (p.left + padX < o.right - padX) &&
-        (p.right - padX > o.left + padX) &&
-        (p.top + padY < o.bottom - padY) &&
-        (p.bottom - padY > o.top + padY);
-}
-
-function chooseObstacle(){
- const items=["🌵","🪨","🪵","🌳"];
- return items[Math.floor(Math.random()*items.length)];
-}
-
-function updateTime(){
- const phase=(score%900)/900;
- if(phase<.38){
-  $("sky").style.background="linear-gradient(#69c3e8,#dff6ff 72%)";
-  $("sun").style.opacity="1";$("moon").style.opacity="0";
-  $("phase").textContent="☀️ SIANG";
- }else if(phase<.62){
-  $("sky").style.background="linear-gradient(#ee936d,#ffd19d 72%)";
-  $("sun").style.opacity=".55";$("moon").style.opacity="0";
-  $("phase").textContent="🌇 SORE";
- }else{
-  $("sky").style.background="linear-gradient(#14264b,#354e72 72%)";
-  $("sun").style.opacity="0";$("moon").style.opacity="1";
-  $("phase").textContent="🌙 MALAM";
- }
-}
-
-function endGame(){
- if(!running)return;
- running=false; cancelAnimationFrame(raf);
- player.classList.remove("running");
- tiger.classList.remove("tiger-running");
- 
- const final=Math.floor(score);
- if(final>best){
-  best=final;
-  localStorage.setItem("damnTigerBest",String(best));
- }
- $("best").textContent=best;
- $("modalTitle").textContent="💥 TERTABRAK!";
- $("modalText").textContent="Skor: "+final+" • Level: "+level+" • Rekor: "+best;
- overlay.classList.remove("hidden");
-}
-
-function loop(now){
- if(!running)return;
- raf=requestAnimationFrame(loop);
- if(paused){last=now;return;}
-
- const dt=Math.min((now-last)/16.6667,2);
- last=now;
-
- score += 0.06 * dt * (speed / 3.5);
- level = 1 + Math.floor(score / 150);
- speed = Math.min(14, 3.5 + (level - 1) * 0.7);
-
- // FISIKA LOMPATAN PEMAIN
- velocityY -= gravity * dt;
- playerY += velocityY * dt;
-
- if(playerY <= 0){
-  playerY = 0;
-  velocityY = 0;
- }
- player.style.bottom = `calc(24% + ${playerY}px)`;
-
- // LOGIKA HARIMAU: Mengikuti di belakang tanpa pernah mendahului pemain
- const playerRect = player.getBoundingClientRect();
- // Maksimal posisi harimau dipatok berada di sebelah kiri pemain (jarak aman minimal 70px)
- const maxTigerLeft = Math.max(10, playerRect.left - 80);
- tiger.style.left = maxTigerLeft + "px";
-
- // PERGERAKAN RINTANGAN DARI KANAN KE KIRI
- obstacleX -= speed * dt * 3.8;
- if(obstacleX < -90){
-  obstacleX = window.innerWidth + 80 + Math.random()*220;
-  obstacle.textContent = chooseObstacle();
- }
- obstacle.style.left = obstacleX + "px";
-
- $("score").textContent=Math.floor(score);
- $("level").textContent=level;
- updateTime();
-
- if(collision()) endGame();
-}
-
-function goMenu(){
- running=false; cancelAnimationFrame(raf);
- overlay.classList.add("hidden"); game.classList.add("hidden"); menu.classList.remove("hidden");
-}
-
-$("startBtn").addEventListener("click",startGame);
-$("againBtn").addEventListener("click",startGame);
-$("menuBtn").addEventListener("click",goMenu);
-$("homeBtn").addEventListener("click",goMenu);
-
-$("jumpBtn").addEventListener("pointerdown",e=>{
- e.preventDefault(); jump();
-});
-
-game.addEventListener("pointerdown",e=>{
- if(!running||e.target===$("jumpBtn")||e.target===$("pause")||e.target===$("homeBtn"))return;
- jump();
-});
-
-document.addEventListener("keydown",e=>{
- if(e.code==="Space"||e.code==="ArrowUp"||e.code==="KeyW"){
-  e.preventDefault(); jump();
- }
- if(e.code==="Escape"&&running){
-  paused=!paused; $("pause").textContent=paused?"▶":"Ⅱ";
- }
-});
-
-$("pause").addEventListener("click",()=>{
- if(!running)return;
- paused=!paused; $("pause").textContent=paused?"▶":"Ⅱ";
-});
-
-$("helpBtn").addEventListener("click",()=>{
- alert("CARA BERMAIN\n\n• Tombol LOMPAT / Space / Panah Atas / W untuk melompat.\n• Karakter berlari ke arah kanan sambil dikejar harimau di belakang.\n• Hindari rintangan yang bergerak dari depan.\n• Semakin lama bertahan, rintangan bergerak semakin cepat!");
-});
-
-window.addEventListener("resize",()=>{
- if(!running){
-  obstacleX=window.innerWidth+120;
-  obstacle.style.left=obstacleX+"px";
- }
-});
-
-reset();
-})();
-</script>
-</body>
-  </html>
-  
+        <div id="menuScreen" class="card">
+            <h1 class="title">Aplikasi Kuis Pengetahuan</h1>
+            
+            <p style="text-align: center; margin-bottom: 15px; color: #cbd5e1;">Pilih Mata Pelajaran:</p>
+            
+            <div class="category-grid" id="categoryGrid">
+                <div class="cat-btn selected" data-cat="biologi"><i class="fa-solid fa-dna"></i><span>Biologi</span></div>
+                <div class="cat-btn" data-cat="kimia"><i class="fa-solid fa-flask"></i><span>Kimia</span></div>
+                <div class="cat-btn" data-cat="fisika"><i class="fa-solid fa-atom"></i><span>Fisika</span></div>
+                <div class="cat-btn" data-cat="ips"><i class="fa-solid fa-globe"></i><span>IPS</span></div>
+                <div class="
