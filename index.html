@@ -11,7 +11,6 @@
             --primary-hover: #4338ca;
             --success: #10b981;
             --danger: #ef4444;
-            --warning: #f59e0b;
             --bg-dark: #0f172a;
             --card-bg: rgba(30, 41, 59, 0.92);
             --text-light: #f8fafc;
@@ -32,7 +31,7 @@
             position: relative;
         }
 
-        /* Canvas Latar Belakang Dinamis */
+        /* Canvas Latar Belakang Animasi */
         #bgCanvas {
             position: fixed;
             top: 0;
@@ -55,7 +54,6 @@
             justify-content: center;
         }
 
-        /* Header Watermark & Motto */
         .header-brand {
             text-align: center;
             margin-bottom: 20px;
@@ -81,7 +79,6 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        /* Kartu Tampilan Main UI */
         .card {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -101,7 +98,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Grid Pilihan Pelajaran */
         .category-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -146,7 +142,6 @@
             box-shadow: 0 8px 18px rgba(79, 70, 229, 0.4);
         }
 
-        /* Mode Selector */
         .mode-section {
             margin-top: 15px;
             text-align: center;
@@ -178,7 +173,6 @@
             box-shadow: 0 0 15px rgba(79, 70, 229, 0.5);
         }
 
-        /* Button Action */
         .btn-action {
             display: flex;
             gap: 10px;
@@ -216,7 +210,6 @@
             transform: scale(1.02);
         }
 
-        /* HUD Kuis */
         .quiz-header {
             display: flex;
             justify-content: space-between;
@@ -253,7 +246,6 @@
             border: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* Pilihan Ganda & Uraian */
         .options-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -298,7 +290,6 @@
             border-color: var(--primary);
         }
 
-        /* Overlay Animasi Reaksi & Info Modal */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -472,21 +463,14 @@
         <ul>
             <li>Tersedia <strong>3 Kesempatan (Nyawa ❤️)</strong>.</li>
             <li>Jika jawaban <strong>Benar</strong> (😊): Naik ke Level berikutnya.</li>
-            <li>Jika jawaban <strong>Salah</strong> (😢): Nyawa berkurang 1 dan Anda tetap berada di level yang sama.</li>
-            <li>Jika nyawa habis, kuis diulang dari Level 1.</li>
+            <li>Jika jawaban <strong>Salah</strong> (😢): Nyawa berkurang 1 dan Anda tetap di level yang sama.</li>
+            <li>Jika nyawa habis, kuis mengulang dari Level 1.</li>
         </ul>
 
         <h3>2. Mode Uraian / Isian</h3>
         <ul>
             <li>Ketikkan jawaban langsung pada kolom teks yang disediakan.</li>
-            <li>Mode ini tidak memiliki batas nyawa untuk latihan mandiri.</li>
-        </ul>
-
-        <h3>3. Tingkat Kesulitan</h3>
-        <ul>
-            <li><strong>Level 1:</strong> Konsep & Pengetahuan Dasar</li>
-            <li><strong>Level 2:</strong> Pemahaman Tingkat Menengah</li>
-            <li><strong>Level 3:</strong> Soal Analisis & HOTS</li>
+            <li>Mode ini tidak memakai batas nyawa untuk latihan mandiri.</li>
         </ul>
 
         <button class="btn-start" id="btnCloseInfo" style="margin-top:20px; width:100%;">Tutup Menu Bantuan</button>
@@ -494,14 +478,39 @@
 </div>
 
 <script>
-    /* === DATA PERTANYAAN PEMBELAJARAN SMA BERTINGKAT === */
-    const quizData = {
-        biologi: [
-            { level: 1, q: 'Organel sel yang dijuluki "The Powerhouse of Cell" tempat respirasi sel berlangsung adalah?', opts: ['Mitokondria', 'Ribosom', 'Lisosom', 'Kloroplas'], a: 'Mitokondria' },
-            { level: 2, q: 'Fase pembelahan mitosis di mana kromosom berderet sejajar di bidang ekuator adalah?', opts: ['Profase', 'Metafase', 'Anafase', 'Telofase'], a: 'Metafase' },
-            { level: 3, q: 'Pada persilangan dihibrid heterozigot sempurna (AaBb x AaBb), rasio fenotip hasil keturunannya adalah?', opts: ['3:1', '9:3:3:1', '1:2:1', '12:3:1'], a: '9:3:3:1' }
-        ],
-        kimia: [
-            { level: 1, q: 'Unsur dengan nomor atom 6 dalam tabel periodik adalah?', opts: ['Oksigen', 'Karbon', 'Nitrogen', 'Hidrogen'], a: 'Karbon' },
-            { level: 2, q: 'Berapakah konsentrasi ion H+ dalam larutan asam dengan nilai pH
-    
+    // Memastikan seluruh DOM terisi sebelum script dijalankan
+    document.addEventListener("DOMContentLoaded", () => {
+        /* === DATA SOAL SMA LENGKAP === */
+        const quizData = {
+            biologi: [
+                { level: 1, q: 'Organel sel yang dijuluki "The Powerhouse of Cell" tempat respirasi sel berlangsung adalah?', opts: ['Mitokondria', 'Ribosom', 'Lisosom', 'Kloroplas'], a: 'Mitokondria' },
+                { level: 2, q: 'Fase pembelahan mitosis di mana kromosom berderet sejajar di bidang ekuator adalah?', opts: ['Profase', 'Metafase', 'Anafase', 'Telofase'], a: 'Metafase' },
+                { level: 3, q: 'Pada persilangan dihibrid heterozigot sempurna (AaBb x AaBb), rasio fenotip hasil keturunannya adalah?', opts: ['3:1', '9:3:3:1', '1:2:1', '12:3:1'], a: '9:3:3:1' }
+            ],
+            kimia: [
+                { level: 1, q: 'Unsur dengan nomor atom 6 dalam tabel periodik adalah?', opts: ['Oksigen', 'Karbon', 'Nitrogen', 'Hidrogen'], a: 'Karbon' },
+                { level: 2, q: 'Berapakah konsentrasi ion H+ dalam larutan asam dengan nilai pH = 3?', opts: ['10⁻³ M', '10⁻⁷ M', '10⁻¹⁴ M', '3 M'], a: '10⁻³ M' },
+                { level: 3, q: 'Menurut teori Bronsted-Lowry, senyawa yang bertindak sebagai basa adalah senyawa yang?', opts: ['Menerima proton (H+)', 'Memberikan proton (H+)', 'Menghasilkan ion OH-', 'Menerima pasangan elektron'], a: 'Menerima proton (H+)' }
+            ],
+            fisika: [
+                { level: 1, q: 'Satuan Internasional (SI) untuk mengukur Gaya adalah?', opts: ['Joule', 'Watt', 'Newton', 'Pascal'], a: 'Newton' },
+                { level: 2, q: 'Benda bermassa 2 kg bergerak dengan kecepatan 4 m/s. Energi kinetik benda tersebut adalah?', opts: ['8 Joule', '16 Joule', '32 Joule', '4 Joule'], a: '16 Joule' },
+                { level: 3, q: 'Dua muatan terpisah sejauh r. Jika jarak antarmuatan dijadikan 2x semula, gaya Coulomb-nya menjadi?', opts: ['2 kali semula', '4 kali semula', '1/2 kali semula', '1/4 kali semula'], a: '1/4 kali semula' }
+            ],
+            matematika: [
+                { level: 1, q: 'Berapakah hasil dari 2³ + 3² ?', opts: ['12', '17', '15', '18'], a: '17' },
+                { level: 2, q: 'Akar-akar dari persamaan kuadrat x² - 5x + 6 = 0 adalah?', opts: ['2 dan 3', '-2 dan -3', '1 dan 6', '-1 dan -6'], a: '2 dan 3' },
+                { level: 3, q: 'Jika f(x) = 3x² + 4x - 5, maka turunan pertama f\'(x) adalah?', opts: ['6x + 4', '3x + 4', '6x² + 4', '6x - 5'], a: '6x + 4' }
+            ],
+            ekonomi: [
+                { level: 1, q: 'Masalah pokok ekonomi klasik meliputi kegiatan?', opts: ['Produksi, Distribusi, Konsumsi', 'Apa, Bagaimana, Untuk siapa', 'Inflasi, Pengangguran, Ekspor', 'Pasar, Uang, Bank'], a: 'Produksi, Distribusi, Konsumsi' },
+                { level: 2, q: 'Hukum permintaan menyatakan bahwa jika harga suatu barang naik, maka jumlah barang yang diminta akan?', opts: ['Naik', 'Turun', 'Tetap', 'Tidak terhingga'], a: 'Turun' },
+                { level: 3, q: 'Kebijakan pemerintah menurunkan suku bunga bank untuk menambah jumlah uang beredar dinamakan kebijakan?', opts: ['Fiskal Moneter', 'Moneter Ekspansif', 'Moneter Kontraktif', 'Fiskal Diskresi'], a: 'Moneter Ekspansif' }
+            ],
+            geografi: [
+                { level: 1, q: 'Lapisan udara yang menyelimuti bumi disebut?', opts: ['Litosfer', 'Hidrosfer', 'Atmosfer', 'Biosfer'], a: 'Atmosfer' },
+                { level: 2, q: 'Skala peta 1 : 100.000 artinya 1 cm pada peta mewakili jarak sebenarnya sejauh?', opts: ['100 km', '10 km', '1 km', '100 meter'], a: '1 km' },
+                { level: 3, q: 'Fenomena El Nino di Samudra Pasifik mengakibatkan sebagian besar wilayah Indonesia mengalami?', opts: ['Curah hujan tinggi', 'Kekeringan panjang', 'Badai salju', 'Tsunami'], a: 'Kekeringan panjang' }
+            ],
+            sosiologi: [
+                { level: 1, q: 'Proses sosialisasi pertama dan utama yang dialami oleh individu terjadi di lingkungan?', opts: ['Sekolah', 'Keluarga', '
