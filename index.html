@@ -2,133 +2,1121 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>Damn Giraffe</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>Damn Giraffe — Safari Run</title>
+
 <style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#f5f0df}
-body{display:flex;align-items:center;justify-content:center;touch-action:none}
-#game{position:relative;width:100vw;height:100vh;max-width:1200px;overflow:hidden;background:linear-gradient(#8fd3ff 0 62%,#d9f0a3 62% 100%)}
-#title{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-weight:900;font-size:clamp(28px,5vw,56px);letter-spacing:2px;color:#2d2a20;text-shadow:3px 3px #fff;z-index:5}
-#score{position:absolute;right:18px;top:18px;font-weight:bold;font-size:clamp(16px,3vw,25px);color:#2d2a20;z-index:5}
-#hint{position:absolute;left:50%;top:78px;transform:translateX(-50%);font-size:14px;color:#333;z-index:5;opacity:.8}
-#world{position:absolute;inset:0}
-#ground{position:absolute;bottom:0;left:0;width:100%;height:38%;background:
-linear-gradient(#a9d77b 0 10px,#6c9f4b 10px 13px,transparent 13px),
-repeating-linear-gradient(90deg,transparent 0 45px,#77ad51 46px 48px,transparent 49px 90px);
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
 }
-#player,#tiger,#obstacle{position:absolute;user-select:none}
-#player{font-size:clamp(55px,10vw,100px);line-height:1;z-index:3;filter:drop-shadow(2px 4px 1px #6c5432)}
-#tiger{font-size:clamp(50px,9vw,88px);line-height:1;z-index:2;transform:scaleX(-1);filter:drop-shadow(2px 4px 1px #555)}
-#obstacle{width:clamp(30px,5vw,48px);height:clamp(45px,8vw,70px);border-radius:7px 7px 2px 2px;background:linear-gradient(90deg,#6b3e22,#9c6032 50%,#5d351e);box-shadow:inset 6px 0 #a76b3b,3px 4px 2px #50743b;z-index:2}
-#obstacle:before,#obstacle:after{content:"";position:absolute;bottom:-13px;width:10px;height:18px;background:#5b3822;border-radius:3px}
-#obstacle:before{left:5px}#obstacle:after{right:5px}
-#start,#gameover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;background:rgba(30,45,25,.34)}
-.card{background:rgba(255,255,255,.94);padding:28px 32px;border-radius:22px;text-align:center;box-shadow:0 10px 35px rgba(0,0,0,.2);max-width:90%}
-.card h2{margin:0 0 10px;font-size:clamp(28px,6vw,52px)}
-.card p{margin:8px 0 20px;color:#444}
-button{border:0;border-radius:14px;background:#e7a72e;color:#2c210e;padding:14px 26px;font-size:18px;font-weight:800;cursor:pointer;box-shadow:0 4px 0 #a66e13}
-button:active{transform:translateY(3px);box-shadow:0 1px 0 #a66e13}
-#mobileJump{position:absolute;right:22px;bottom:22px;z-index:8;width:95px;height:95px;border-radius:50%;background:rgba(231,167,46,.85);color:#2c210e;display:none;font-size:17px}
-@media(max-width:700px){#mobileJump{display:block}#hint{top:68px;font-size:12px}}
+
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#101820;
+}
+
+body{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+#game{
+  position:relative;
+  width:100%;
+  max-width:1100px;
+  height:100vh;
+  overflow:hidden;
+  background:
+    linear-gradient(
+      to bottom,
+      #75b6d0 0%,
+      #a9d5df 45%,
+      #d8c47d 70%,
+      #8da25d 100%
+    );
+}
+
+/* ================= SKY ================= */
+
+.sun{
+  position:absolute;
+  width:90px;
+  height:90px;
+  right:10%;
+  top:9%;
+  border-radius:50%;
+  background:#ffd86b;
+  box-shadow:0 0 50px #ffe9a0;
+  z-index:1;
+}
+
+.cloud{
+  position:absolute;
+  width:150px;
+  height:35px;
+  border-radius:40px;
+  background:rgba(255,255,255,.55);
+  filter:blur(2px);
+  animation:cloudMove 35s linear infinite;
+}
+
+.cloud:before,
+.cloud:after{
+  content:"";
+  position:absolute;
+  background:inherit;
+  border-radius:50%;
+}
+
+.cloud:before{
+  width:55px;
+  height:55px;
+  left:25px;
+  top:-25px;
+}
+
+.cloud:after{
+  width:75px;
+  height:75px;
+  right:20px;
+  top:-38px;
+}
+
+.c1{top:16%;left:-180px}
+.c2{top:27%;left:-300px;animation-delay:12s;transform:scale(.7)}
+
+@keyframes cloudMove{
+  from{transform:translateX(-20vw)}
+  to{transform:translateX(130vw)}
+}
+
+/* ================= DISTANT LAND ================= */
+
+.hills{
+  position:absolute;
+  bottom:27%;
+  width:120%;
+  height:30%;
+  left:-10%;
+  background:
+    radial-gradient(ellipse at 20% 100%,#5f8050 0 25%,transparent 26%),
+    radial-gradient(ellipse at 45% 100%,#6c8b52 0 30%,transparent 31%),
+    radial-gradient(ellipse at 75% 100%,#577847 0 27%,transparent 28%);
+  z-index:2;
+}
+
+/* ================= GROUND ================= */
+
+.ground{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height:31%;
+  background:
+    linear-gradient(#8fa75d,#71894e);
+  border-top:8px solid #526c3e;
+  z-index:5;
+}
+
+.ground:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  opacity:.25;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 80px,
+      #52673d 81px 84px
+    );
+  animation:groundMove .45s linear infinite;
+}
+
+@keyframes groundMove{
+  from{transform:translateX(0)}
+  to{transform:translateX(-84px)}
+}
+
+/* ================= TREES ================= */
+
+.tree{
+  position:absolute;
+  bottom:25%;
+  width:25px;
+  height:130px;
+  background:#5c412d;
+  z-index:3;
+}
+
+.tree:before{
+  content:"";
+  position:absolute;
+  width:125px;
+  height:125px;
+  left:-50px;
+  top:-70px;
+  border-radius:50%;
+  background:#496f3b;
+  box-shadow:
+    40px 15px 0 #547a40,
+    -25px 20px 0 #3f6336;
+}
+
+.t1{left:10%}
+.t2{left:74%;transform:scale(.8)}
+.t3{left:47%;transform:scale(.65)}
+
+.scenery{
+  animation:sceneryMove 7s linear infinite;
+}
+
+@keyframes sceneryMove{
+  from{transform:translateX(0)}
+  to{transform:translateX(-30px)}
+}
+
+/* ================= UI ================= */
+
+#topbar{
+  position:absolute;
+  top:15px;
+  left:15px;
+  right:15px;
+  z-index:50;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.panel{
+  min-width:120px;
+  padding:10px 15px;
+  border-radius:14px;
+  color:white;
+  background:rgba(10,25,25,.55);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 5px 20px rgba(0,0,0,.15);
+}
+
+.label{
+  font-size:10px;
+  opacity:.7;
+  letter-spacing:1px;
+}
+
+.value{
+  font-size:20px;
+  font-weight:800;
+  margin-top:3px;
+}
+
+/* ================= CHARACTERS ================= */
+
+#player{
+  position:absolute;
+  left:18%;
+  bottom:31%;
+  width:120px;
+  height:170px;
+  z-index:20;
+  transform-origin:center bottom;
+}
+
+.giraffe-body{
+  position:absolute;
+  left:32px;
+  bottom:25px;
+  width:65px;
+  height:75px;
+  background:
+    radial-gradient(circle at 20px 20px,#6d482a 0 8px,transparent 9px),
+    radial-gradient(circle at 48px 40px,#6d482a 0 9px,transparent 10px),
+    #d39a47;
+  border-radius:45% 45% 35% 35%;
+}
+
+.giraffe-neck{
+  position:absolute;
+  left:62px;
+  bottom:72px;
+  width:25px;
+  height:80px;
+  background:#d39a47;
+  border-radius:15px;
+}
+
+.giraffe-head{
+  position:absolute;
+  left:53px;
+  bottom:140px;
+  width:50px;
+  height:35px;
+  background:#d39a47;
+  border-radius:55% 45% 45% 35%;
+}
+
+.giraffe-head:before{
+  content:"";
+  position:absolute;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#111;
+  right:12px;
+  top:11px;
+}
+
+.giraffe-head:after{
+  content:"";
+  position:absolute;
+  width:17px;
+  height:5px;
+  border-radius:50%;
+  background:#67432d;
+  right:-8px;
+  bottom:8px;
+}
+
+.ear{
+  position:absolute;
+  width:18px;
+  height:13px;
+  background:#b87c35;
+  border-radius:100% 0;
+  top:-7px;
+}
+
+.ear1{left:5px;transform:rotate(-25deg)}
+.ear2{right:5px;transform:rotate(25deg)}
+
+.horn{
+  position:absolute;
+  width:6px;
+  height:18px;
+  background:#69462b;
+  top:-17px;
+  border-radius:5px;
+}
+
+.h1{left:13px}
+.h2{left:31px}
+
+.leg{
+  position:absolute;
+  bottom:0;
+  width:13px;
+  height:55px;
+  background:#a86f34;
+  border-radius:8px;
+  transform-origin:top;
+}
+
+.leg1{left:40px}
+.leg2{left:67px}
+.leg3{left:48px}
+.leg4{left:76px}
+
+.running .leg1,
+.running .leg4{
+  animation:legA .22s infinite alternate;
+}
+
+.running .leg2,
+.running .leg3{
+  animation:legB .22s infinite alternate;
+}
+
+@keyframes legA{
+  from{transform:rotate(28deg)}
+  to{transform:rotate(-28deg)}
+}
+
+@keyframes legB{
+  from{transform:rotate(-28deg)}
+  to{transform:rotate(28deg)}
+}
+
+.running{
+  animation:bodyRun .22s infinite alternate;
+}
+
+@keyframes bodyRun{
+  from{transform:translateY(0)}
+  to{transform:translateY(-4px)}
+}
+
+/* ================= TIGER ================= */
+
+#tiger{
+  position:absolute;
+  left:3%;
+  bottom:31%;
+  width:125px;
+  height:90px;
+  z-index:18;
+  transition:left .3s;
+}
+
+.tiger-body{
+  position:absolute;
+  left:20px;
+  bottom:20px;
+  width:85px;
+  height:45px;
+  border-radius:50%;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 14px,
+      #292015 15px 19px
+    ),
+    #c76e28;
+}
+
+.tiger-head{
+  position:absolute;
+  left:0;
+  bottom:42px;
+  width:48px;
+  height:43px;
+  border-radius:50%;
+  background:#d27b2c;
+}
+
+.tiger-head:before{
+  content:"";
+  position:absolute;
+  width:8px;
+  height:8px;
+  background:#111;
+  border-radius:50%;
+  right:10px;
+  top:14px;
+}
+
+.tiger-head:after{
+  content:"";
+  position:absolute;
+  width:14px;
+  height:9px;
+  background:#19130e;
+  border-radius:50%;
+  right:0;
+  bottom:7px;
+}
+
+.tiger-ear{
+  position:absolute;
+  width:15px;
+  height:15px;
+  background:#9d4d1f;
+  top:-6px;
+  border-radius:4px;
+}
+
+.te1{left:5px}
+.te2{right:6px}
+
+.tiger-leg{
+  position:absolute;
+  bottom:0;
+  width:11px;
+  height:32px;
+  background:#a75520;
+  border-radius:7px;
+  transform-origin:top;
+}
+
+.tl1{left:35px}
+.tl2{left:62px}
+.tl3{left:48px}
+.tl4{left:75px}
+
+.runningTiger .tiger-leg:nth-child(odd){
+  animation:legA .2s infinite alternate;
+}
+
+.runningTiger .tiger-leg:nth-child(even){
+  animation:legB .2s infinite alternate;
+}
+
+.runningTiger{
+  animation:tigerRun .18s infinite alternate;
+}
+
+@keyframes tigerRun{
+  from{transform:translateY(0)}
+  to{transform:translateY(-3px)}
+}
+
+/* ================= OBSTACLE ================= */
+
+.obstacle{
+  position:absolute;
+  bottom:31%;
+  width:55px;
+  height:55px;
+  border-radius:50% 55% 35% 60%;
+  background:
+    radial-gradient(circle at 30% 25%,#aaa 0 5%,transparent 6%),
+    radial-gradient(circle at 70% 55%,#777 0 8%,transparent 9%),
+    #777;
+  box-shadow:inset -8px -10px 0 rgba(0,0,0,.2);
+  z-index:17;
+}
+
+/* ================= START / GAME OVER ================= */
+
+.overlay{
+  position:absolute;
+  inset:0;
+  z-index:100;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:rgba(5,15,20,.5);
+  backdrop-filter:blur(7px);
+}
+
+.card{
+  width:min(90%,430px);
+  padding:32px;
+  text-align:center;
+  color:white;
+  border-radius:25px;
+  background:rgba(17,28,29,.88);
+  border:1px solid rgba(255,255,255,.2);
+  box-shadow:0 20px 70px rgba(0,0,0,.45);
+}
+
+.card h1{
+  font-size:38px;
+  margin-bottom:8px;
+}
+
+.card p{
+  color:#cbd5d1;
+  line-height:1.6;
+  margin:15px 0 25px;
+}
+
+button{
+  border:0;
+  cursor:pointer;
+  color:#182018;
+  font-size:17px;
+  font-weight:800;
+  padding:15px 30px;
+  border-radius:15px;
+  background:#f2bd45;
+  box-shadow:0 5px 0 #b47d20;
+}
+
+button:active{
+  transform:translateY(4px);
+  box-shadow:0 1px 0 #b47d20;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* ================= CONTROLS ================= */
+
+#jumpButton{
+  position:absolute;
+  z-index:80;
+  right:25px;
+  bottom:25px;
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  padding:0;
+  font-size:15px;
+  opacity:.85;
+}
+
+#pauseButton{
+  position:absolute;
+  z-index:80;
+  right:125px;
+  bottom:35px;
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  padding:0;
+  font-size:20px;
+}
+
+/* ================= EFFECT ================= */
+
+#flash{
+  position:absolute;
+  inset:0;
+  z-index:90;
+  background:#ff3b30;
+  opacity:0;
+  pointer-events:none;
+}
+
+.hit{
+  animation:hitFlash .35s;
+}
+
+@keyframes hitFlash{
+  0%,100%{opacity:0}
+  50%{opacity:.45}
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:600px){
+  .panel{
+    min-width:auto;
+    padding:8px 10px;
+  }
+
+  .value{
+    font-size:16px;
+  }
+
+  #player{
+    left:17%;
+    transform:scale(.85);
+    transform-origin:bottom;
+  }
+
+  #tiger{
+    transform:scale(.75);
+    transform-origin:bottom left;
+  }
+
+  .card h1{
+    font-size:30px;
+  }
+}
 </style>
 </head>
+
 <body>
+
 <div id="game">
-  <div id="title">DAMN GIRAFFE</div>
-  <div id="score">00000</div>
-  <div id="hint">SPACE / ↑ / TAP = LOMPAT</div>
-  <div id="ground"></div>
-  <div id="tiger">🐅</div>
-  <div id="player">🦒</div>
-  <div id="obstacle"></div>
-  <button id="mobileJump">LOMPAT</button>
 
-  <div id="start"><div class="card">
-    <h2>🦒 Damn Giraffe</h2>
-    <p>Lari sejauh mungkin dan hindari semua rintangan.<br>Harimau terus mengejar dari belakang!</p>
-    <button id="startBtn">MULAI GAME</button>
-  </div></div>
+  <div class="sun"></div>
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
 
-  <div id="gameover" style="display:none"><div class="card">
-    <h2>🐅 TERTANGKAP!</h2>
-    <p id="finalText">Skor: 0</p>
-    <button id="restartBtn">MAIN LAGI</button>
-  </div></div>
+  <div class="hills"></div>
+
+  <div class="scenery">
+    <div class="tree t1"></div>
+    <div class="tree t2"></div>
+    <div class="tree t3"></div>
+  </div>
+
+  <div class="ground"></div>
+
+  <!-- UI -->
+  <div id="topbar">
+    <div class="panel">
+      <div class="label">SKOR</div>
+      <div class="value" id="score">0</div>
+    </div>
+
+    <div class="panel">
+      <div class="label">LEVEL</div>
+      <div class="value" id="level">1</div>
+    </div>
+
+    <div class="panel">
+      <div class="label">HIGH SCORE</div>
+      <div class="value" id="highScore">0</div>
+    </div>
+  </div>
+
+  <!-- GIRAFFE -->
+  <div id="player" class="running">
+
+    <div class="giraffe-head">
+      <div class="ear ear1"></div>
+      <div class="ear ear2"></div>
+      <div class="horn h1"></div>
+      <div class="horn h2"></div>
+    </div>
+
+    <div class="giraffe-neck"></div>
+    <div class="giraffe-body"></div>
+
+    <div class="leg leg1"></div>
+    <div class="leg leg2"></div>
+    <div class="leg leg3"></div>
+    <div class="leg leg4"></div>
+
+  </div>
+
+  <!-- TIGER -->
+  <div id="tiger" class="runningTiger">
+
+    <div class="tiger-head">
+      <div class="tiger-ear te1"></div>
+      <div class="tiger-ear te2"></div>
+    </div>
+
+    <div class="tiger-body"></div>
+
+    <div class="tiger-leg tl1"></div>
+    <div class="tiger-leg tl2"></div>
+    <div class="tiger-leg tl3"></div>
+    <div class="tiger-leg tl4"></div>
+
+  </div>
+
+  <div id="obstacle" class="obstacle"></div>
+
+  <button id="pauseButton">Ⅱ</button>
+  <button id="jumpButton">LOMPAT</button>
+
+  <div id="flash"></div>
+
+  <!-- START -->
+  <div id="startScreen" class="overlay">
+    <div class="card">
+      <h1>🦒 DAMN GIRAFFE</h1>
+      <p>
+        Safari Run<br>
+        Lari sejauh mungkin dan hindari rintangan!
+        Jangan sampai harimau menangkapmu.
+      </p>
+      <button id="startButton">MULAI BERLARI</button>
+    </div>
+  </div>
+
+  <!-- GAME OVER -->
+  <div id="gameOver" class="overlay hidden">
+    <div class="card">
+      <h1>🐅 TERTANGKAP!</h1>
+
+      <p>
+        Skor: <b id="finalScore">0</b><br>
+        Level: <b id="finalLevel">1</b><br>
+        High Score: <b id="finalHighScore">0</b>
+      </p>
+
+      <button id="restartButton">MAIN LAGI</button>
+    </div>
+  </div>
+
 </div>
+
 <script>
-const game=document.getElementById('game'), player=document.getElementById('player'),
-tiger=document.getElementById('tiger'), obstacle=document.getElementById('obstacle'),
-scoreEl=document.getElementById('score'), start=document.getElementById('start'),
-over=document.getElementById('gameover'), finalText=document.getElementById('finalText');
-let running=false, jumping=false, vy=0, py=0, ox=0, speed=7, score=0, last=0, raf=0;
+/* ==========================================
+   DAMN GIRAFFE — SAFARI RUN
+========================================== */
 
-function groundY(){return game.clientHeight*0.38}
-function resetPositions(){
-  const gy=groundY();
-  player.style.left='16%'; player.style.bottom=(gy+2)+'px';
-  tiger.style.left='6%'; tiger.style.bottom=(gy+2)+'px';
-  ox=game.clientWidth+120;
-  obstacle.style.left=ox+'px'; obstacle.style.bottom=(gy+2)+'px';
-  py=0; vy=0; jumping=false; score=0; speed=7; scoreEl.textContent='00000';
-}
-function jump(){
-  if(!running)return;
-  if(!jumping){jumping=true;vy=16;}
-}
+const player = document.getElementById("player");
+const tiger = document.getElementById("tiger");
+const obstacle = document.getElementById("obstacle");
+
+const scoreText = document.getElementById("score");
+const levelText = document.getElementById("level");
+const highScoreText = document.getElementById("highScore");
+
+const startScreen = document.getElementById("startScreen");
+const gameOver = document.getElementById("gameOver");
+
+const finalScore = document.getElementById("finalScore");
+const finalLevel = document.getElementById("finalLevel");
+const finalHighScore = document.getElementById("finalHighScore");
+
+const startButton = document.getElementById("startButton");
+const restartButton = document.getElementById("restartButton");
+const jumpButton = document.getElementById("jumpButton");
+const pauseButton = document.getElementById("pauseButton");
+
+const flash = document.getElementById("flash");
+
+let running = false;
+let paused = false;
+
+let score = 0;
+let level = 1;
+
+let speed = 7;
+let gravity = 0.75;
+
+let velocityY = 0;
+let playerY = 0;
+
+let obstacleX = window.innerWidth + 200;
+let tigerX = 40;
+
+let highScore =
+  Number(localStorage.getItem("damnGiraffeHighScore")) || 0;
+
+highScoreText.textContent = highScore;
+
+
+/* ==========================================
+   START GAME
+========================================== */
+
 function startGame(){
-  start.style.display='none';over.style.display='none';running=true;last=performance.now();resetPositions();raf=requestAnimationFrame(loop);
-}
-function endGame(){
-  running=false; cancelAnimationFrame(raf);
-  finalText.textContent='Skor: '+Math.floor(score)+' — Harimau menang kali ini!';
-  over.style.display='flex';
-}
-function rect(el){return el.getBoundingClientRect()}
-function loop(t){
-  if(!running)return;
-  const dt=Math.min((t-last)/16.67,2); last=t;
-  const gy=groundY();
-  // jump physics
-  if(jumping){
-    py+=vy*dt; vy-=0.9*dt;
-    if(py<=0){py=0;vy=0;jumping=false;}
-    player.style.bottom=(gy+2+py)+'px';
-  }
-  // obstacle
-  ox-=speed*dt;
-  if(ox < -80){
-    ox=game.clientWidth + 80 + Math.random()*260;
-    score+=20;
-  }
-  obstacle.style.left=ox+'px';
-  speed=Math.min(13,speed+0.002*dt);
-  score+=0.08*dt;
-  scoreEl.textContent=String(Math.floor(score)).padStart(5,'0');
 
-  // tiger moves a little closer as speed increases
-  const tigerLeft=Math.max(4, 6 + (speed-7)*1.3);
-  tiger.style.left=tigerLeft+'%';
+  score = 0;
+  level = 1;
+  speed = 7;
 
-  const a=rect(player), b=rect(obstacle);
-  if(a.right-12>b.left && a.left+12<b.right && a.bottom-10>b.top && a.top+10<b.bottom){
-    endGame(); return;
-  }
-  raf=requestAnimationFrame(loop);
+  playerY = 0;
+  velocityY = 0;
+
+  obstacleX = window.innerWidth + 300;
+  tigerX = 20;
+
+  running = true;
+  paused = false;
+
+  scoreText.textContent = score;
+  levelText.textContent = level;
+
+  startScreen.classList.add("hidden");
+  gameOver.classList.add("hidden");
+
+  player.classList.add("running");
+  tiger.classList.add("runningTiger");
+
+  gameLoop();
 }
-document.addEventListener('keydown',e=>{
-  if(e.code==='Space'||e.code==='ArrowUp'){e.preventDefault();jump();}
-  if(e.code==='Enter'&&!running&&start.style.display!=='none')startGame();
-  if(e.code==='Enter'&&!running&&over.style.display!=='none')startGame();
-});
-game.addEventListener('pointerdown',e=>{
-  if(e.target.closest('button'))return;
+
+
+/* ==========================================
+   JUMP
+========================================== */
+
+function jump(){
+
+  if(!running || paused) return;
+
+  if(playerY === 0){
+
+    velocityY = 15;
+
+  }
+
+}
+
+jumpButton.addEventListener("touchstart",(e)=>{
+  e.preventDefault();
   jump();
 });
-document.getElementById('mobileJump').addEventListener('pointerdown',e=>{e.preventDefault();jump()});
-document.getElementById('startBtn').onclick=startGame;
-document.getElementById('restartBtn').onclick=startGame;
-window.addEventListener('resize',()=>{if(!running)resetPositions()});
-resetPositions();
+
+jumpButton.addEventListener("click",jump);
+
+
+/* ==========================================
+   KEYBOARD
+========================================== */
+
+document.addEventListener("keydown",(e)=>{
+
+  if(e.code === "Space" || e.code === "ArrowUp"){
+    e.preventDefault();
+    jump();
+  }
+
+  if(e.code === "KeyP"){
+    togglePause();
+  }
+
+});
+
+
+/* ==========================================
+   PAUSE
+========================================== */
+
+function togglePause(){
+
+  if(!running) return;
+
+  paused = !paused;
+
+  pauseButton.textContent = paused ? "▶" : "Ⅱ";
+
+}
+
+pauseButton.addEventListener("click",togglePause);
+
+
+/* ==========================================
+   GAME LOOP
+========================================== */
+
+let lastTime = 0;
+
+function gameLoop(time){
+
+  if(!running) return;
+
+  requestAnimationFrame(gameLoop);
+
+  if(paused) return;
+
+  if(!lastTime) lastTime = time;
+
+  const delta = Math.min((time-lastTime)/16.67,2);
+
+  lastTime = time;
+
+  update(delta);
+
+}
+
+
+/* ==========================================
+   UPDATE
+========================================== */
+
+function update(delta){
+
+  /* SCORE */
+
+  score += 0.12 * delta;
+
+  scoreText.textContent = Math.floor(score);
+
+
+  /* LEVEL */
+
+  const newLevel =
+    Math.floor(score / 100) + 1;
+
+  if(newLevel !== level){
+
+    level = newLevel;
+
+    levelText.textContent = level;
+
+    speed =
+      7 +
+      (level - 1) * 0.8;
+
+  }
+
+
+  /* HIGH SCORE */
+
+  if(Math.floor(score) > highScore){
+
+    highScore = Math.floor(score);
+
+    highScoreText.textContent = highScore;
+
+    localStorage.setItem(
+      "damnGiraffeHighScore",
+      highScore
+    );
+
+  }
+
+
+  /* JUMP PHYSICS */
+
+  velocityY -= gravity * delta;
+
+  playerY += velocityY * delta;
+
+  if(playerY <= 0){
+
+    playerY = 0;
+    velocityY = 0;
+
+  }
+
+  player.style.bottom =
+    `calc(31% + ${playerY}px)`;
+
+
+  /* OBSTACLE */
+
+  obstacleX -= speed * delta;
+
+  if(obstacleX < -80){
+
+    obstacleX =
+      window.innerWidth +
+      150 +
+      Math.random()*300;
+
+  }
+
+  obstacle.style.left =
+    obstacleX + "px";
+
+
+  /* TIGER */
+
+  const danger =
+    Math.max(
+      0,
+      Math.min(1, score / 400)
+    );
+
+  tigerX +=
+    (0.15 + danger * 0.3) *
+    delta;
+
+  tiger.style.left =
+    tigerX + "%";
+
+
+  /* COLLISION */
+
+  checkCollision();
+
+}
+
+
+/* ==========================================
+   COLLISION
+========================================== */
+
+function checkCollision(){
+
+  const p =
+    player.getBoundingClientRect();
+
+  const o =
+    obstacle.getBoundingClientRect();
+
+  const t =
+    tiger.getBoundingClientRect();
+
+
+  /* obstacle collision */
+
+  if(
+
+    p.right > o.left + 10 &&
+    p.left < o.right - 10 &&
+    p.bottom > o.top + 10 &&
+    p.top < o.bottom
+
+  ){
+
+    if(playerY < 45){
+
+      endGame();
+
+    }
+
+  }
+
+
+  /* tiger collision */
+
+  if(
+
+    p.left < t.right &&
+    p.right > t.left &&
+    p.bottom > t.top + 15
+
+  ){
+
+    endGame();
+
+  }
+
+}
+
+
+/* ==========================================
+   GAME OVER
+========================================== */
+
+function endGame(){
+
+  if(!running) return;
+
+  running = false;
+
+  flash.classList.add("hit");
+
+  setTimeout(()=>{
+    flash.classList.remove("hit");
+  },400);
+
+  finalScore.textContent =
+    Math.floor(score);
+
+  finalLevel.textContent =
+    level;
+
+  finalHighScore.textContent =
+    highScore;
+
+  gameOver.classList.remove("hidden");
+
+}
+
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+startButton.addEventListener(
+  "click",
+  startGame
+);
+
+restartButton.addEventListener(
+  "click",
+  startGame
+);
+
+
+/* ==========================================
+   TOUCH ANYWHERE
+========================================== */
+
+document.getElementById("game")
+.addEventListener("touchstart",(e)=>{
+
+  if(
+    e.target === jumpButton ||
+    e.target === pauseButton
+  ) return;
+
+  if(running){
+    jump();
+  }
+
+});
+
+
+/* ==========================================
+   RESET ANIMATION
+========================================== */
+
+window.addEventListener("resize",()=>{
+
+  if(!running){
+
+    obstacleX =
+      window.innerWidth + 200;
+
+  }
+
+});
+
 </script>
+
 </body>
-</html>
+  </html>
