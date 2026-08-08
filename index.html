@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Damn Giraffe</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#f5f0df}
+body{display:flex;align-items:center;justify-content:center;touch-action:none}
+#game{position:relative;width:100vw;height:100vh;max-width:1200px;overflow:hidden;background:linear-gradient(#8fd3ff 0 62%,#d9f0a3 62% 100%)}
+#title{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-weight:900;font-size:clamp(28px,5vw,56px);letter-spacing:2px;color:#2d2a20;text-shadow:3px 3px #fff;z-index:5}
+#score{position:absolute;right:18px;top:18px;font-weight:bold;font-size:clamp(16px,3vw,25px);color:#2d2a20;z-index:5}
+#hint{position:absolute;left:50%;top:78px;transform:translateX(-50%);font-size:14px;color:#333;z-index:5;opacity:.8}
+#world{position:absolute;inset:0}
+#ground{position:absolute;bottom:0;left:0;width:100%;height:38%;background:
+linear-gradient(#a9d77b 0 10px,#6c9f4b 10px 13px,transparent 13px),
+repeating-linear-gradient(90deg,transparent 0 45px,#77ad51 46px 48px,transparent 49px 90px);
+}
+#player,#tiger,#obstacle{position:absolute;user-select:none}
+#player{font-size:clamp(55px,10vw,100px);line-height:1;z-index:3;filter:drop-shadow(2px 4px 1px #6c5432)}
+#tiger{font-size:clamp(50px,9vw,88px);line-height:1;z-index:2;transform:scaleX(-1);filter:drop-shadow(2px 4px 1px #555)}
+#obstacle{width:clamp(30px,5vw,48px);height:clamp(45px,8vw,70px);border-radius:7px 7px 2px 2px;background:linear-gradient(90deg,#6b3e22,#9c6032 50%,#5d351e);box-shadow:inset 6px 0 #a76b3b,3px 4px 2px #50743b;z-index:2}
+#obstacle:before,#obstacle:after{content:"";position:absolute;bottom:-13px;width:10px;height:18px;background:#5b3822;border-radius:3px}
+#obstacle:before{left:5px}#obstacle:after{right:5px}
+#start,#gameover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;background:rgba(30,45,25,.34)}
+.card{background:rgba(255,255,255,.94);padding:28px 32px;border-radius:22px;text-align:center;box-shadow:0 10px 35px rgba(0,0,0,.2);max-width:90%}
+.card h2{margin:0 0 10px;font-size:clamp(28px,6vw,52px)}
+.card p{margin:8px 0 20px;color:#444}
+button{border:0;border-radius:14px;background:#e7a72e;color:#2c210e;padding:14px 26px;font-size:18px;font-weight:800;cursor:pointer;box-shadow:0 4px 0 #a66e13}
+button:active{transform:translateY(3px);box-shadow:0 1px 0 #a66e13}
+#mobileJump{position:absolute;right:22px;bottom:22px;z-index:8;width:95px;height:95px;border-radius:50%;background:rgba(231,167,46,.85);color:#2c210e;display:none;font-size:17px}
+@media(max-width:700px){#mobileJump{display:block}#hint{top:68px;font-size:12px}}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="title">DAMN GIRAFFE</div>
+  <div id="score">00000</div>
+  <div id="hint">SPACE / ↑ / TAP = LOMPAT</div>
+  <div id="ground"></div>
+  <div id="tiger">🐅</div>
+  <div id="player">🦒</div>
+  <div id="obstacle"></div>
+  <button id="mobileJump">LOMPAT</button>
+
+  <div id="start"><div class="card">
+    <h2>🦒 Damn Giraffe</h2>
+    <p>Lari sejauh mungkin dan hindari semua rintangan.<br>Harimau terus mengejar dari belakang!</p>
+    <button id="startBtn">MULAI GAME</button>
+  </div></div>
+
+  <div id="gameover" style="display:none"><div class="card">
+    <h2>🐅 TERTANGKAP!</h2>
+    <p id="finalText">Skor: 0</p>
+    <button id="restartBtn">MAIN LAGI</button>
+  </div></div>
+</div>
+<script>
+const game=document.getElementById('game'), player=document.getElementById('player'),
+tiger=document.getElementById('tiger'), obstacle=document.getElementById('obstacle'),
+scoreEl=document.getElementById('score'), start=document.getElementById('start'),
+over=document.getElementById('gameover'), finalText=document.getElementById('finalText');
+let running=false, jumping=false, vy=0, py=0, ox=0, speed=7, score=0, last=0, raf=0;
+
+function groundY(){return game.clientHeight*0.38}
+function resetPositions(){
+  const gy=groundY();
+  player.style.left='16%'; player.style.bottom=(gy+2)+'px';
+  tiger.style.left='6%'; tiger.style.bottom=(gy+2)+'px';
+  ox=game.clientWidth+120;
+  obstacle.style.left=ox+'px'; obstacle.style.bottom=(gy+2)+'px';
+  py=0; vy=0; jumping=false; score=0; speed=7; scoreEl.textContent='00000';
+}
+function jump(){
+  if(!running)return;
+  if(!jumping){jumping=true;vy=16;}
+}
+function startGame(){
+  start.style.display='none';over.style.display='none';running=true;last=performance.now();resetPositions();raf=requestAnimationFrame(loop);
+}
+function endGame(){
+  running=false; cancelAnimationFrame(raf);
+  finalText.textContent='Skor: '+Math.floor(score)+' — Harimau menang kali ini!';
+  over.style.display='flex';
+}
+function rect(el){return el.getBoundingClientRect()}
+function loop(t){
+  if(!running)return;
+  const dt=Math.min((t-last)/16.67,2); last=t;
+  const gy=groundY();
+  // jump physics
+  if(jumping){
+    py+=vy*dt; vy-=0.9*dt;
+    if(py<=0){py=0;vy=0;jumping=false;}
+    player.style.bottom=(gy+2+py)+'px';
+  }
+  // obstacle
+  ox-=speed*dt;
+  if(ox < -80){
+    ox=game.clientWidth + 80 + Math.random()*260;
+    score+=20;
+  }
+  obstacle.style.left=ox+'px';
+  speed=Math.min(13,speed+0.002*dt);
+  score+=0.08*dt;
+  scoreEl.textContent=String(Math.floor(score)).padStart(5,'0');
+
+  // tiger moves a little closer as speed increases
+  const tigerLeft=Math.max(4, 6 + (speed-7)*1.3);
+  tiger.style.left=tigerLeft+'%';
+
+  const a=rect(player), b=rect(obstacle);
+  if(a.right-12>b.left && a.left+12<b.right && a.bottom-10>b.top && a.top+10<b.bottom){
+    endGame(); return;
+  }
+  raf=requestAnimationFrame(loop);
+}
+document.addEventListener('keydown',e=>{
+  if(e.code==='Space'||e.code==='ArrowUp'){e.preventDefault();jump();}
+  if(e.code==='Enter'&&!running&&start.style.display!=='none')startGame();
+  if(e.code==='Enter'&&!running&&over.style.display!=='none')startGame();
+});
+game.addEventListener('pointerdown',e=>{
+  if(e.target.closest('button'))return;
+  jump();
+});
+document.getElementById('mobileJump').addEventListener('pointerdown',e=>{e.preventDefault();jump()});
+document.getElementById('startBtn').onclick=startGame;
+document.getElementById('restartBtn').onclick=startGame;
+window.addEventListener('resize',()=>{if(!running)resetPositions()});
+resetPositions();
+</script>
+</body>
+</html>
