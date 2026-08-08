@@ -1,1152 +1,515 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Kuis SMA - Anung Anindito</title>
-
-<style>
-:root{
-    --bg:#0f172a;
-    --card:#1e293b;
-    --primary:#6366f1;
-    --primary2:#4f46e5;
-    --success:#10b981;
-    --danger:#ef4444;
-    --text:#f8fafc;
-    --muted:#cbd5e1;
-}
-
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    font-family:Arial,Helvetica,sans-serif;
-}
-
-body{
-    min-height:100vh;
-    color:var(--text);
-    background:
-        radial-gradient(circle at 10% 10%,#312e81,transparent 30%),
-        radial-gradient(circle at 90% 90%,#164e63,transparent 30%),
-        var(--bg);
-}
-
-button{
-    font-family:inherit;
-}
-
-.hidden{
-    display:none !important;
-}
-
-/* =========================
-   LAYOUT
-========================= */
-
-.container{
-    width:100%;
-    max-width:1000px;
-    min-height:100vh;
-    margin:auto;
-    padding:20px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-}
-
-.brand{
-    text-align:center;
-    margin-bottom:20px;
-}
-
-.brand-name{
-    display:inline-block;
-    padding:9px 18px;
-    border-radius:30px;
-    background:linear-gradient(135deg,#6366f1,#a855f7);
-    font-weight:bold;
-    box-shadow:0 8px 25px rgba(99,102,241,.3);
-}
-
-.motto{
-    margin-top:8px;
-    color:#94a3b8;
-    font-style:italic;
-}
-
-.card{
-    background:rgba(30,41,59,.94);
-    border:1px solid rgba(255,255,255,.1);
-    border-radius:24px;
-    padding:28px;
-    box-shadow:0 20px 50px rgba(0,0,0,.4);
-}
-
-/* =========================
-   MENU
-========================= */
-
-.title{
-    text-align:center;
-    font-size:clamp(1.7rem,5vw,2.5rem);
-    margin-bottom:8px;
-    background:linear-gradient(90deg,#38bdf8,#818cf8);
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
-}
-
-.subtitle{
-    text-align:center;
-    color:var(--muted);
-    margin-bottom:22px;
-}
-
-.section-title{
-    margin-bottom:12px;
-    color:#e2e8f0;
-    font-weight:bold;
-}
-
-/* SUBJECT */
-
-.subject-grid{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:10px;
-    max-height:330px;
-    overflow-y:auto;
-    padding:4px;
-}
-
-.subject{
-    min-height:95px;
-    border-radius:15px;
-    border:2px solid rgba(255,255,255,.08);
-    background:rgba(255,255,255,.05);
-    color:white;
-    cursor:pointer;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    gap:7px;
-    transition:.2s;
-}
-
-.subject:hover{
-    transform:translateY(-3px);
-    background:rgba(99,102,241,.2);
-}
-
-.subject.selected{
-    border-color:var(--primary);
-    background:rgba(99,102,241,.3);
-    box-shadow:0 0 18px rgba(99,102,241,.3);
-}
-
-.subject-icon{
-    font-size:28px;
-}
-
-/* MODE */
-
-.mode-container{
-    margin-top:22px;
-    text-align:center;
-}
-
-.mode-buttons{
-    display:flex;
-    gap:12px;
-    justify-content:center;
-    margin-top:10px;
-}
-
-.mode-button{
-    flex:1;
-    max-width:260px;
-    padding:13px;
-    border-radius:12px;
-    border:2px solid rgba(255,255,255,.1);
-    background:rgba(255,255,255,.05);
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.mode-button.selected{
-    background:var(--primary);
-    border-color:var(--primary);
-}
-
-/* BUTTON */
-
-.action-buttons{
-    display:flex;
-    gap:12px;
-    margin-top:20px;
-}
-
-.btn{
-    border:none;
-    border-radius:14px;
-    padding:15px;
-    color:white;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.btn:hover{
-    transform:translateY(-2px);
-}
-
-.btn-primary{
-    flex:2;
-    background:linear-gradient(135deg,var(--primary),var(--primary2));
-    box-shadow:0 8px 20px rgba(79,70,229,.3);
-}
-
-.btn-secondary{
-    flex:1;
-    background:rgba(255,255,255,.08);
-}
-
-/* =========================
-   QUIZ
-========================= */
-
-.quiz-top{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-bottom:20px;
-    padding-bottom:15px;
-    border-bottom:1px solid rgba(255,255,255,.1);
-}
-
-.badge{
-    padding:8px 13px;
-    border-radius:20px;
-    background:rgba(255,255,255,.08);
-    font-weight:bold;
-}
-
-.score{
-    color:#facc15;
-}
-
-.lives{
-    color:#fb7185;
-}
-
-.question{
-    min-height:130px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:22px;
-    border-radius:16px;
-    background:rgba(0,0,0,.2);
-    font-size:1.2rem;
-    line-height:1.6;
-    margin-bottom:20px;
-}
-
-/* OPTIONS */
-
-.options{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-}
-
-.option{
-    padding:17px;
-    border-radius:13px;
-    border:1px solid rgba(255,255,255,.1);
-    background:rgba(255,255,255,.05);
-    color:white;
-    text-align:left;
-    cursor:pointer;
-    font-size:15px;
-    transition:.2s;
-}
-
-.option:hover{
-    background:rgba(99,102,241,.25);
-    border-color:#6366f1;
-}
-
-/* ESSAY */
-
-.essay{
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-}
-
-.essay input{
-    width:100%;
-    padding:16px;
-    border-radius:12px;
-    border:2px solid rgba(255,255,255,.1);
-    outline:none;
-    background:#0f172a;
-    color:white;
-    font-size:16px;
-}
-
-.essay input:focus{
-    border-color:#6366f1;
-}
-
-/* =========================
-   MODAL
-========================= */
-
-.overlay{
-    position:fixed;
-    inset:0;
-    z-index:100;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    background:rgba(0,0,0,.85);
-}
-
-.modal{
-    width:100%;
-    max-width:500px;
-    max-height:85vh;
-    overflow:auto;
-    background:#1e293b;
-    border:1px solid rgba(255,255,255,.1);
-    border-radius:22px;
-    padding:28px;
-    text-align:center;
-}
-
-.modal-emoji{
-    font-size:70px;
-    margin-bottom:10px;
-}
-
-.modal h2{
-    margin-bottom:12px;
-}
-
-.modal p{
-    color:var(--muted);
-    line-height:1.6;
-    margin-bottom:20px;
-}
-
-.info-modal{
-    text-align:left;
-}
-
-.info-modal h2{
-    color:#38bdf8;
-}
-
-.info-modal h3{
-    margin-top:18px;
-    margin-bottom:8px;
-}
-
-.info-modal p,
-.info-modal li{
-    color:var(--muted);
-    line-height:1.6;
-}
-
-.info-modal ul{
-    margin-left:20px;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media(max-width:800px){
-
-    .subject-grid{
-        grid-template-columns:repeat(3,1fr);
-    }
-}
-
-@media(max-width:550px){
-
-    .container{
-        padding:12px;
-    }
-
-    .card{
-        padding:18px;
-    }
-
-    .subject-grid{
-        grid-template-columns:repeat(2,1fr);
-        max-height:300px;
-    }
-
-    .options{
-        grid-template-columns:1fr;
-    }
-
-    .mode-buttons,
-    .action-buttons{
-        flex-direction:column;
-    }
-
-    .mode-button{
-        max-width:none;
-    }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Belajar Interaktif SMA - Anung Anindito</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-dark: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.9);
+            --text-light: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Canvas Latar Belakang Dinamis */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Header Watermark & Motto */
+        .header-brand {
+            text-align: center;
+            margin-bottom: 20px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .watermark {
+            display: inline-block;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            margin-bottom: 8px;
+        }
+
+        .motto {
+            font-style: italic;
+            color: #94a3b8;
+            font-size: 1.1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* Kartu Tampilan Main UI */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Grid Pilihan Pelajaran */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+            max-height: 320px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .category-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+        .category-grid::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+        }
+
+        .cat-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 12px 6px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cat-btn i {
+            font-size: 1.6rem;
+            color: #38bdf8;
+        }
+
+        .cat-btn:hover, .cat-btn.selected {
+            background: rgba(99, 102, 241, 0.25);
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 18px rgba(79, 70, 229, 0.3);
+        }
+
+        /* Mode Selector */
+        .mode-section {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .mode-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 12px 0;
+        }
+
+        .mode-btn {
+            flex: 1;
+            max-width: 200px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .mode-btn.selected {
+            background: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(79, 70, 229, 0.5);
+        }
+
+        /* Button Action */
+        .btn-action {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-start {
+            flex: 2;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-info {
+            flex: 1;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-start:hover, .btn-info:hover {
+            transform: scale(1.02);
+        }
+
+        /* HUD Kuis */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .lives {
+            color: var(--danger);
+            font-size: 1.2rem;
+        }
+
+        .question-box {
+            font-size: 1.25rem;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            text-align: center;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 16px;
+        }
+
+        /* Pilihan Ganda & Uraian */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .opt-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 20px;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: left;
+            transition: 0.2s;
+        }
+
+        .opt-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .essay-box {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .essay-input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            font-size: 1.1rem;
+            outline: none;
+        }
+
+        .essay-input:focus {
+            border-color: var(--primary);
+        }
+
+        /* Overlay Animasi Reaksi & Info Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .reaction-emoji {
+            font-size: 7rem;
+            margin-bottom: 15px;
+            animation: bounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .reaction-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .info-card {
+            background: #1e293b;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .info-card h2 {
+            color: #38bdf8;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+        }
+
+        .info-card h3 {
+            color: white;
+            margin: 14px 0 6px;
+        }
+
+        .info-card ul {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .hidden { display: none !important; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 600px) {
+            .options-grid { grid-template-columns: 1fr; }
+            .title { font-size: 1.6rem; }
+            .category-grid { grid-template-columns: repeat(2, 1fr); }
+            .btn-action { flex-direction: column; }
+        }
+    </style>
 </head>
-
 <body>
+<canvas id="bgCanvas"></canvas>
 
 <div class="container">
-
-    <!-- =========================
-         BRAND
-    ========================== -->
-
-    <div class="brand">
-
-        <div class="brand-name">
-            🎓 Anung Anindito • SMAN 1 Cijeruk
-        </div>
-
-        <div class="motto">
-            "Belajar untuk hidup, hidup untuk belajar"
-        </div>
-
+    <div class="header-brand">
+        <div class="watermark"><i class="fa-solid fa-graduation-cap"></i> Anung anindito.sman1cijeruk</div>
+        <div class="motto">"belajar untuk hidup, hidup untuk belajar"</div>
     </div>
 
-
-    <!-- =========================
-         HALAMAN UTAMA
-    ========================== -->
-
-    <main id="homePage" class="card">
-
-        <h1 class="title">
-            🧠 Kuis Pengetahuan SMA
-        </h1>
-
-        <p class="subtitle">
-            Uji pengetahuanmu dengan soal bertingkat!
-        </p>
-
-
-        <div class="section-title">
-            📚 Pilih Mata Pelajaran
+    <div id="menuScreen" class="card">
+        <h1 class="title">Aplikasi Kuis Pengetahuan SMA</h1>
+        
+        <p style="text-align: center; margin-bottom: 15px; color: #cbd5e1;">Pilih Mata Pelajaran:</p>
+        
+        <div class="category-grid" id="categoryGrid">
+            <div class="cat-btn selected" data-cat="biologi"><i class="fa-solid fa-dna"></i><span>Biologi</span></div>
+            <div class="cat-btn" data-cat="kimia"><i class="fa-solid fa-flask"></i><span>Kimia</span></div>
+            <div class="cat-btn" data-cat="fisika"><i class="fa-solid fa-atom"></i><span>Fisika</span></div>
+            <div class="cat-btn" data-cat="matematika"><i class="fa-solid fa-calculator"></i><span>Matematika</span></div>
+            <div class="cat-btn" data-cat="ekonomi"><i class="fa-solid fa-chart-line"></i><span>Ekonomi</span></div>
+            <div class="cat-btn" data-cat="geografi"><i class="fa-solid fa-earth-americas"></i><span>Geografi</span></div>
+            <div class="cat-btn" data-cat="sosiologi"><i class="fa-solid fa-users"></i><span>Sosiologi</span></div>
+            <div class="cat-btn" data-cat="sejarah"><i class="fa-solid fa-landmark"></i><span>Sejarah</span></div>
+            <div class="cat-btn" data-cat="indo"><i class="fa-solid fa-book"></i><span>B. Indonesia</span></div>
+            <div class="cat-btn" data-cat="inggris"><i class="fa-solid fa-language"></i><span>B. Inggris</span></div>
+            <div class="cat-btn" data-cat="pkn"><i class="fa-solid fa-scale-balanced"></i><span>PKN</span></div>
+            <div class="cat-btn" data-cat="sunda"><i class="fa-solid fa-feather-pointed"></i><span>B. Sunda</span></div>
+            <div class="cat-btn" data-cat="jepang"><i class="fa-solid fa-torii-gate"></i><span>B. Jepang</span></div>
+            <div class="cat-btn" data-cat="china"><i class="fa-solid fa-dragon"></i><span>Mandarin</span></div>
+            <div class="cat-btn" data-cat="germany"><i class="fa-solid fa-beer-mug-empty"></i><span>B. Jerman</span></div>
         </div>
 
-        <div
-            id="subjectGrid"
-            class="subject-grid">
-        </div>
-
-
-        <div class="mode-container">
-
-            <div class="section-title">
-                🎮 Pilih Mode Kuis
+        <div class="mode-section">
+            <p style="color: #cbd5e1;">Pilih Mode Kuis:</p>
+            <div class="mode-options">
+                <button class="mode-btn selected" data-mode="pg">Pilihan Ganda</button>
+                <button class="mode-btn" data-mode="uraian">Uraian / Isian</button>
             </div>
-
-            <div class="mode-buttons">
-
-                <button
-                    id="pgMode"
-                    class="mode-button selected"
-                    type="button">
-
-                    Pilihan Ganda
-
-                </button>
-
-                <button
-                    id="essayMode"
-                    class="mode-button"
-                    type="button">
-
-                    Uraian / Isian
-
-                </button>
-
-            </div>
-
         </div>
 
-
-        <div class="action-buttons">
-
-            <button
-                id="startButton"
-                class="btn btn-primary"
-                type="button">
-
-                🚀 MULAI BELAJAR
-
-            </button>
-
-            <button
-                id="infoButton"
-                class="btn btn-secondary"
-                type="button">
-
-                ℹ️ Bantuan
-
-            </button>
-
+        <div class="btn-action">
+            <button class="btn-start" id="btnStartGame">Mulai Belajar <i class="fa-solid fa-play"></i></button>
+            <button class="btn-info" id="btnShowInfo"><i class="fa-solid fa-circle-info"></i> Bantuan & Info</button>
         </div>
-
-    </main>
-
-
-    <!-- =========================
-         HALAMAN KUIS
-    ========================== -->
-
-    <main
-        id="quizPage"
-        class="card hidden">
-
-        <div class="quiz-top">
-
-            <button
-                id="homeButton"
-                class="btn btn-secondary"
-                type="button">
-
-                🏠 Home
-
-            </button>
-
-            <div
-                id="levelBadge"
-                class="badge">
-
-                Level 1
-
-            </div>
-
-            <div
-                id="scoreBadge"
-                class="badge score">
-
-                ⭐ 0
-
-            </div>
-
-            <div
-                id="livesBadge"
-                class="badge lives">
-
-                ❤️❤️❤️
-
-            </div>
-
-        </div>
-
-
-        <div
-            id="question"
-            class="question">
-
-            Memuat pertanyaan...
-
-        </div>
-
-
-        <!-- PILIHAN GANDA -->
-
-        <div
-            id="options"
-            class="options">
-        </div>
-
-
-        <!-- URAIAN -->
-
-        <div
-            id="essayArea"
-            class="essay hidden">
-
-            <input
-                id="essayInput"
-                type="text"
-                placeholder="Ketik jawaban kamu di sini..."
-                autocomplete="off">
-
-            <button
-                id="submitEssay"
-                class="btn btn-primary"
-                type="button">
-
-                ✅ Kirim Jawaban
-
-            </button>
-
-        </div>
-
-    </main>
-
-</div>
-
-
-<!-- =========================
-     MODAL REAKSI
-========================= -->
-
-<div
-    id="reactionModal"
-    class="overlay hidden">
-
-    <div class="modal">
-
-        <div
-            id="reactionEmoji"
-            class="modal-emoji">
-
-            😊
-
-        </div>
-
-        <h2 id="reactionTitle">
-            Jawaban Benar!
-        </h2>
-
-        <p id="reactionMessage">
-            Hebat!
-        </p>
-
-        <button
-            id="continueButton"
-            class="btn btn-primary"
-            type="button">
-
-            Lanjut
-
-        </button>
-
     </div>
 
-</div>
+    <div id="quizScreen" class="card hidden">
+        <div class="quiz-header">
+            <button id="btnBack" style="background:none; border:none; color:white; cursor:pointer; font-size:1.1rem;">
+                <i class="fa-solid fa-arrow-left"></i> Keluar
+            </button>
+            <div class="badge" id="levelBadge">Level 1 (Mudah)</div>
+            <div class="badge lives" id="livesBadge"><i class="fa-solid fa-heart"></i> <i class="fa-solid fa-heart"></i> <i class="fa-solid fa-heart"></i></div>
+        </div>
 
+        <div class="question-box" id="questionText">
+            Pertanyaan akan muncul di sini...
+        </div>
 
-<!-- =========================
-     MODAL INFO
-========================= -->
+        <div class="options-grid" id="pgOptions"></div>
 
-<div
-    id="infoModal"
-    class="overlay hidden">
-
-    <div class="modal info-modal">
-
-        <h2>
-            📚 Tentang Aplikasi
-        </h2>
-
-        <p>
-            Aplikasi Kuis Pengetahuan SMA adalah media
-            belajar interaktif untuk latihan berbagai
-            mata pelajaran tingkat SMA.
-        </p>
-
-        <h3>
-            🎮 Cara Bermain
-        </h3>
-
-        <ul>
-
-            <li>
-                Pilih mata pelajaran.
-            </li>
-
-            <li>
-                Pilih mode Pilihan Ganda atau Uraian.
-            </li>
-
-            <li>
-                Tekan tombol Mulai Belajar.
-            </li>
-
-            <li>
-                Jawab soal sampai Level 3.
-            </li>
-
-        </ul>
-
-        <h3>
-            ❤️ Sistem Nyawa
-        </h3>
-
-        <ul>
-
-            <li>
-                Pilihan Ganda memiliki 3 nyawa.
-            </li>
-
-            <li>
-                Jawaban salah mengurangi satu nyawa.
-            </li>
-
-            <li>
-                Jika nyawa habis, permainan diulang
-                dari Level 1.
-            </li>
-
-        </ul>
-
-        <h3>
-            🏆 Level
-        </h3>
-
-        <ul>
-
-            <li>
-                Level 1 = Dasar
-            </li>
-
-            <li>
-                Level 2 = Menengah
-            </li>
-
-            <li>
-                Level 3 = HOTS
-            </li>
-
-        </ul>
-
-        <button
-            id="closeInfo"
-            class="btn btn-primary"
-            style="width:100%;margin-top:20px;"
-            type="button">
-
-            Tutup
-
-        </button>
-
+        <div class="essay-box hidden" id="essayOptions">
+            <input type="text" id="essayAnswer" class="essay-input" placeholder="Ketik jawaban Anda di sini..." autocomplete="off">
+            <button class="btn-start" id="btnSubmitEssay">Kirim Jawaban</button>
+        </div>
     </div>
-
 </div>
 
+<div class="modal-overlay" id="reactionOverlay">
+    <div class="reaction-emoji" id="reactionEmoji">😊</div>
+    <div class="reaction-text" id="reactionText">Jawaban Benar!</div>
+    <button class="btn-start" id="btnNextLevel" style="max-width: 220px;">Lanjut <i class="fa-solid fa-arrow-right"></i></button>
+</div>
+
+<div class="modal-overlay" id="infoOverlay">
+    <div class="info-card">
+        <h2><i class="fa-solid fa-graduation-cap"></i> Tentang Aplikasi</h2>
+        <p>Aplikasi Kuis Pembelajaran Interaktif dikembangkan oleh <strong>Anung Anindito (SMAN 1 Cijeruk)</strong>. Berlandaskan motto <em>"belajar untuk hidup, hidup untuk belajar"</em>, aplikasi ini menyediakan media latihan soal interaktif berjenjang untuk jenjang SMA.</p>
+
+        <h2><i class="fa-solid fa-gamepad"></i> Cara Bermain</h2>
+        <h3>1. Mode Pilihan Ganda (PG)</h3>
+        <ul>
+            <li>Tersedia <strong>3 Kesempatan (Nyawa ❤️)</strong>.</li>
+            <li>Jika jawaban <strong>Benar</strong> (😊): Naik ke Level berikutnya.</li>
+            <li>Jika jawaban <strong>Salah</strong> (😢): Nyawa berkurang 1 dan Anda tetap berada di level yang sama hingga bisa menjawab dengan benar.</li>
+            <li>Jika nyawa habis (3x salah), Anda harus mengulang dari Level 1.</li>
+        </ul>
+
+        <h3>2. Mode Uraian / Isian</h3>
+        <ul>
+            <li>Ketikkan jawaban langsung pada kolom teks yang disediakan.</li>
+            <li>Mode ini tidak memakai batas nyawa sehingga bebas untuk berlatih mandiri.</li>
+        </ul>
+
+        <h3>3. Tingkat Kesulitan</h3>
+        <ul>
+            <li><strong>Level 1:</strong> Konsep & Pengetahuan Dasar</li>
+            <li><strong>Level 2:</strong> Pemahaman Tingkat Menengah</li>
+            <li><strong>Level 3:</strong> Soal Analisis & HOTS</li>
+        </ul>
+
+        <button class="btn-start" id="btnCloseInfo" style="margin-top:20px; width:100%;">Tutup Menu Bantuan</button>
+    </div>
+</div>
 
 <script>
-
-/* =====================================================
-   DATA MATA PELAJARAN
-===================================================== */
-
-const subjects = [
-
-    {
-        id:"biologi",
-        name:"Biologi",
-        icon:"🧬"
-    },
-
-    {
-        id:"kimia",
-        name:"Kimia",
-        icon:"🧪"
-    },
-
-    {
-        id:"fisika",
-        name:"Fisika",
-        icon:"⚛️"
-    },
-
-    {
-        id:"matematika",
-        name:"Matematika",
-        icon:"📐"
-    },
-
-    {
-        id:"ekonomi",
-        name:"Ekonomi",
-        icon:"📈"
-    },
-
-    {
-        id:"geografi",
-        name:"Geografi",
-        icon:"🌍"
-    },
-
-    {
-        id:"sosiologi",
-        name:"Sosiologi",
-        icon:"👥"
-    },
-
-    {
-        id:"sejarah",
-        name:"Sejarah",
-        icon:"📜"
-    },
-
-    {
-        id:"indonesia",
-        name:"B. Indonesia",
-        icon:"📖"
-    },
-
-    {
-        id:"inggris",
-        name:"B. Inggris",
-        icon:"🇬🇧"
-    },
-
-    {
-        id:"pkn",
-        name:"PKN",
-        icon:"⚖️"
-    },
-
-    {
-        id:"sunda",
-        name:"B. Sunda",
-        icon:"🍃"
-    },
-
-    {
-        id:"jepang",
-        name:"B. Jepang",
-        icon:"🌸"
-    },
-
-    {
-        id:"mandarin",
-        name:"Mandarin",
-        icon:"🐉"
-    },
-
-    {
-        id:"jerman",
-        name:"B. Jerman",
-        icon:"🇩🇪"
-    }
-
-];
-
-
-/* =====================================================
-   DATA SOAL
-===================================================== */
-
-const quizData = {
-
-biologi:[
-    {
-        level:1,
-        question:"Organel sel yang menjadi tempat utama respirasi sel adalah?",
-        options:[
-            "Ribosom",
-            "Mitokondria",
-            "Lisosom",
-            "Kloroplas"
+    /* === DATA PERTANYAAN PEMBELAJARAN SMA LENGKAP & BERTINGKAT === */
+    const quizData = {
+        biologi: [
+            { level: 1, type: 'pg', q: 'Organel sel yang dijuluki "The Powerhouse of Cell" tempat respirasi sel berlangsung adalah?', opts: ['Mitokondria', 'Ribosom', 'Lisosom', 'Kloroplas'], a: 'Mitokondria' },
+            { level: 2, type: 'pg', q: 'Fase pembelahan mitosis di mana kromosom berderet di bidang ekuator adalah?', opts: ['Profase', 'Metafase', 'Anafase', 'Telofase'], a: 'Metafase' },
+            { level: 3, type: 'pg', q: 'Pada persilangan dihibrid heterozigot sempurna (AaBb x AaBb), berapa rasio fenotip hasil keturunannya?', opts: ['3:1', '9:3:3:1', '1:2:1', '12:3:1'], a: '9:3:3:1' }
         ],
-        answer:"Mitokondria"
-    },
-
-    {
-        level:2,
-        question:"Pada pembelahan mitosis, kromosom berjajar di bidang ekuator pada fase?",
-        options:[
-            "Profase",
-            "Metafase",
-            "Anafase",
-            "Telofase"
+        kimia: [
+            { level: 1, type: 'pg', q: 'Unsur dengan nomor atom 6 dalam tabel periodik adalah?', opts: ['Oksigen', 'Karbon', 'Nitrogen', 'Hidrogen'], a: 'Karbon' },
+            { level: 2, type: 'pg', q: 'Berapakah konsentrasi ion H+ dalam larutan asam dengan nilai pH = 3?', opts: ['10⁻³ M', '10⁻⁷ M', '10⁻¹⁴ M', '3 M'], a: '10⁻³ M' },
+            { level: 3, type: 'pg', q: 'Menurut teori asam-basa Bronsted-Lowry, senyawa yang bertindak sebagai basa adalah senyawa yang?', opts: ['Menerima donor proton (H+)', 'Memberikan proton (H+)', 'Menghasilkan ion OH-', 'Menerima pasangan elektron'], a: 'Menerima donor proton (H+)' }
         ],
-        answer:"Metafase"
-    },
-
-    {
-        level:3,
-        question:"Persilangan AaBb × AaBb menghasilkan rasio fenotipe klasik?",
-        options:[
-            "3 : 1",
-            "9 : 3 : 3 : 1",
-            "1 : 2 : 1",
-            "1 : 1"
+        fisika: [
+            { level: 1, type: 'pg', q: 'Satuan Internasional (SI) untuk mengukur gaya adalah?', opts: ['Joule', 'Watt', 'Newton', 'Pascal'], a: 'Newton' },
+            { level: 2, type: 'pg', q: 'Benda bermassa 2 kg bergerak dengan kecepatan 4 m/s. Energi kinetik benda tersebut adalah?', opts: ['8 Joule', '16 Joule', '32 Joule', '4 Joule'], a: '16 Joule' },
+            { level: 3, type: 'pg', q: 'Dua buah muatan terpisah sejauh r. Jika jarak antarmuatan dijadikan 2x semula, gaya Coulomb-nya menjadi?', opts: ['2 kali semula', '4 kali semula', '1/2 kali semula', '1/4 kali semula'], a: '1/4 kali semula' }
         ],
-        answer:"9 : 3 : 3 : 1"
-    }
-],
-
-kimia:[
-    {
-        level:1,
-        question:"Unsur dengan nomor atom 6 adalah?",
-        options:[
-            "Oksigen",
-            "Karbon",
-            "Nitrogen",
-            "Hidrogen"
-        ],
-        answer:"Karbon"
-    },
-
-    {
-        level:2,
-        question:"Jika pH larutan = 3, konsentrasi H+ adalah?",
-        options:[
-            "10⁻³ M",
-            "10⁻⁷ M",
-            "10⁻¹⁴ M",
-            "3 M"
-        ],
-        answer:"10⁻³ M"
-    },
-
-    {
-        level:3,
-        question:"Menurut teori Bronsted-Lowry, basa adalah zat yang?",
-        options:[
-            "Menerima proton",
-            "Memberikan proton",
-            "Menerima neutron",
-            "Menghasilkan elektron"
-        ],
-        answer:"Menerima proton"
-    }
-],
-
-fisika:[
-    {
-        level:1,
-        question:"Satuan SI untuk gaya adalah?",
-        options:[
-            "Joule",
-            "Watt",
-            "Newton",
-            "Pascal"
-        ],
-        answer:"Newton"
-    },
-
-    {
-        level:2,
-        question:"Benda bermassa 2 kg bergerak dengan kecepatan 4 m/s. Energi kinetiknya adalah?",
-        options:[
-            "4 J",
-            "8 J",
-            "16 J",
-            "32 J"
-        ],
-        answer:"16 J"
-    },
-
-    {
-        level:3,
-        question:"Jika jarak dua muatan menjadi dua kali lipat, gaya Coulomb menjadi?",
-        options:[
-            "2 kali",
-            "4 kali",
-            "1/2 kali",
-            "1/4 kali"
-        ],
-        answer:"1/4 kali"
-    }
-],
-
-matematika:[
-    {
-        level:1,
-        question:"Berapakah hasil dari 2³ + 3²?",
-        options:[
-            "12",
-            "15",
-            "17",
-            "18"
-        ],
-        answer:"17"
-    },
-
-    {
-        level:2,
-        question:"Akar-akar persamaan x² - 5x + 6 = 0 adalah?",
-        options:[
-            "1 dan 6",
-            "2 dan 3",
-            "-2 dan -3",
-            "3 dan 4"
-        ],
-        answer:"2 dan 3"
-    },
-
-    {
-        level:3,
-        question:"Jika f(x)=3x²+4x−5, maka turunan pertamanya adalah?",
-        options:[
-            "3x + 4",
-            "6x + 4",
-            "6x² + 4",
-            "6x − 5"
-        ],
-        answer:"6x + 4"
-    }
-],
-
-ekonomi:[
-    {
-        level:1,
-        question:"Masalah pokok ekonomi klasik meliputi?",
-        options:[
-            "Produksi, distribusi, konsumsi",
-            "Inflasi, pajak, ekspor",
-            "Bank, pasar, uang",
-            "Produksi, inflasi, pajak"
-        ],
-        answer:"Produksi, distribusi, konsumsi"
-    },
-
-    {
-        level:2,
-        question:"Jika harga barang naik, jumlah barang yang diminta biasanya?",
-        options:[
-            "Naik",
-            "Turun",
-            "Tetap",
-            "Tidak terbatas"
-        ],
-        answer:"Turun"
-    },
-
-    {
-        level:3,
-        question:"Kebijakan moneter untuk meningkatkan jumlah uang beredar disebut?",
-        options:[
-            "Moneter ekspansif",
-            "Moneter kontraktif",
-            "Fiskal kontraktif",
-            "Proteksi"
-        ],
-        answer:"Moneter ekspansif"
-    }
-],
-
-geografi:[
-    {
-        level:1,
-        question:"Lapisan udara yang menyelimuti bumi disebut?",
-        options:[
-            "Litosfer",
-            "Atmosfer",
-            "Hidrosfer",
-            "Biosfer"
-        ],
-        answer:"Atmosfer"
-    },
-
-    {
-        level:2,
-        question:"Skala 1 : 100.000 berarti 1 cm pada peta mewakili?",
-        options:[
-            "100 km",
-            "10 km",
-            "1 km",
-            "100 m"
-        ],
-        answer:"1 km"
-    },
-
-    {
-        level:3,
-        question:"Fenomena El Nino biasanya menyebabkan Indonesia mengalami?",
-        options:[
-            "Kekeringan",
-            "Musim salju",
-            "Curah hujan ekstrem sepanjang tahun",
-            "Gempa bumi"
-        ],
-        answer:"Kekeringan"
-    }
-],
-
-sosiologi:[
-    {
-        level:1,
-        question:"Proses seseorang mempelajari nilai dan norma masyarakat disebut?",
-        options:[
-            "Sosialisasi",
-            "Konflik",
-            "Asimilasi",
-            "Mobilitas"
-        ],
-        answer:"Sosialisasi"
-    },
-
-    {
-        level:2,
-        question:"Kerja sama beberapa organisasi untuk mencapai tujuan tertentu disebut?",
-        options:[
-            "Koalisi",
-            "Konflik",
-            "Kontravensi",
-            "Persaingan"
-        ],
-        answer:"Koalisi"
-    },
-
-    {
-        level:3,
-        question:"Perubahan sosial yang berlangsung secara lambat disebut?",
-        options:[
-            "Revolusi",
-            "Evolusi",
-            "Konflik",
-            "Disintegrasi"
-        ],
-        answer:"Evolusi"
-    }
-],
-
-sejarah:[
-    {
-        level:1,
-        question:"Tokoh yang mengetik naskah Proklamasi Kemerdekaan Indonesia adalah?",
-        options:[
-            "Sayuti Melik",
-            "Sukarni",
-            "Ahmad Soebardjo",
-            "B.M. Diah"
-        ],
-        answer:"Sayuti Melik"
-    },
-
-    {
-        level:2,
-        question:"Cultuurstelsel atau Tanam Paksa diperkenalkan oleh?",
-        options:[
-            "Daendels",
-            "Raffles",
-            "Van den Bosch",
-            "J.P. Coen"
-        ],
-        answer:"Van den Bosch"
-    },
-
-    {
-        level:3,
- 
+        matematika: [
+            { level: 1, type: 'pg', q: 'Berapakah hasil dari 2³ + 3² ?', opts: ['12', '17', '15', '18'], a: '17' },
+            { level: 2, type: 'pg', q: 'Akar-akar dari persamaan kuadrat x² - 5x + 6 =
+                                                                                             
