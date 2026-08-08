@@ -9,7 +9,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
         }
@@ -26,7 +26,7 @@
             position: relative;
         }
 
-        /* Canvas Background Partikel (Dibuat Tidak Menghalangi Klik) */
+        /* CANVAS BACKGROUND ANIMATION */
         #bgCanvas {
             position: fixed;
             top: 0;
@@ -34,14 +34,14 @@
             width: 100%;
             height: 100%;
             z-index: 1;
-            pointer-events: none; /* KUNCI UTAMA: Sentuhan/klik akan menembus canvas */
+            pointer-events: none !important; /* Dibuat tembus pandang dari sentuhan HP */
         }
 
         .container {
             width: 100%;
-            max-width: 500px;
+            max-width: 480px;
             position: relative;
-            z-index: 10; /* Memastikan UI berada di atas background */
+            z-index: 10; /* Berada di atas canvas */
         }
 
         .header-brand {
@@ -58,7 +58,7 @@
             font-size: 0.85rem;
             font-weight: bold;
             margin-bottom: 6px;
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
         }
 
         .motto {
@@ -68,22 +68,19 @@
         }
 
         .card {
-            background: rgba(30, 41, 59, 0.85);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 16px;
-            padding: 18px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            padding: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .title {
             text-align: center;
-            font-size: 1.35rem;
+            font-size: 1.3rem;
             color: #38bdf8;
             margin-bottom: 12px;
             font-weight: bold;
-            text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
         }
 
         .section-label {
@@ -93,19 +90,19 @@
             margin-bottom: 8px;
         }
 
-        /* Grid Kategori */
+        /* GRID KATEGORI */
         .category-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 8px;
             max-height: 220px;
             overflow-y: auto;
-            padding-right: 4px;
+            padding: 2px;
             margin-bottom: 12px;
         }
 
         .cat-btn {
-            background: rgba(15, 23, 42, 0.7);
+            background: rgba(15, 23, 42, 0.8);
             border: 2px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             padding: 10px 6px;
@@ -117,16 +114,20 @@
             flex-direction: column;
             align-items: center;
             gap: 4px;
-            transition: all 0.2s ease;
+            touch-action: manipulation;
+        }
+
+        .cat-btn * {
+            pointer-events: none; /* Mencegah sentuhan terhalang teks/ikon */
         }
 
         .cat-btn.active {
             border-color: #6366f1;
-            background: rgba(99, 102, 241, 0.3);
-            box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+            background: rgba(99, 102, 241, 0.35);
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
         }
 
-        /* Mode Selection */
+        /* MODE SELECTION */
         .mode-grid {
             display: flex;
             gap: 8px;
@@ -136,7 +137,7 @@
         .mode-btn {
             flex: 1;
             padding: 10px;
-            background: rgba(15, 23, 42, 0.7);
+            background: rgba(15, 23, 42, 0.8);
             border: 2px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             color: #fff;
@@ -144,15 +145,16 @@
             font-weight: bold;
             cursor: pointer;
             text-align: center;
+            touch-action: manipulation;
         }
 
         .mode-btn.active {
             background: #4f46e5;
             border-color: #6366f1;
-            box-shadow: 0 0 12px rgba(79, 70, 229, 0.5);
+            box-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
         }
 
-        /* Action Buttons */
+        /* ACTION BUTTONS */
         .action-grid {
             display: flex;
             gap: 8px;
@@ -168,6 +170,7 @@
             font-weight: bold;
             font-size: 0.95rem;
             cursor: pointer;
+            touch-action: manipulation;
             box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
         }
 
@@ -181,13 +184,15 @@
             font-size: 0.8rem;
             font-weight: bold;
             cursor: pointer;
+            touch-action: manipulation;
         }
 
         .btn-main:active, .btn-sub:active, .cat-btn:active, .opt-btn:active {
-            transform: scale(0.96);
+            opacity: 0.7;
+            transform: scale(0.98);
         }
 
-        /* Quiz Play Screen */
+        /* QUIZ DISPLAY */
         .quiz-header {
             display: flex;
             justify-content: space-between;
@@ -227,14 +232,15 @@
         }
 
         .opt-btn {
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             padding: 12px;
             border-radius: 8px;
             color: white;
             font-size: 0.85rem;
             text-align: left;
             cursor: pointer;
+            touch-action: manipulation;
         }
 
         .essay-box {
@@ -245,7 +251,7 @@
 
         .essay-input {
             padding: 12px;
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(15, 23, 42, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             color: white;
@@ -253,7 +259,7 @@
             outline: none;
         }
 
-        /* Popups */
+        /* MODAL POPUPS */
         .modal {
             position: fixed;
             inset: 0;
@@ -362,7 +368,7 @@
 </div>
 
 <script>
-    // 1. ANMATION PARTICLE BACKGROUND (Super Smooth & Safe)
+    // 1. ANIMASI BACKGROUND PARTIKEL
     const canvas = document.getElementById('bgCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -374,48 +380,44 @@
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    class Particle {
-        constructor() {
-            this.reset();
-        }
-        reset() {
+    function Particle() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.4;
+        this.speedY = (Math.random() - 0.5) * 0.4;
+        this.alpha = Math.random() * 0.5 + 0.2;
+    }
+
+    Particle.prototype.update = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
             this.x = Math.random() * canvas.width;
             this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 2.5 + 0.5;
-            this.speedX = (Math.random() - 0.5) * 0.5;
-            this.speedY = (Math.random() - 0.5) * 0.5;
-            this.alpha = Math.random() * 0.5 + 0.2;
         }
-        update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-            if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
-                this.reset();
-            }
-        }
-        draw() {
-            ctx.fillStyle = `rgba(99, 102, 241, ${this.alpha})`;
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
-        }
-    }
+    };
 
-    for (let i = 0; i < 45; i++) {
-        particles.push(new Particle());
-    }
+    Particle.prototype.draw = function() {
+        ctx.fillStyle = 'rgba(99, 102, 241, ' + this.alpha + ')';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+    };
 
-    function animateParticles() {
+    for (let i = 0; i < 40; i++) particles.push(new Particle());
+
+    function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-            p.update();
-            p.draw();
-        });
-        requestAnimationFrame(animateParticles);
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+        }
+        requestAnimationFrame(animate);
     }
-    animateParticles();
+    animate();
 
-    // 2. LOGIKA KUIS (100% Responsif)
+    // 2. SISTEM KUIS DENGAN EVENT TOUCH KHUSUS HP
     var selectedCategory = 'biologi';
     var selectedMode = 'pg';
     var currentLevel = 1;
@@ -489,4 +491,171 @@
         ],
         china: [
             { level: 1, q: 'Pengucapan "Halo / Apa kabar" Mandarin?', opts: ['Xie Xie', 'Ni Hao', 'Zai Jian', 'Dui Bu Qi'], a: 'Ni Hao' },
-            { level: 2, q: 'Jumlah nada dasar bahasa Mandarin?', opts: ['3 Nada', '
+            { level: 2, q: 'Jumlah nada dasar bahasa Mandarin?', opts: ['3 Nada', '4 Nada', '5 Nada', '6 Nada'], a: '4 Nada' },
+            { level: 3, q: 'Sistem Latin pembacaan Hanzi?', opts: ['Pinyin', 'Kanji', 'Hanzi', 'Zhuyin'], a: 'Pinyin' }
+        ],
+        germany: [
+            { level: 1, q: 'Arti "Guten Morgen" adalah?', opts: ['Selamat Malam', 'Selamat Siang', 'Selamat Pagi', 'Selamat Tinggal'], a: 'Selamat Pagi' },
+            { level: 2, q: 'Kata ganti "Saya" bahasa Jerman?', opts: ['Du', 'Ich', 'Er', 'Wir'], a: 'Ich' },
+            { level: 3, q: 'Artikel maskulin tunggal?', opts: ['Der', 'Die', 'Das', 'Den'], a: 'Der' }
+        ]
+    };
+
+    // Fungsi Pembantu Event Click & Touch HP
+    function addTouchListener(element, callback) {
+        if (!element) return;
+        element.addEventListener('click', callback);
+    }
+
+    // Pilihan Kategori
+    var catBtns = document.querySelectorAll('.cat-btn');
+    for (var i = 0; i < catBtns.length; i++) {
+        (function(btn) {
+            addTouchListener(btn, function() {
+                for (var j = 0; j < catBtns.length; j++) catBtns[j].classList.remove('active');
+                btn.classList.add('active');
+                selectedCategory = btn.getAttribute('data-cat');
+            });
+        })(catBtns[i]);
+    }
+
+    // Pilihan Mode
+    var modeBtns = document.querySelectorAll('.mode-btn');
+    for (var k = 0; k < modeBtns.length; k++) {
+        (function(btn) {
+            addTouchListener(btn, function() {
+                for (var m = 0; m < modeBtns.length; m++) modeBtns[m].classList.remove('active');
+                btn.classList.add('active');
+                selectedMode = btn.getAttribute('data-mode');
+            });
+        })(modeBtns[k]);
+    }
+
+    // Tombol Mulai
+    addTouchListener(document.getElementById('btnStart'), function() {
+        currentLevel = 1;
+        lives = 3;
+        document.getElementById('menuScreen').classList.add('hidden');
+        document.getElementById('quizScreen').classList.remove('hidden');
+        loadQuestion();
+    });
+
+    // Tombol Kembali
+    addTouchListener(document.getElementById('btnBack'), function() {
+        document.getElementById('quizScreen').classList.add('hidden');
+        document.getElementById('menuScreen').classList.remove('hidden');
+    });
+
+    // Tombol Info
+    addTouchListener(document.getElementById('btnInfo'), function() {
+        document.getElementById('infoModal').classList.remove('hidden');
+    });
+
+    addTouchListener(document.getElementById('btnCloseInfo'), function() {
+        document.getElementById('infoModal').classList.add('hidden');
+    });
+
+    function renderLives() {
+        var livesBadge = document.getElementById('livesBadge');
+        if (selectedMode === 'uraian') {
+            livesBadge.style.display = 'none';
+        } else {
+            livesBadge.style.display = 'block';
+            var str = '';
+            for (var i = 0; i < lives; i++) str += '❤️ ';
+            livesBadge.innerHTML = str || '🖤';
+        }
+    }
+
+    function loadQuestion() {
+        renderLives();
+        var catData = quizData[selectedCategory] || quizData.biologi;
+        var qObj = catData[currentLevel - 1] || catData[0];
+
+        document.getElementById('levelBadge').textContent = 'Level ' + currentLevel;
+        document.getElementById('questionText').textContent = qObj.q;
+
+        var pgOptions = document.getElementById('pgOptions');
+        var essayOptions = document.getElementById('essayOptions');
+
+        if (selectedMode === 'pg') {
+            pgOptions.classList.remove('hidden');
+            essayOptions.classList.add('hidden');
+            pgOptions.innerHTML = '';
+
+            for (var i = 0; i < qObj.opts.length; i++) {
+                var btn = document.createElement('button');
+                btn.className = 'opt-btn';
+                btn.textContent = qObj.opts[i];
+                (function(val) {
+                    addTouchListener(btn, function() { checkAnswer(val, qObj.a); });
+                })(qObj.opts[i]);
+                pgOptions.appendChild(btn);
+            }
+        } else {
+            pgOptions.classList.add('hidden');
+            essayOptions.classList.remove('hidden');
+            document.getElementById('essayAnswer').value = '';
+            
+            var btnEssay = document.getElementById('btnSubmitEssay');
+            btnEssay.onclick = function() {
+                var val = document.getElementById('essayAnswer').value.trim();
+                checkAnswer(val, qObj.a);
+            };
+        }
+    }
+
+    function checkAnswer(userAns, correctAns) {
+        if (!userAns) return;
+
+        var isCorrect = userAns.toLowerCase() === correctAns.toLowerCase();
+        var modal = document.getElementById('resultModal');
+        var emoji = document.getElementById('resultEmoji');
+        var text = document.getElementById('resultText');
+        var btnNext = document.getElementById('btnModalNext');
+
+        if (isCorrect) {
+            emoji.textContent = '😊';
+            text.textContent = 'Jawaban Benar!';
+            btnNext.textContent = currentLevel < 3 ? 'Lanjut Level' : 'Selesai & Ke Menu';
+            btnNext.onclick = function() {
+                modal.classList.add('hidden');
+                if (currentLevel < 3) {
+                    currentLevel++;
+                    loadQuestion();
+                } else {
+                    document.getElementById('quizScreen').classList.add('hidden');
+                    document.getElementById('menuScreen').classList.remove('hidden');
+                }
+            };
+        } else {
+            if (selectedMode === 'pg') lives--;
+
+            if (lives <= 0 && selectedMode === 'pg') {
+                emoji.textContent = '😢';
+                text.textContent = 'Nyawa Habis! Mengulang dari Level 1.';
+                btnNext.textContent = 'Coba Lagi';
+                btnNext.onclick = function() {
+                    modal.classList.add('hidden');
+                    currentLevel = 1;
+                    lives = 3;
+                    loadQuestion();
+                };
+            } else {
+                emoji.textContent = '🤔';
+                text.textContent = selectedMode === 'pg' 
+                    ? 'Salah! Nyawa tersisa ' + lives 
+                    : 'Jawaban Benar: ' + correctAns;
+                btnNext.textContent = 'Coba Lagi';
+                btnNext.onclick = function() {
+                    modal.classList.add('hidden');
+                    loadQuestion();
+                };
+            }
+        }
+        modal.classList.remove('hidden');
+    }
+</script>
+</body>
+</html>
+
