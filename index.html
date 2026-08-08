@@ -2,261 +2,155 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aplikasi Kuis Pembelajaran SMA - Anung Anindito</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color-1: #0f172a;
-            --primary-color: #38bdf8;
-            --accent-glow: rgba(56, 189, 248, 0.35);
-            --text-light: #f8fafc;
-            --card-bg: rgba(30, 41, 59, 0.95);
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRAINWASH — Belajar, Belajar untuk Hidup</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-subject="default">
 
-        /* Tema Per Mata Pelajaran */
-        body.theme-fisika { --bg-color-1: #1a1a1a; --primary-color: #ff3e3e; --accent-glow: rgba(255, 62, 62, 0.35); }
-        body.theme-biologi { --bg-color-1: #052e16; --primary-color: #4ade80; --accent-glow: rgba(74, 222, 128, 0.35); }
-        body.theme-kimia { --bg-color-1: #2e1065; --primary-color: #a78bfa; --accent-glow: rgba(167, 139, 250, 0.35); }
-        body.theme-matematika { --bg-color-1: #450a0a; --primary-color: #fb923c; --accent-glow: rgba(251, 146, 60, 0.35); }
-        body.theme-sejarah { --bg-color-1: #422006; --primary-color: #e9c46a; --accent-glow: rgba(233, 196, 106, 0.35); }
-        body.theme-geografi { --bg-color-1: #0c4a6e; --primary-color: #22d3ee; --accent-glow: rgba(34, 211, 238, 0.35); }
-        body.theme-ekonomi { --bg-color-1: #14532d; --primary-color: #fbbf24; --accent-glow: rgba(251, 191, 36, 0.35); }
-        body.theme-sosiologi { --bg-color-1: #701a75; --primary-color: #f472b6; --accent-glow: rgba(244, 114, 182, 0.35); }
-        body.theme-indo, body.theme-sunda, body.theme-jawa { --bg-color-1: #78350f; --primary-color: #f59e0b; --accent-glow: rgba(245, 158, 11, 0.35); }
-        body.theme-inggris, body.theme-jepang, body.theme-china, body.theme-jerman { --bg-color-1: #1e1b4b; --primary-color: #818cf8; --accent-glow: rgba(129, 140, 248, 0.35); }
+    <div id="bg-animation" class="bg-container"></div>
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+    <div class="app-container">
+        <header>
+            <div class="logo-area" onclick="navigateTo('home')">
+                <span class="logo-text">BRAINWASH</span>
+            </div>
+            <nav id="nav-controls">
+                <button class="nav-btn" onclick="navigateTo('home')">🏠 Home</button>
+                <button class="nav-btn" onclick="toggleSound()" id="sound-btn">🔊 Efek: ON</button>
+            </nav>
+        </header>
 
-        body {
-            background-color: var(--bg-color-1);
-            color: var(--text-light);
-            min-height: 100vh;
-            position: relative;
-            transition: background-color 0.3s ease;
-        }
+        <main id="main-content">
 
-        /* Latar Belakang Canvas */
-        #bgCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1;
-            pointer-events: none;
-        }
+            <section id="screen-home" class="screen active">
+                <div class="hero">
+                    <h1 class="title-glitch">BRAINWASH</h1>
+                    <p class="subtitle">"Asah Otakmu. Uji Pengetahuanmu."</p>
+                    <p class="motto">"Belajar, Belajar untuk Hidup."</p>
+                    <a href="#subjects-section" class="btn-primary start-btn">🚀 MULAI KUIS</a>
+                </div>
 
-        /* Container Utama */
-        .container {
-            position: relative;
-            z-index: 10;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px 15px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+                <div id="subjects-section" class="subjects-wrapper">
+                    <h2>Pilih Mata Pelajaran SMA</h2>
+                    <div class="grid-cards" id="sma-subjects">
+                        </div>
 
-        .header-brand {
-            text-align: center;
-            margin-bottom: 15px;
-        }
+                    <h2>Bahasa Asing</h2>
+                    <div class="grid-cards" id="lang-subjects">
+                        </div>
+                </div>
+            </section>
 
-        .watermark {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--primary-color), #a855f7);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            box-shadow: 0 4px 15px var(--accent-glow);
-            margin-bottom: 5px;
-        }
+            <section id="screen-mode" class="screen">
+                <h2 class="section-title">PILIH MODE KUIS</h2>
+                <p id="selected-subject-label" class="subject-tag"></p>
 
-        .motto {
-            font-style: italic;
-            color: #94a3b8;
-            font-size: 0.85rem;
-        }
+                <div class="mode-grid">
+                    <div class="mode-card" onclick="selectMode('pg')">
+                        <div class="mode-icon">🔘</div>
+                        <h3>PILHAN GANDA</h3>
+                        <p>Pilih jawaban yang paling tepat dari pilihan A, B, C, atau D.</p>
+                    </div>
+                    <div class="mode-card" onclick="selectMode('essay')">
+                        <div class="mode-icon">📝</div>
+                        <h3>MODE URAIAN</h3>
+                        <p>Ketik dan masukkan jawabanmu secara eksplisit.</p>
+                    </div>
+                </div>
+                <button class="btn-secondary" onclick="navigateTo('home')">← Kembali ke Selection</button>
+            </section>
 
-        .card {
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
+            <section id="screen-quiz" class="screen">
+                <div class="quiz-header">
+                    <div class="hud-item">
+                        <span class="hud-label">LEVEL:</span>
+                        <span id="hud-level" class="hud-val">1</span>
+                    </div>
+                    <div class="hud-item">
+                        <span id="hud-lives" class="lives-container">❤️ ❤️ ❤️</span>
+                    </div>
+                    <div class="hud-item">
+                        <span class="hud-label">SKOR:</span>
+                        <span id="hud-score" class="hud-val">0</span>
+                    </div>
+                </div>
 
-        .title {
-            text-align: center;
-            font-size: 1.6rem;
-            margin-bottom: 15px;
-            color: var(--primary-color);
-            font-weight: 800;
-        }
+                <div class="progress-bar-container">
+                    <div id="progress-bar" class="progress-bar-fill"></div>
+                </div>
 
-        /* Grid Kategori */
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
-            gap: 10px;
-            margin-bottom: 15px;
-            max-height: 250px;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
+                <div class="quiz-card">
+                    <div class="quiz-meta">
+                        <span id="quiz-subject-badge" class="badge">Informatika</span>
+                        <span id="quiz-question-num" class="badge-num">SOAL 01/10</span>
+                    </div>
 
-        .cat-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 2px solid rgba(255, 255, 255, 0.12);
-            border-radius: 12px;
-            padding: 10px 4px;
-            color: white;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-align: center;
-            user-select: none;
-        }
+                    <div id="question-text" class="question-text">
+                        Pertanyaan akan muncul di sini...
+                    </div>
 
-        .cat-btn i, .cat-btn span { pointer-events: none; }
+                    <div id="options-container" class="options-grid"></div>
 
-        .cat-btn.selected {
-            background: var(--accent-glow);
-            border-color: var(--primary-color);
-            box-shadow: 0 0 12px var(--accent-glow);
-        }
+                    <div id="essay-container" class="essay-box hidden">
+                        <input type="text" id="essay-input" placeholder="Ketik jawabanmu di sini..." autocomplete="off">
+                        <button class="btn-primary" onclick="submitEssay()">SUBMIT JAWABAN</button>
+                    </div>
 
-        /* Pilihan Mode */
-        .mode-options {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 10px 0;
-        }
+                    <div id="feedback-box" class="feedback-box hidden">
+                        <div id="feedback-status" class="feedback-status"></div>
+                        <div id="feedback-explanation" class="feedback-explanation"></div>
+                        <button id="next-btn" class="btn-primary" onclick="nextQuestion()">Lanjut →</button>
+                    </div>
+                </div>
+            </section>
 
-        .mode-btn {
-            flex: 1;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 2px solid rgba(255, 255, 255, 0.12);
-            border-radius: 12px;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
+            <section id="screen-result" class="screen">
+                <div class="result-card">
+                    <h1 id="result-title">🎉 KUIS SELESAI!</h1>
+                    <div class="result-score-big">
+                        <span>SKOR AKHIR</span>
+                        <h2 id="result-score">0</h2>
+                    </div>
 
-        .mode-btn.selected {
-            background: var(--primary-color);
-            border-color: var(--primary-color);
-            color: var(--bg-color-1);
-        }
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <span class="stat-label">Benar</span>
+                            <span id="stat-correct" class="stat-val text-success">0</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Salah</span>
+                            <span id="stat-wrong" class="stat-val text-danger">0</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Akurasi</span>
+                            <span id="stat-accuracy" class="stat-val">0%</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Level Tertinggi</span>
+                            <span id="stat-level" class="stat-val">LEVEL 1</span>
+                        </div>
+                    </div>
 
-        /* Tombol Aksi */
-        .btn-start {
-            width: 100%;
-            padding: 14px;
-            background: var(--primary-color);
-            color: var(--bg-color-1);
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-        }
+                    <div class="result-actions">
+                        <button class="btn-primary" onclick="restartQuiz()">🔄 MAIN LAGI</button>
+                        <button class="btn-secondary" onclick="navigateTo('home')">📚 PILIH MAPEL</button>
+                    </div>
+                </div>
+            </section>
 
-        .quiz-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
+        </main>
 
-        .badge {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 6px 12px;
-            border-radius: 14px;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
+        <footer>
+            <div class="watermark">
+                <span>BRAINWASH v1.0</span> • 
+                <strong>Anung Anindito — SMAN 1 Cijeruk</strong>
+            </div>
+        </footer>
+    </div>
 
-        .question-box {
-            font-size: 1.05rem;
-            margin-bottom: 18px;
-            line-height: 1.5;
-            text-align: center;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0,0,0,0.25);
-            padding: 15px;
-            border-radius: 14px;
-        }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-        }
-
-        .opt-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 12px 15px;
-            border-radius: 12px;
-            color: white;
-            font-size: 0.95rem;
-            cursor: pointer;
-            text-align: left;
-        }
-
-        .essay-box {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .essay-input {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.4);
-            color: white;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        .essay-input:focus {
-            border-color: var(--primary-color);
-        }
-
-        /* Modal Hasil / Pop-up Reaksi */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 100;
-            display: none; /* Default disembunyikan total */
-        
+    <script src="script.js"></script>
+</body>
+                                                                                    </html>
+                                                                                    
