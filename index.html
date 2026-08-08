@@ -2,14 +2,14 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuis Pengetahuan SMA - Anung Anindito</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aplikasi Kuis Pengetahuan SMA</title>
     <style>
         :root {
             --primary: #4f46e5;
             --primary-hover: #4338ca;
             --bg-dark: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.95);
+            --card-bg: #1e293b;
             --text-light: #f8fafc;
         }
 
@@ -19,6 +19,7 @@
             padding: 0;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         body {
@@ -29,21 +30,11 @@
             position: relative;
         }
 
-        /* Latar Belakang Animasi Fisika/Sains */
-        #bgCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-
+        /* Container & Card Layout */
         .container {
             position: relative;
-            z-index: 2;
-            max-width: 750px;
+            z-index: 10;
+            max-width: 600px;
             margin: 0 auto;
             padding: 15px;
             min-height: 100vh;
@@ -71,7 +62,7 @@
         .motto {
             font-style: italic;
             color: #94a3b8;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .card {
@@ -84,45 +75,58 @@
 
         .title {
             text-align: center;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             margin-bottom: 15px;
             color: #38bdf8;
         }
 
+        /* Grid Mata Pelajaran */
         .category-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 8px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
             margin-bottom: 15px;
-            max-height: 250px;
+            max-height: 260px;
             overflow-y: auto;
-            padding-right: 4px;
+            padding: 5px;
+        }
+
+        @media (min-width: 480px) {
+            .category-grid { grid-template-columns: repeat(3, 1fr); }
         }
 
         .cat-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 10px 4px;
+            border-radius: 14px;
+            padding: 12px 6px;
             color: white;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             font-size: 0.85rem;
-            transition: 0.2s;
+            transition: background 0.2s, border-color 0.2s;
+            pointer-events: auto;
         }
 
         .cat-btn .icon {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
+            pointer-events: none;
+        }
+
+        .cat-btn span {
+            pointer-events: none;
         }
 
         .cat-btn.selected {
-            background: rgba(99, 102, 241, 0.4);
-            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.35);
+            border-color: #6366f1;
+            box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
         }
 
+        /* Mode Option */
         .mode-section {
             margin-top: 10px;
             text-align: center;
@@ -137,14 +141,14 @@
 
         .mode-btn {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            border-radius: 12px;
             color: white;
             cursor: pointer;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .mode-btn.selected {
@@ -152,22 +156,24 @@
             border-color: var(--primary);
         }
 
+        /* Tombol Aksi */
         .btn-action {
             display: flex;
             gap: 10px;
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
         .btn-start {
             flex: 2;
             padding: 14px;
-            background: var(--primary);
+            background: linear-gradient(135deg, #4f46e5, #4338ca);
             color: white;
             border: none;
             border-radius: 12px;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
         }
 
         .btn-info {
@@ -177,11 +183,16 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
             border-radius: 12px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: bold;
             cursor: pointer;
         }
 
+        .btn-start:active, .btn-info:active, .cat-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Interface Kuis */
         .quiz-header {
             display: flex;
             justify-content: space-between;
@@ -200,7 +211,7 @@
         }
 
         .question-box {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             margin-bottom: 20px;
             line-height: 1.5;
             text-align: center;
@@ -208,9 +219,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0,0,0,0.25);
+            background: rgba(0, 0, 0, 0.25);
             padding: 15px;
             border-radius: 14px;
+            user-select: text;
         }
 
         .options-grid {
@@ -219,14 +231,10 @@
             gap: 10px;
         }
 
-        @media (min-width: 600px) {
-            .options-grid { grid-template-columns: 1fr 1fr; }
-        }
-
         .opt-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px 16px;
+            padding: 14px;
             border-radius: 10px;
             color: white;
             font-size: 0.95rem;
@@ -234,8 +242,8 @@
             text-align: left;
         }
 
-        .opt-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+        .opt-btn:active {
+            background: rgba(99, 102, 241, 0.3);
         }
 
         .essay-box {
@@ -253,8 +261,10 @@
             color: white;
             font-size: 1rem;
             outline: none;
+            user-select: text;
         }
 
+        /* Modals */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -276,12 +286,12 @@
         }
 
         .reaction-emoji {
-            font-size: 5rem;
+            font-size: 4.5rem;
             margin-bottom: 10px;
         }
 
         .reaction-text {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: bold;
             margin-bottom: 15px;
             text-align: center;
@@ -291,7 +301,7 @@
             background: #1e293b;
             border-radius: 16px;
             padding: 20px;
-            max-width: 500px;
+            max-width: 450px;
             width: 100%;
             color: #cbd5e1;
             font-size: 0.9rem;
@@ -303,8 +313,6 @@
 </head>
 <body>
 
-<canvas id="bgCanvas"></canvas>
-
 <div class="container">
     <div class="header-brand">
         <div class="watermark">🎓 Anung anindito.sman1cijeruk</div>
@@ -312,9 +320,9 @@
     </div>
 
     <div id="menuScreen" class="card">
-        <h1 class="title">Kuis Pengetahuan SMA</h1>
+        <h1 class="title">Aplikasi Kuis Pengetahuan SMA</h1>
         
-        <p style="text-align: center; margin-bottom: 10px; color: #cbd5e1; font-size: 0.9rem;">Pilih Mata Pelajaran:</p>
+        <p style="text-align: center; margin-bottom: 10px; color: #cbd5e1; font-size: 0.85rem;">Pilih Mata Pelajaran:</p>
         
         <div class="category-grid" id="categoryGrid">
             <div class="cat-btn selected" data-cat="biologi"><span class="icon">🧬</span><span>Biologi</span></div>
@@ -335,7 +343,7 @@
         </div>
 
         <div class="mode-section">
-            <p style="color: #cbd5e1; font-size: 0.9rem;">Pilih Mode Kuis:</p>
+            <p style="color: #cbd5e1; font-size: 0.85rem;">Pilih Mode Kuis:</p>
             <div class="mode-options">
                 <button class="mode-btn selected" data-mode="pg">Pilihan Ganda</button>
                 <button class="mode-btn" data-mode="uraian">Uraian / Isian</button>
@@ -344,13 +352,13 @@
 
         <div class="btn-action">
             <button class="btn-start" id="btnStartGame">Mulai Belajar ▶</button>
-            <button class="btn-info" id="btnShowInfo">ℹ Bantuan</button>
+            <button class="btn-info" id="btnShowInfo">ℹ Bantuan & Info</button>
         </div>
     </div>
 
     <div id="quizScreen" class="card hidden">
         <div class="quiz-header">
-            <button id="btnBack" style="background:none; border:none; color:white; cursor:pointer; font-size:1rem;">
+            <button id="btnBack" style="background:none; border:none; color:white; cursor:pointer; font-size:0.95rem;">
                 ← Menu
             </button>
             <div class="badge" id="levelBadge">Level 1</div>
@@ -364,7 +372,7 @@
         <div class="options-grid" id="pgOptions"></div>
 
         <div class="essay-box hidden" id="essayOptions">
-            <input type="text" id="essayAnswer" class="essay-input" placeholder="Ketik jawaban Anda..." autocomplete="off">
+            <input type="text" id="essayAnswer" class="essay-input" placeholder="Ketik jawaban Anda di sini..." autocomplete="off">
             <button class="btn-start" id="btnSubmitEssay">Kirim Jawaban</button>
         </div>
     </div>
@@ -373,21 +381,22 @@
 <div class="modal-overlay" id="reactionOverlay">
     <div class="reaction-emoji" id="reactionEmoji">😊</div>
     <div class="reaction-text" id="reactionText">Jawaban Benar!</div>
-    <button class="btn-start" id="btnNextLevel" style="max-width: 220px;">Lanjut →</button>
+    <button class="btn-start" id="btnNextLevel" style="max-width: 200px;">Lanjut →</button>
 </div>
 
 <div class="modal-overlay" id="infoOverlay">
     <div class="info-card">
-        <h2 style="color: #38bdf8; margin-bottom: 10px;">Tentang Aplikasi</h2>
-        <p>Aplikasi Kuis Pembelajaran SMA dikembangkan oleh <strong>Anung Anindito (SMAN 1 Cijeruk)</strong>.</p>
+        <h2 style="color: #38bdf8; margin-bottom: 10px;">Informasi Aplikasi</h2>
+        <p>Aplikasi Kuis Pembelajaran SMA Dikembangkan oleh <strong>Anung Anindito (SMAN 1 Cijeruk)</strong>.</p>
         <p style="margin-top: 10px;">Motto: <em>"belajar untuk hidup, hidup untuk belajar"</em></p>
         <button class="btn-start" id="btnCloseInfo" style="margin-top:20px; width:100%;">Tutup</button>
     </div>
 </div>
 
 <script>
-    // Memastikan seluruh dokumen siap
-    window.onload = function() {
+    // Memastikan JS berjalan dengan aman
+    document.addEventListener("DOMContentLoaded", function() {
+        
         const quizData = {
             biologi: [
                 { level: 1, q: 'Organel sel yang dijuluki "The Powerhouse of Cell" tempat respirasi sel berlangsung adalah?', opts: ['Mitokondria', 'Ribosom', 'Lisosom', 'Kloroplas'], a: 'Mitokondria' },
@@ -450,9 +459,4 @@
                 { level: 3, q: 'Unsur tatakrama basa Sunda pikeun ngahormatan batur nyaeta basa?', opts: ['Loma', 'Lemes', 'Kasar', 'Sedeng'], a: 'Lemes' }
             ],
             jepang: [
-                { level: 1, q: 'Ungkapan salam "Selamat Pagi" dalam bahasa Jepang adalah?', opts: ['Konnichiwa', 'Ohayou Gozaimasu', 'Konbanwa', 'Arigatou'], a: 'Ohayou Gozaimasu' },
-                { level: 2, q: 'Huruf Jepang khusus untuk menuliskan kata serapan bahasa asing adalah?', opts: ['Hiragana', 'Katakana', 'Kanji', 'Romaji'], a: 'Katakana' },
-                { level: 3, q: 'Partikel penanda objek penderita kata kerja transitif adalah?', opts: ['Wa', 'Ga', 'Wo / O', 'Ni'], a: 'Wo / O' }
-            ],
-            china: [
-                { level: 1, q: 'Pengucapan salam "Halo / Apa kabar" dalam Bahasa Mandarin adalah?
+                { level: 1, q: 'Ungkapan salam "Selamat Pagi" dalam bahasa Jepang adalah?', opts: ['Konnichiwa', 'Ohayou Gozaimasu', 'Konbanwa', 'Arigatou'], a: 'Ohayou Gozaima
