@@ -15,18 +15,33 @@
         }
 
         body {
-            background-color: #0f172a;
+            background-color: #0b0f19;
             color: #f8fafc;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 12px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Canvas Background Partikel (Dibuat Tidak Menghalangi Klik) */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none; /* KUNCI UTAMA: Sentuhan/klik akan menembus canvas */
         }
 
         .container {
             width: 100%;
             max-width: 500px;
+            position: relative;
+            z-index: 10; /* Memastikan UI berada di atas background */
         }
 
         .header-brand {
@@ -36,13 +51,14 @@
 
         .watermark {
             display: inline-block;
-            background: #6366f1;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
             color: #ffffff;
-            padding: 6px 14px;
+            padding: 6px 16px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: bold;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
         }
 
         .motto {
@@ -52,19 +68,22 @@
         }
 
         .card {
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            padding: 18px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
         }
 
         .title {
             text-align: center;
-            font-size: 1.3rem;
+            font-size: 1.35rem;
             color: #38bdf8;
             margin-bottom: 12px;
             font-weight: bold;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
         }
 
         .section-label {
@@ -86,9 +105,9 @@
         }
 
         .cat-btn {
-            background: #0f172a;
-            border: 2px solid #334155;
-            border-radius: 10px;
+            background: rgba(15, 23, 42, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
             padding: 10px 6px;
             color: #fff;
             text-align: center;
@@ -98,25 +117,27 @@
             flex-direction: column;
             align-items: center;
             gap: 4px;
+            transition: all 0.2s ease;
         }
 
         .cat-btn.active {
             border-color: #6366f1;
-            background: #312e81;
+            background: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
         }
 
         /* Mode Selection */
         .mode-grid {
             display: flex;
             gap: 8px;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
         .mode-btn {
             flex: 1;
             padding: 10px;
-            background: #0f172a;
-            border: 2px solid #334155;
+            background: rgba(15, 23, 42, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             color: #fff;
             font-size: 0.8rem;
@@ -128,6 +149,7 @@
         .mode-btn.active {
             background: #4f46e5;
             border-color: #6366f1;
+            box-shadow: 0 0 12px rgba(79, 70, 229, 0.5);
         }
 
         /* Action Buttons */
@@ -139,21 +161,22 @@
         .btn-main {
             flex: 2;
             padding: 12px;
-            background: #4f46e5;
+            background: linear-gradient(135deg, #4f46e5, #3b82f6);
             color: white;
             border: none;
             border-radius: 10px;
             font-weight: bold;
             font-size: 0.95rem;
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
         }
 
         .btn-sub {
             flex: 1;
             padding: 12px;
-            background: #334155;
+            background: rgba(255, 255, 255, 0.1);
             color: white;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 10px;
             font-size: 0.8rem;
             font-weight: bold;
@@ -161,7 +184,7 @@
         }
 
         .btn-main:active, .btn-sub:active, .cat-btn:active, .opt-btn:active {
-            opacity: 0.7;
+            transform: scale(0.96);
         }
 
         /* Quiz Play Screen */
@@ -171,11 +194,11 @@
             align-items: center;
             margin-bottom: 12px;
             padding-bottom: 8px;
-            border-bottom: 1px solid #334155;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .badge {
-            background: #334155;
+            background: rgba(255, 255, 255, 0.1);
             padding: 4px 10px;
             border-radius: 12px;
             font-size: 0.8rem;
@@ -183,17 +206,18 @@
         }
 
         .question-box {
-            background: #0f172a;
-            padding: 14px;
-            border-radius: 10px;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 16px;
+            border-radius: 12px;
             text-align: center;
             font-size: 0.95rem;
             margin-bottom: 14px;
-            min-height: 70px;
+            min-height: 75px;
             display: flex;
             align-items: center;
             justify-content: center;
             line-height: 1.4;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .options-grid {
@@ -203,8 +227,8 @@
         }
 
         .opt-btn {
-            background: #0f172a;
-            border: 1px solid #334155;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 12px;
             border-radius: 8px;
             color: white;
@@ -221,8 +245,8 @@
 
         .essay-input {
             padding: 12px;
-            background: #0f172a;
-            border: 1px solid #334155;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             color: white;
             font-size: 0.9rem;
@@ -248,13 +272,15 @@
             text-align: center;
             max-width: 350px;
             width: 100%;
-            border: 1px solid #334155;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
+
+<canvas id="bgCanvas"></canvas>
 
 <div class="container">
     <div class="header-brand">
@@ -336,7 +362,60 @@
 </div>
 
 <script>
-    // System Initialization
+    // 1. ANMATION PARTICLE BACKGROUND (Super Smooth & Safe)
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+        constructor() {
+            this.reset();
+        }
+        reset() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2.5 + 0.5;
+            this.speedX = (Math.random() - 0.5) * 0.5;
+            this.speedY = (Math.random() - 0.5) * 0.5;
+            this.alpha = Math.random() * 0.5 + 0.2;
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                this.reset();
+            }
+        }
+        draw() {
+            ctx.fillStyle = `rgba(99, 102, 241, ${this.alpha})`;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    for (let i = 0; i < 45; i++) {
+        particles.push(new Particle());
+    }
+
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+        requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // 2. LOGIKA KUIS (100% Responsif)
     var selectedCategory = 'biologi';
     var selectedMode = 'pg';
     var currentLevel = 1;
@@ -410,74 +489,4 @@
         ],
         china: [
             { level: 1, q: 'Pengucapan "Halo / Apa kabar" Mandarin?', opts: ['Xie Xie', 'Ni Hao', 'Zai Jian', 'Dui Bu Qi'], a: 'Ni Hao' },
-            { level: 2, q: 'Jumlah nada dasar bahasa Mandarin?', opts: ['3 Nada', '4 Nada', '5 Nada', '6 Nada'], a: '4 Nada' },
-            { level: 3, q: 'Sistem Latin pembacaan Hanzi?', opts: ['Pinyin', 'Kanji', 'Hanzi', 'Zhuyin'], a: 'Pinyin' }
-        ],
-        germany: [
-            { level: 1, q: 'Arti "Guten Morgen" adalah?', opts: ['Selamat Malam', 'Selamat Siang', 'Selamat Pagi', 'Selamat Tinggal'], a: 'Selamat Pagi' },
-            { level: 2, q: 'Kata ganti "Saya" bahasa Jerman?', opts: ['Du', 'Ich', 'Er', 'Wir'], a: 'Ich' },
-            { level: 3, q: 'Artikel maskulin tunggal?', opts: ['Der', 'Die', 'Das', 'Den'], a: 'Der' }
-        ]
-    };
-
-    // Event Delegation (Memastikan Responsivitas Sentuhan)
-    document.getElementById('categoryGrid').addEventListener('click', function(e) {
-        var btn = e.target.closest('.cat-btn');
-        if (!btn) return;
-        var all = this.querySelectorAll('.cat-btn');
-        for(var i=0; i<all.length; i++) all[i].classList.remove('active');
-        btn.classList.add('active');
-        selectedCategory = btn.getAttribute('data-cat');
-    });
-
-    document.getElementById('modeGrid').addEventListener('click', function(e) {
-        var btn = e.target.closest('.mode-btn');
-        if (!btn) return;
-        var all = this.querySelectorAll('.mode-btn');
-        for(var i=0; i<all.length; i++) all[i].classList.remove('active');
-        btn.classList.add('active');
-        selectedMode = btn.getAttribute('data-mode');
-    });
-
-    document.getElementById('btnStart').onclick = function() {
-        currentLevel = 1;
-        lives = 3;
-        document.getElementById('menuScreen').classList.add('hidden');
-        document.getElementById('quizScreen').classList.remove('hidden');
-        loadQuestion();
-    };
-
-    document.getElementById('btnBack').onclick = function() {
-        document.getElementById('quizScreen').classList.add('hidden');
-        document.getElementById('menuScreen').classList.remove('hidden');
-    };
-
-    document.getElementById('btnInfo').onclick = function() {
-        document.getElementById('infoModal').classList.remove('hidden');
-    };
-
-    document.getElementById('btnCloseInfo').onclick = function() {
-        document.getElementById('infoModal').classList.add('hidden');
-    };
-
-    function renderLives() {
-        var livesBadge = document.getElementById('livesBadge');
-        if (selectedMode === 'uraian') {
-            livesBadge.style.display = 'none';
-        } else {
-            livesBadge.style.display = 'block';
-            var str = '';
-            for (var i = 0; i < lives; i++) str += '❤️ ';
-            livesBadge.innerHTML = str || '🖤';
-        }
-    }
-
-    function loadQuestion() {
-        renderLives();
-        var catData = quizData[selectedCategory] || quizData.biologi;
-        var qObj = catData[currentLevel - 1] || catData[0];
-
-        document.getElementById('levelBadge').textContent = 'Level ' + currentLevel;
-        document.getElementById('questionText').textContent = qObj.q;
-
-        var pgOptions = document.getElementById('pgOptio
+            { level: 2, q: 'Jumlah nada dasar bahasa Mandarin?', opts: ['3 Nada', '
