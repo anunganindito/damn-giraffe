@@ -56,12 +56,11 @@
             <div class="cat-btn" data-cat="kimia"><span>🧪</span><span>Kimia</span></div>
             <div class="cat-btn" data-cat="fisika"><span>⚛️</span><span>Fisika</span></div>
             <div class="cat-btn" data-cat="matematika"><span>📐</span><span>Matematika</span></div>
-            <div class="cat-btn" data-cat="ekonomi"><span>📈</span><span>Ekonomi</span></div>
-            <div class="cat-btn" data-cat="geografi"><span>🌍</span><span>Geografi</span></div>
-            <div class="cat-btn" data-cat="sosiologi"><span>👥</span><span>Sosiologi</span></div>
-            <div class="cat-btn" data-cat="sejarah"><span>🏛️</span><span>Sejarah</span></div>
-            <div class="cat-btn" data-cat="indo"><span>📖</span><span>B. Indonesia</span></div>
             <div class="cat-btn" data-cat="inggris"><span>🗣️</span><span>B. Inggris</span></div>
+            <div class="cat-btn" data-cat="jepang"><span>⛩️</span><span>B. Jepang</span></div>
+            <div class="cat-btn" data-cat="jerman"><span>🍺</span><span>B. Jerman</span></div>
+            <div class="cat-btn" data-cat="spanyol"><span>💃</span><span>B. Spanyol</span></div>
+            <div class="cat-btn" data-cat="china"><span>🐉</span><span>Mandarin</span></div>
         </div>
 
         <div class="section-label">Pilih Mode Kuis:</div>
@@ -123,16 +122,15 @@
     window.addEventListener('resize', resizeCanvas);
 
     const symbols = {
-        matematika: ['∑', 'π', '√x', '∞', '∫', 'sin', 'cos', '+', '%'],
-        fisika: ['E=mc²', 'F=ma', 'Ω', 'λ', '⚛', 'v=s/t', 'Hz'],
-        kimia: ['H₂O', 'CO₂', 'pH', 'NaCl', '🧪', 'Mol'],
+        matematika: ['∑', 'π', '√x', '∞', '∫', 'sin', 'cos'],
+        fisika: ['E=mc²', 'F=ma', 'Ω', 'λ', '⚛', 'Hz'],
+        kimia: ['H₂O', 'CO₂', 'pH', 'NaCl', '🧪'],
         biologi: ['🧬', 'DNA', 'ATP', 'Cell', '🌿'],
-        geografi: ['🌍', '1:1000', 'GPS'],
-        ekonomi: ['$', 'Rp', '%', 'P', 'Q'],
-        sejarah: ['🏛️', '1945', 'Proklamasi'],
-        indo: ['A-Z', 'SPOK', 'Puisi'],
-        inggris: ['Grammar', 'Verb', 'Noun'],
-        sosiologi: ['👥', 'Sosial', 'Norma']
+        inggris: ['Grammar', 'Verb', 'Noun', 'English'],
+        jepang: ['⛩️', 'あ', 'カ', 'Kanji', 'Sakura'],
+        jerman: ['🍺', 'Deutsch', 'Ich', 'Gut'],
+        spanyol: ['💃', 'Hola', 'Amigo', 'Sol'],
+        china: ['🐉', '漢', 'Pinyin', 'NiHao']
     };
 
     function Particle() { this.reset(); }
@@ -169,16 +167,51 @@
     var selectedMode = 'pg', currentLevel = 1, lives = 3;
 
     var quizData = {
-        biologi: [{ level: 1, q: 'Organel sel tempat respirasi sel?', opts: ['Mitokondria', 'Ribosom', 'Lisosom'], a: 'Mitokondria' }],
-        kimia: [{ level: 1, q: 'Unsur nomor atom 6?', opts: ['Oksigen', 'Karbon', 'Nitrogen'], a: 'Karbon' }],
-        fisika: [{ level: 1, q: 'Satuan SI Gaya?', opts: ['Joule', 'Watt', 'Newton'], a: 'Newton' }],
-        matematika: [{ level: 1, q: 'Hasil 2^3 + 3^2?', opts: ['12', '17', '15'], a: '17' }],
-        ekonomi: [{ level: 1, q: 'Masalah pokok ekonomi?', opts: ['Produksi, Distribusi, Konsumsi', 'Pasar, Uang'], a: 'Produksi, Distribusi, Konsumsi' }],
-        geografi: [{ level: 1, q: 'Lapisan udara bumi?', opts: ['Litosfer', 'Atmosfer', 'Biosfer'], a: 'Atmosfer' }],
-        sosiologi: [{ level: 1, q: 'Sosialisasi pertama terjadi di?', opts: ['Sekolah', 'Keluarga', 'Teman'], a: 'Keluarga' }],
-        sejarah: [{ level: 1, q: 'Tanggal Proklamasi RI?', opts: ['17 Agustus 1945', '10 November 1945'], a: '17 Agustus 1945' }],
-        indo: [{ level: 1, q: 'Gagasan utama paragraf?', opts: ['Ide pokok', 'Kesimpulan'], a: 'Ide pokok' }],
-        inggris: [{ level: 1, q: 'Past tense of "Go"?', opts: ['Went', 'Gone', 'Goes'], a: 'Went' }]
+        biologi: [
+            { level: 1, q: 'Organel tempat respirasi sel?', opts: ['Mitokondria', 'Ribosom', 'Lisosom'], a: 'Mitokondria' },
+            { level: 2, q: 'Fase sel saat kromosom berderet di ekuator?', opts: ['Profase', 'Metafase', 'Anafase'], a: 'Metafase' },
+            { level: 3, q: 'Rasio fenotip persilangan dihibrid heterozigot?', opts: ['3:1', '9:3:3:1', '1:2:1'], a: '9:3:3:1' }
+        ],
+        kimia: [
+            { level: 1, q: 'Unsur dengan nomor atom 6?', opts: ['Oksigen', 'Karbon', 'Nitrogen'], a: 'Karbon' },
+            { level: 2, q: 'Konsentrasi ion H+ pada pH = 3?', opts: ['10^-3 M', '10^-7 M', '3 M'], a: '10^-3 M' },
+            { level: 3, q: 'Senyawa asam sulfat memiliki rumus?', opts: ['HCl', 'H2SO4', 'HNO3'], a: 'H2SO4' }
+        ],
+        fisika: [
+            { level: 1, q: 'Satuan SI untuk Gaya?', opts: ['Joule', 'Watt', 'Newton'], a: 'Newton' },
+            { level: 2, q: 'Massa 2 kg, kecepatan 4 m/s. Energi kinetiknya?', opts: ['8 Joule', '16 Joule', '32 Joule'], a: '16 Joule' },
+            { level: 3, q: 'Rumus Hukum II Newton adalah?', opts: ['F = m . a', 'E = m . c2', 'V = I . R'], a: 'F = m . a' }
+        ],
+        matematika: [
+            { level: 1, q: 'Hasil 2^3 + 3^2 adalah?', opts: ['12', '17', '15'], a: '17' },
+            { level: 2, q: 'Akar dari x^2 - 5x + 6 = 0 adalah?', opts: ['2 dan 3', '-2 dan -3', '1 dan 6'], a: '2 dan 3' },
+            { level: 3, q: 'Turunan pertama dari f(x) = 3x^2 + 4x?', opts: ['6x + 4', '3x + 4', '6x'], a: '6x + 4' }
+        ],
+        inggris: [
+            { level: 1, q: 'Past tense of "Go"?', opts: ['Went', 'Gone', 'Goes'], a: 'Went' },
+            { level: 2, q: 'Complete: "If I _____ a doctor, I would help."', opts: ['am', 'was', 'were'], a: 'were' },
+            { level: 3, q: 'Passive voice of "They build a house"?', opts: ['A house is built', 'A house was built', 'A house built'], a: 'A house is built' }
+        ],
+        jepang: [
+            { level: 1, q: 'Salam "Selamat Pagi" dalam bahasa Jepang?', opts: ['Konnichiwa', 'Ohayou Gozaimasu', 'Konbanwa'], a: 'Ohayou Gozaimasu' },
+            { level: 2, q: 'Huruf yang digunakan untuk kata serapan asing?', opts: ['Hiragana', 'Katakana', 'Kanji'], a: 'Katakana' },
+            { level: 3, q: 'Partikel penanda objek penderita adalah?', opts: ['Wa', 'Ga', 'Wo / O'], a: 'Wo / O' }
+        ],
+        jerman: [
+            { level: 1, q: 'Arti dari "Guten Morgen" adalah?', opts: ['Selamat Malam', 'Selamat Pagi', 'Selamat Tinggal'], a: 'Selamat Pagi' },
+            { level: 2, q: 'Kata ganti "Saya" dalam bahasa Jerman?', opts: ['Du', 'Ich', 'Er'], a: 'Ich' },
+            { level: 3, q: 'Artikel maskulin tunggal dalam bahasa Jerman?', opts: ['Der', 'Die', 'Das'], a: 'Der' }
+        ],
+        spanyol: [
+            { level: 1, q: 'Arti kata "Hola" dalam bahasa Spanyol?', opts: ['Halo', 'Selamat Tinggal', 'Terima Kasih'], a: 'Halo' },
+            { level: 2, q: 'Bagaimana mengucapkan "Terima Kasih"?', opts: ['Por favor', 'Gracias', 'De nada'], a: 'Gracias' },
+            { level: 3, q: 'Kata ganti "Saya" dalam bahasa Spanyol?', opts: ['Yo', 'Tu', 'El'], a: 'Yo' }
+        ],
+        china: [
+            { level: 1, q: 'Pengucapan "Halo / Apa kabar" dalam Mandarin?', opts: ['Xie Xie', 'Ni Hao', 'Zai Jian'], a: 'Ni Hao' },
+            { level: 2, q: 'Ada berapa nada dasar dalam bahasa Mandarin?', opts: ['3 Nada', '4 Nada', '5 Nada'], a: '4 Nada' },
+            { level: 3, q: 'Sistem ejaan Latin untuk membaca karakter Hanzi?', opts: ['Pinyin', 'Kanji', 'Zhuyin'], a: 'Pinyin' }
+        ]
     };
 
     function addTouchListener(el, cb) { if (el) el.addEventListener('click', cb); }
@@ -226,7 +259,7 @@
     function loadQuestion() {
         renderLives();
         var catData = quizData[selectedCategory] || quizData.biologi;
-        var qObj = catData[0];
+        var qObj = catData[currentLevel - 1] || catData[0];
         document.getElementById('levelBadge').textContent = 'Level ' + currentLevel;
         document.getElementById('questionText').textContent = qObj.q;
 
@@ -261,21 +294,40 @@
 
         if (isCorrect) {
             emoji.textContent = '😊'; text.textContent = 'Jawaban Benar!';
-            btnNext.textContent = 'Ke Menu Utama';
-            btnNext.onclick = function() {
-                modal.classList.add('hidden');
-                document.getElementById('quizScreen').classList.add('hidden');
-                document.getElementById('menuScreen').classList.remove('hidden');
-            };
+            if (currentLevel < 3) {
+                btnNext.textContent = 'Lanjut Level ' + (currentLevel + 1);
+                btnNext.onclick = function() {
+                    modal.classList.add('hidden');
+                    currentLevel++;
+                    loadQuestion();
+                };
+            } else {
+                btnNext.textContent = 'Selamat! Kembali ke Menu';
+                btnNext.onclick = function() {
+                    modal.classList.add('hidden');
+                    document.getElementById('quizScreen').classList.add('hidden');
+                    document.getElementById('menuScreen').classList.remove('hidden');
+                };
+            }
         } else {
             if (selectedMode === 'pg') lives--;
-            emoji.textContent = '🤔'; text.textContent = 'Kurang Tepat!';
-            btnNext.textContent = 'Coba Lagi';
-            btnNext.onclick = function() { modal.classList.add('hidden'); loadQuestion(); };
+            if (lives <= 0 && selectedMode === 'pg') {
+                emoji.textContent = '😢'; text.textContent = 'Nyawa Habis!';
+                btnNext.textContent = 'Ulang dari Level 1';
+                btnNext.onclick = function() {
+                    modal.classList.add('hidden');
+                    currentLevel = 1; lives = 3;
+                    loadQuestion();
+                };
+            } else {
+                emoji.textContent = '🤔'; text.textContent = 'Kurang Tepat!';
+                btnNext.textContent = 'Coba Lagi';
+                btnNext.onclick = function() { modal.classList.add('hidden'); loadQuestion(); };
+            }
         }
         modal.classList.remove('hidden');
     }
 </script>
 </body>
-    </html>
-    
+</html>
+
