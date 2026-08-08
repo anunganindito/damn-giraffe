@@ -4,27 +4,32 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#6db7d6">
-<title>Damn Giraffe — Endless Runner</title>
+<title>Damn Tiger — Endless Runner</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif}
-body{background:#78bdd8;touch-action:none}
+body{background:#78bdd8;touch-action:none;user-select:none;-webkit-user-select:none}
 button{font:inherit;border:0;cursor:pointer}
 .hidden{display:none!important}
+
 #app,#game{position:relative;width:100%;height:100%;overflow:hidden}
 #menu{position:absolute;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;background:linear-gradient(#77c8e7 0 62%,#89ad61 62%)}
 .menu-card{width:min(94vw,520px);padding:26px;border-radius:28px;background:#fffffff2;text-align:center;box-shadow:0 18px 55px #0004}
 .logo{font-size:clamp(40px,10vw,70px);font-weight:950;letter-spacing:-3px;color:#24333b}
 .sub{color:#5c6c75;margin:7px 0 4px}
 .watermark{font-size:12px;font-weight:800;color:#68757b;opacity:.75;margin-bottom:18px}
+
 #chars{display:flex;gap:9px;margin:12px 0 18px}
 .char{flex:1;padding:12px 5px;border:3px solid transparent;border-radius:17px;background:#edf2f4;color:#24343d}
 .char.selected{border-color:#edae20;background:#fff4d3;box-shadow:0 4px 0 #d8b45c}
 .char .emoji{display:block;font-size:43px;margin-bottom:5px}
 .char b{font-size:13px}
+
 .btn{width:100%;padding:15px;margin:6px 0;border-radius:15px;font-weight:900}
 .play{background:#ffb51b;color:#342400;box-shadow:0 5px #c68300}
+.play:active{transform:translateY(2px);box-shadow:0 3px #c68300}
 .help{background:#293b49;color:#fff}
+
 #game{background:#82c9e6}
 #sky{position:absolute;inset:0;background:linear-gradient(#69c3e8,#dff6ff 72%);transition:background 1.4s}
 #sun,#moon{position:absolute;width:78px;height:78px;border-radius:50%;right:12%;top:9%;transition:all 1.4s}
@@ -33,53 +38,53 @@ button{font:inherit;border:0;cursor:pointer}
 .cloud{position:absolute;font-size:58px;opacity:.6;animation:cloud 34s linear infinite;pointer-events:none}
 .c1{top:12%;left:-15%}.c2{top:29%;left:45%;animation-duration:42s}
 @keyframes cloud{to{transform:translateX(130vw)}}
+
 #mountains{position:absolute;left:-10%;bottom:24%;width:120%;height:28%;background:#789c68;clip-path:polygon(0 100%,0 62%,12% 32%,23% 58%,36% 15%,51% 60%,63% 28%,78% 57%,91% 18%,100% 50%,100% 100%);opacity:.8}
 #ground{position:absolute;left:0;bottom:0;width:100%;height:24%;background:linear-gradient(#86a95d,#678b48);border-top:6px solid #4f7339}
 #ground:after{content:"";position:absolute;inset:35% 0 0;background:repeating-linear-gradient(90deg,transparent 0 45px,#5d823e 46px 49px);opacity:.65}
+
 #hud{position:absolute;z-index:20;top:12px;left:12px;right:12px;display:flex;gap:6px;justify-content:space-between;flex-wrap:wrap;font-weight:900}
 .badge{padding:8px 11px;border-radius:12px;background:#ffffffe8;color:#1c2d35;box-shadow:0 2px 8px #0002}
 #phase{position:absolute;z-index:20;top:65px;left:50%;transform:translateX(-50%);padding:7px 13px;border-radius:20px;background:#ffffffb8;color:#263d46;font-weight:900}
 
-/* KARAKTER & DEREKSI BERLARI KE KANAN */
+/* POSISI & PENGATURAN KARAKTER MENDAHULUI HARIMAU */
 #player,#tiger,#obstacle{position:absolute;z-index:8;user-select:none}
 #player,#tiger{bottom:24%;font-size:clamp(56px,12vw,94px);line-height:1;filter:drop-shadow(0 8px 2px #0004);transform-origin:center bottom}
 
-/* Pemain Menghadap Kanan (left: 22%) */
-#player{left:22%;z-index:8;transform:scaleX(-1)}
+/* Pemain di Depan (Lari ke Kanan) */
+#player{left:24%;z-index:8;transform:scaleX(-1)}
 
-/* Harimau Mengejar di Belakang Pemain (left: 4%) dan Menghadap Kanan */
+/* Harimau Mengejar di Belakang (Lari ke Kanan) */
 #tiger{left:4%;font-size:clamp(50px,10vw,82px);z-index:7;transform:scaleX(-1)}
 
 #obstacle{bottom:24%;left:110%;font-size:clamp(43px,9vw,70px);line-height:1;filter:drop-shadow(0 7px 2px #0004)}
 
-/* ANIMASI BERLARI HARIMAU & PEMAIN HASIL PERBAIKAN */
-.running{animation:runCycle .34s infinite}
+/* ANIMASI BERLARI KE KANAN */
+.running{animation:runCycle .28s infinite alternate ease-in-out}
 @keyframes runCycle{
-  0%{transform:scaleX(-1) translateY(0) rotate(-2deg)}
-  25%{transform:scaleX(-1) translateY(-5px) rotate(2deg)}
-  50%{transform:scaleX(-1) translateY(0) rotate(-2deg)}
-  75%{transform:scaleX(-1) translateY(-5px) rotate(2deg)}
-  100%{transform:scaleX(-1) translateY(0) rotate(-2deg)}
+  from{transform:scaleX(-1) translateY(0) rotate(-1deg)}
+  to{transform:scaleX(-1) translateY(-6px) rotate(2deg)}
 }
-.tiger-running{animation:tigerRun .28s infinite}
-@keyframes tigerRun{
-  0%{transform:scaleX(-1) translateY(0) rotate(1deg)}
-  50%{transform:scaleX(-1) translateY(-7px) rotate(-2deg)}
-  100%{transform:scaleX(-1) translateY(0) rotate(1deg)}
-}
-.jumping{animation:jump .60s cubic-bezier(.2,.75,.3,1)}
-.tiger-jumping{animation:tigerJump .60s cubic-bezier(.2,.75,.3,1)}
-@keyframes jump{0%{bottom:24%;transform:scaleX(-1)}45%{bottom:54%;transform:scaleX(-1)}100%{bottom:24%;transform:scaleX(-1)}}
-@keyframes tigerJump{0%{bottom:24%;transform:scaleX(-1)}45%{bottom:51%;transform:scaleX(-1) rotate(-3deg)}100%{bottom:24%;transform:scaleX(-1)}}
 
-#pause{position:absolute;z-index:30;right:64px;top:65px;width:44px;height:44px;border-radius:12px;background:#ffffffdf;font-weight:900}
-#homeBtn{position:absolute;z-index:30;right:12px;top:65px;width:44px;height:44px;border-radius:12px;background:#ffffffdf;font-weight:900}
+.tiger-running{animation:tigerRun .22s infinite alternate ease-in-out}
+@keyframes tigerRun{
+  from{transform:scaleX(-1) translateY(0) rotate(1deg)}
+  to{transform:scaleX(-1) translateY(-8px) rotate(-2deg)}
+}
+
+#pause,#homeBtn{position:absolute;z-index:30;top:65px;width:44px;height:44px;border-radius:12px;background:#ffffffdf;font-weight:900}
+#pause{right:64px}
+#homeBtn{right:12px}
+
 #controls{position:absolute;z-index:30;left:16px;right:16px;bottom:16px;display:flex;justify-content:flex-end}
 #jumpBtn{width:100px;height:72px;border-radius:20px;background:#ffbf36df;color:#3b2a00;font-weight:950;box-shadow:0 5px #aa7410}
+#jumpBtn:active{transform:translateY(3px);box-shadow:0 2px #aa7410}
+
 #overlay{position:absolute;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:18px;background:#102e2859;backdrop-filter:blur(3px)}
 .modal{width:min(92vw,430px);background:#fff;border-radius:25px;padding:25px;text-align:center;box-shadow:0 18px 50px #0005}
 .modal h2{margin:4px;font-size:32px;color:#254434}.small{color:#61716c;line-height:1.5;margin:12px 0 20px}
-@media(max-width:600px){#phase{top:104px;font-size:12px}.badge{font-size:12px;padding:7px 8px}#player{left:20%}#tiger{left:2%}}
+
+@media(max-width:600px){#phase{top:104px;font-size:12px}.badge{font-size:12px;padding:7px 8px}#player{left:22%}#tiger{left:2%}}
 </style>
 </head>
 <body>
@@ -87,8 +92,8 @@ button{font:inherit;border:0;cursor:pointer}
 
 <section id="menu">
  <div class="menu-card">
-  <div class="logo">DAMN GIRAFFE</div>
-  <div class="sub">Endless Runner — Safari Run</div>
+  <div class="logo">DAMN TIGER</div>
+  <div class="sub">Endless Runner — Chase Game</div>
   <div class="watermark">© Anung anindito.sman1cijeruk</div>
   <div id="chars">
    <button class="char selected" data-char="🦒"><span class="emoji">🦒</span><b>Jerapah</b></button>
@@ -138,11 +143,17 @@ const menu=$("menu"), game=$("game"), overlay=$("overlay");
 const player=$("player"), tiger=$("tiger"), obstacle=$("obstacle");
 
 let selected="🦒";
-let running=false, paused=false, jumping=false;
-let score=0, level=1, speed=3; // Dimulai lambat (speed = 3)
+let running=false, paused=false;
+let score=0, level=1, speed=3.5; 
 let obstacleX=0, last=0, raf=0;
-let tigerJumpClock=0;
-let best=Number(localStorage.getItem("damnGiraffeBest")||0);
+
+// FISIKA LOMPATAN
+let playerY = 0;
+let velocityY = 0;
+const gravity = 0.65;
+const jumpForce = 14;
+
+let best=Number(localStorage.getItem("damnTigerBest")||0);
 $("best").textContent=best;
 
 document.querySelectorAll(".char").forEach(btn=>{
@@ -155,15 +166,23 @@ document.querySelectorAll(".char").forEach(btn=>{
 
 function reset(){
  cancelAnimationFrame(raf);
- score=0; level=1; speed=3; tigerJumpClock=0;
+ score=0; level=1; speed=3.5;
+ playerY=0; velocityY=0;
  obstacleX=window.innerWidth + 100;
- jumping=false; paused=false;
+ 
+ running=false; paused=false;
  $("score").textContent="0"; $("level").textContent="1"; $("best").textContent=best;
  player.textContent=selected;
- player.classList.remove("running","jumping");
- tiger.classList.remove("tiger-running","tiger-jumping");
+ player.classList.remove("running");
+ tiger.classList.remove("tiger-running");
+ 
+ player.style.transform = `scaleX(-1) translateY(0px)`;
  obstacle.textContent="🌵";
  obstacle.style.left=obstacleX+"px";
+ 
+ // Reset posisi harimau aman di belakang
+ tiger.style.left = "4%";
+ 
  $("pause").textContent="Ⅱ";
  updateTime();
 }
@@ -177,26 +196,23 @@ function startGame(){
 }
 
 function jump(){
- if(!running||paused||jumping)return;
- jumping=true;
- player.classList.remove("jumping");
- void player.offsetWidth;
- player.classList.add("jumping");
- window.setTimeout(()=>{
-  player.classList.remove("jumping");
-  jumping=false;
- },600);
+ if(!running || paused) return;
+ if(playerY === 0){
+  velocityY = jumpForce;
+ }
 }
 
 function collision(){
- const a=player.getBoundingClientRect();
- const b=obstacle.getBoundingClientRect();
- const padX = a.width * 0.25;
- const padY = a.height * 0.22;
- return a.left + padX < b.right - padX &&
-        a.right - padX > b.left + padX &&
-        a.top + padY < b.bottom - padY &&
-        a.bottom - padY > b.top + padY;
+ const p = player.getBoundingClientRect();
+ const o = obstacle.getBoundingClientRect();
+ 
+ const padX = p.width * 0.28;
+ const padY = p.height * 0.20;
+ 
+ return (p.left + padX < o.right - padX) &&
+        (p.right - padX > o.left + padX) &&
+        (p.top + padY < o.bottom - padY) &&
+        (p.bottom - padY > o.top + padY);
 }
 
 function chooseObstacle(){
@@ -224,12 +240,13 @@ function updateTime(){
 function endGame(){
  if(!running)return;
  running=false; cancelAnimationFrame(raf);
- player.classList.remove("running","jumping");
- tiger.classList.remove("tiger-running","tiger-jumping");
+ player.classList.remove("running");
+ tiger.classList.remove("tiger-running");
+ 
  const final=Math.floor(score);
  if(final>best){
   best=final;
-  localStorage.setItem("damnGiraffeBest",String(best));
+  localStorage.setItem("damnTigerBest",String(best));
  }
  $("best").textContent=best;
  $("modalTitle").textContent="💥 TERTABRAK!";
@@ -245,24 +262,30 @@ function loop(now){
  const dt=Math.min((now-last)/16.6667,2);
  last=now;
 
- score += 0.05 * dt * speed;
- level = 1 + Math.floor(score/120);
+ score += 0.06 * dt * (speed / 3.5);
+ level = 1 + Math.floor(score / 150);
+ speed = Math.min(14, 3.5 + (level - 1) * 0.7);
 
- // PERCEPATAN RINTANGAN: Berjalan lambat di awal (speed 3) dan bertambah cepat seiring skor
- speed = Math.min(15, 3 + (level - 1) * 0.6);
+ // FISIKA LOMPATAN PEMAIN
+ velocityY -= gravity * dt;
+ playerY += velocityY * dt;
 
- // Melompatnya harimau di belakang sebagai efek kejar-kejaran
- tigerJumpClock += dt*16.6667;
- if(tigerJumpClock>=2200 && !tiger.classList.contains("tiger-jumping")){
-  tigerJumpClock=0;
-  tiger.classList.add("tiger-jumping");
-  window.setTimeout(()=>tiger.classList.remove("tiger-jumping"),600);
+ if(playerY <= 0){
+  playerY = 0;
+  velocityY = 0;
  }
+ player.style.bottom = `calc(24% + ${playerY}px)`;
 
- // RINTANGAN BERGERAK DARI KANAN KE KIRI (KE ARAH PEMAIN)
- obstacleX -= speed * dt * 3.5;
- if(obstacleX < -100){
-  obstacleX = window.innerWidth + 80 + Math.random()*200;
+ // LOGIKA HARIMAU: Mengikuti di belakang tanpa pernah mendahului pemain
+ const playerRect = player.getBoundingClientRect();
+ // Maksimal posisi harimau dipatok berada di sebelah kiri pemain (jarak aman minimal 70px)
+ const maxTigerLeft = Math.max(10, playerRect.left - 80);
+ tiger.style.left = maxTigerLeft + "px";
+
+ // PERGERAKAN RINTANGAN DARI KANAN KE KIRI
+ obstacleX -= speed * dt * 3.8;
+ if(obstacleX < -90){
+  obstacleX = window.innerWidth + 80 + Math.random()*220;
   obstacle.textContent = chooseObstacle();
  }
  obstacle.style.left = obstacleX + "px";
@@ -308,7 +331,7 @@ $("pause").addEventListener("click",()=>{
 });
 
 $("helpBtn").addEventListener("click",()=>{
- alert("CARA BERMAIN\n\n• Tombol LOMPAT / Space / Panah Atas untuk melompat.\n• Karakter berlari ke kanan dikejar harimau di belakang.\n• Hindari rintangan yang datang dari depan.\n• Semakin lama bertahan, rintangan berjalan semakin cepat!");
+ alert("CARA BERMAIN\n\n• Tombol LOMPAT / Space / Panah Atas / W untuk melompat.\n• Karakter berlari ke arah kanan sambil dikejar harimau di belakang.\n• Hindari rintangan yang bergerak dari depan.\n• Semakin lama bertahan, rintangan bergerak semakin cepat!");
 });
 
 window.addEventListener("resize",()=>{
@@ -322,4 +345,5 @@ reset();
 })();
 </script>
 </body>
-</html>
+  </html>
+  
