@@ -31,7 +31,7 @@
             position: fixed;
             inset: 0;
             z-index: 1;
-            pointer-events: none; /* MENJAMIN TOMBOL BISA DIPENCET */
+            pointer-events: none;
             overflow: hidden;
         }
 
@@ -53,7 +53,6 @@
             box-shadow: 0 0 40px #ffea85;
         }
 
-        /* Animasi Awan Berjalan Melintas Layar */
         .cloud {
             position: absolute;
             font-size: 55px;
@@ -70,7 +69,6 @@
             100% { transform: translateX(120vw); }
         }
 
-        /* Ilustrasi Gunung di Bagian Bawah */
         #mountains {
             position: absolute;
             left: -10%;
@@ -83,7 +81,7 @@
         }
 
         /* ========================================================= */
-        /* 2. LAYOUT KONTEN & CARD (Z-INDEX TERPROTEKSI)              */
+        /* 2. LAYOUT KONTEN & CARD                                   */
         /* ========================================================= */
         .container {
             position: relative;
@@ -220,7 +218,7 @@
             box-shadow: 0 2px #c68300;
         }
 
-        /* ANIMASI BORDER & GLOW BELAKANG PERTANYAAN */
+        /* ANIMASI BORDER BELAKANG PERTANYAAN */
         .question-wrapper {
             position: relative;
             margin-bottom: 20px;
@@ -273,6 +271,31 @@
         .opt-btn:active {
             background: #fff4d3;
             border-color: #ffb51b;
+        }
+
+        /* STYLE KHUSUS KETIK URAN / ISIAN */
+        .essay-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .essay-input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 2px solid #cbd5e1;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1e293b;
+            outline: none;
+            background: #ffffff;
+            user-select: text !important; /* Memungkinkan pengetikan di HP */
+        }
+
+        .essay-input:focus {
+            border-color: #ffb51b;
+            box-shadow: 0 0 8px rgba(255, 181, 27, 0.4);
         }
 
         /* Modal Popup */
@@ -339,7 +362,6 @@
                 <div class="cat-btn" data-cat="ekonomi"><i class="fa-solid fa-chart-line"></i><span>Ekonomi</span></div>
                 <div class="cat-btn" data-cat="geografi"><i class="fa-solid fa-earth-americas"></i><span>Geografi</span></div>
                 <div class="cat-btn" data-cat="indo"><i class="fa-solid fa-book"></i><span>B. Indonesia</span></div>
-                
                 <div class="cat-btn" data-cat="sunda"><i class="fa-solid fa-feather-pointed"></i><span>B. Sunda</span></div>
                 <div class="cat-btn" data-cat="jawa"><i class="fa-solid fa-scroll"></i><span>B. Jawa</span></div>
                 <div class="cat-btn" data-cat="inggris"><i class="fa-solid fa-language"></i><span>B. Inggris</span></div>
@@ -374,6 +396,11 @@
             </div>
 
             <div class="options-grid" id="pgOptions"></div>
+
+            <div class="essay-wrapper hidden" id="essayOptions">
+                <input type="text" id="essayInput" class="essay-input" placeholder="Ketik jawaban Anda di sini..." autocomplete="off">
+                <button class="btn-start" id="btnSubmitEssay">Kirim Jawaban <i class="fa-solid fa-paper-plane"></i></button>
+            </div>
         </div>
     </div>
 
@@ -386,7 +413,6 @@
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         
-        // FUNGSI BINDING KLIK AMAN UNTUK WEBVIEW ANDROID
         function bindClick(element, callback) {
             if (!element) return;
             element.addEventListener('click', function(e) {
@@ -432,9 +458,10 @@
         };
 
         let currentCat = 'informatika';
+        let currentMode = 'pg'; // 'pg' atau 'uraian'
         let currentQIndex = 0;
 
-        // Pilihan Kategori
+        // Kategori Mapel
         document.querySelectorAll('.cat-btn').forEach(btn => {
             bindClick(btn, function() {
                 document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
@@ -443,11 +470,12 @@
             });
         });
 
-        // Pilihan Mode
+        // Mode Game (PG vs Uraian)
         document.querySelectorAll('.mode-btn').forEach(btn => {
             bindClick(btn, function() {
                 document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
                 this.classList.add('selected');
+                currentMode = this.dataset.mode;
             });
         });
 
@@ -473,44 +501,32 @@
             document.getElementById('questionNumBadge').innerText = `Soal ${currentQIndex + 1}/${list.length}`;
             document.getElementById('questionText').innerText = qObj.q;
 
-            const optsGrid = document.getElementById('pgOptions');
-            optsGrid.innerHTML = '';
+            const pgGrid = document.getElementById('pgOptions');
+            const essayWrapper = document.getElementById('essayOptions');
 
-            qObj.opts.forEach(opt => {
-                const b = document.createElement('button');
-                b.className = 'opt-btn';
-                b.innerText = opt;
-                bindClick(b, function() {
-                    checkAnswer(opt, qObj.a);
+            if (currentMode === 'pg') {
+                pgGrid.classList.remove('hidden');
+                essayWrapper.classList.add('hidden');
+                pgGrid.innerHTML = '';
+
+                qObj.opts.forEach(opt => {
+                    const b = document.createElement('button');
+                    b.className = 'opt-btn';
+                    b.innerText = opt;
+                    bindClick(b, function() {
+                        checkAnswer(opt, qObj.a);
+                    });
+                    pgGrid.appendChild(b);
                 });
-                optsGrid.appendChild(b);
-            });
-        }
-
-        function checkAnswer(userOpt, correctOpt) {
-            const isCorrect = userOpt === correctOpt;
-            const overlay = document.getElementById('reactionOverlay');
-            document.getElementById('reactionEmoji').innerText = isCorrect ? '😊' : '😢';
-            document.getElementById('reactionText').innerText = isCorrect ? 'Jawaban Benar! 🎉' : `Salah! Jawaban: ${correctOpt}`;
-            
-            overlay.classList.add('active');
-        }
-
-        bindClick(document.getElementById('btnNextLevel'), function() {
-            document.getElementById('reactionOverlay').classList.remove('active');
-            const list = questionsData[currentCat] || questionsData['informatika'];
-            currentQIndex++;
-            
-            if (currentQIndex < list.length) {
-                loadQuestion();
             } else {
-                alert("Selamat, Anda telah menyelesaikan kuis ini!");
-                quizScreen.classList.add('hidden');
-                menuScreen.classList.remove('hidden');
+                // Tampilan Isian Uraian
+                pgGrid.classList.add('hidden');
+                essayWrapper.classList.remove('hidden');
+                document.getElementById('essayInput').value = '';
             }
-        });
-    });
-    </script>
-</body>
-                </html>
-    
+        }
+
+        // Tombol Kirim Jawaban Uraian
+        bindClick(document.getElementById('btnSubmitEssay'), function() {
+            const userTyped = document.getElementById('essayInput').value.trim();
+            const list = questionsData[currentCat] || questionsData['inform
