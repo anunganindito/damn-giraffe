@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -29,8 +30,8 @@
         #bgContainer {
             position: fixed;
             inset: 0;
-            z-index: 1; /* Di bawah semua menu */
-            pointer-events: none; /* MEMASTIKAN SENTUHAN/KLIK TIDAK TERHALANG */
+            z-index: 1;
+            pointer-events: none; /* MENJAMIN TOMBOL BISA DIPENCET */
             overflow: hidden;
         }
 
@@ -82,12 +83,12 @@
         }
 
         /* ========================================================= */
-        /* 2. LAYOUT KONTEN & CARD (ANTI-STUCK Z-INDEX)              */
+        /* 2. LAYOUT KONTEN & CARD (Z-INDEX TERPROTEKSI)              */
         /* ========================================================= */
         .container {
             position: relative;
-            z-index: 10; /* Dipastikan di atas background agar bisa di-klik */
-            max-width: 800px;
+            z-index: 10;
+            max-width: 850px;
             margin: 0 auto;
             padding: 15px;
             min-height: 100vh;
@@ -143,7 +144,7 @@
             grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
             gap: 10px;
             margin-bottom: 15px;
-            max-height: 260px;
+            max-height: 280px;
             overflow-y: auto;
             padding: 5px;
         }
@@ -160,7 +161,8 @@
             align-items: center;
             gap: 6px;
             font-weight: bold;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
+            text-align: center;
         }
 
         .cat-btn i { font-size: 1.3rem; color: #ff9800; }
@@ -337,6 +339,13 @@
                 <div class="cat-btn" data-cat="ekonomi"><i class="fa-solid fa-chart-line"></i><span>Ekonomi</span></div>
                 <div class="cat-btn" data-cat="geografi"><i class="fa-solid fa-earth-americas"></i><span>Geografi</span></div>
                 <div class="cat-btn" data-cat="indo"><i class="fa-solid fa-book"></i><span>B. Indonesia</span></div>
+                
+                <div class="cat-btn" data-cat="sunda"><i class="fa-solid fa-feather-pointed"></i><span>B. Sunda</span></div>
+                <div class="cat-btn" data-cat="jawa"><i class="fa-solid fa-scroll"></i><span>B. Jawa</span></div>
+                <div class="cat-btn" data-cat="inggris"><i class="fa-solid fa-language"></i><span>B. Inggris</span></div>
+                <div class="cat-btn" data-cat="jepang"><i class="fa-solid fa-torii-gate"></i><span>B. Jepang</span></div>
+                <div class="cat-btn" data-cat="china"><i class="fa-solid fa-dragon"></i><span>Mandarin</span></div>
+                <div class="cat-btn" data-cat="jerman"><i class="fa-solid fa-beer-mug-empty"></i><span>B. Jerman</span></div>
             </div>
 
             <div class="mode-options">
@@ -377,7 +386,7 @@
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         
-        // FUNGSI PENANGAN KLIK AMAN UNTUK WEBVIEW ANDROID
+        // FUNGSI BINDING KLIK AMAN UNTUK WEBVIEW ANDROID
         function bindClick(element, callback) {
             if (!element) return;
             element.addEventListener('click', function(e) {
@@ -390,11 +399,35 @@
             informatika: [
                 { q: "Struktur data LIFO (Last In First Out) adalah?", opts: ["Stack", "Queue", "Array", "Tree"], a: "Stack" },
                 { q: "Simbol belah ketupat pada flowchart menunjukkan?", opts: ["Keputusan", "Input/Output", "Proses", "Start"], a: "Keputusan" },
-                { q: "Bahasa pemrograman populer untuk AI & Data Science?", opts: ["Python", "HTML", "CSS", "Pascal"], a: "Python" }
+                { q: "Bahasa pemrograman populer untuk AI?", opts: ["Python", "HTML", "CSS", "Pascal"], a: "Python" }
             ],
             biologi: [
                 { q: "Organel sel penghasil energi ATP adalah?", opts: ["Mitokondria", "Ribosom", "Lisosom", "Kloroplas"], a: "Mitokondria" },
                 { q: "Proses pembuatan makanan pada tumbuhan hijau?", opts: ["Fotosintesis", "Respirasi", "Transpirasi", "Osmosis"], a: "Fotosintesis" }
+            ],
+            sunda: [
+                { q: "Ragam basa anu digunakeun ka jalma anu leuwih kolot nyaeta?", opts: ["Basa Lemes", "Basa Loma", "Basa Kasar", "Basa Cohag"], a: "Basa Lemes" },
+                { q: "Karangan rekaan dina wangun prosa anu ukuranna pondok disebut?", opts: ["Carpon", "Novel", "Dongeng", "Fabel"], a: "Carpon" }
+            ],
+            jawa: [
+                { q: "Tembung ingkang digunakake nalika guneman karo wong sing luwih tuwa yaiku?", opts: ["Krama Alus", "Ngoko Lugu", "Ngoko Alus", "Krama Lugu"], a: "Krama Alus" },
+                { q: "Aksara Jawa cacahe ana piro?", opts: ["20", "18", "24", "26"], a: "20" }
+            ],
+            inggris: [
+                { q: "Choose the correct past form of 'Go':", opts: ["Went", "Gone", "Going", "Goes"], a: "Went" },
+                { q: "Which one is a synonym of 'Happy'?", opts: ["Joyful", "Sad", "Angry", "Tired"], a: "Joyful" }
+            ],
+            jepang: [
+                { q: "Salam 'Selamat Pagi' dalam bahasa Jepang adalah?", opts: ["Ohayou Gozaimasu", "Konnichiwa", "Konbanwa", "Oyasumi"], a: "Ohayou Gozaimasu" },
+                { q: "Huruf yang digunakan untuk kata serapan bahasa asing adalah?", opts: ["Katakana", "Hiragana", "Kanji", "Romaji"], a: "Katakana" }
+            ],
+            china: [
+                { q: "Sistem ejaan latin untuk membaca huruf Mandarin disebut?", opts: ["Pinyin", "Hanzi", "Radikal", "Tone"], a: "Pinyin" },
+                { q: "Kata 'Terima Kasih' dalam Bahasa Mandarin adalah?", opts: ["Xièxie", "Nǐ hǎo", "Zàijiàn", "Dabuqi"], a: "Xièxie" }
+            ],
+            jerman: [
+                { q: "Kata 'Selamat Siang / Halo' dalam Bahasa Jerman adalah?", opts: ["Guten Tag", "Guten Morgen", "Guten Abend", "Danke"], a: "Guten Tag" },
+                { q: "Artikel kata benda maskulin dalam Bahasa Jerman adalah?", opts: ["Der", "Die", "Das", "Ein"], a: "Der" }
             ]
         };
 
@@ -479,6 +512,5 @@
     });
     </script>
 </body>
-</html>
-
+                </html>
     
