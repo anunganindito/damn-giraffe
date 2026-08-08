@@ -6,14 +6,11 @@
     <title>Aplikasi Kuis Pembelajaran SMA - Anung Anindito</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* ========================================================= */
-        /* 1. VARIABEL & TEMA CSS DINAMIS (KUNCI PERUBAHAN TEMA)      */
-        /* ========================================================= */
         :root {
             /* Tema Default (Informatika) */
-            --bg-color-1: #0f172a; /* Biru Sangat Tua */
-            --bg-color-2: #1e293b; /* Biru Tua */
-            --primary-color: #38bdf8; /* Biru Cerah */
+            --bg-color-1: #0f172a;
+            --bg-color-2: #1e293b;
+            --primary-color: #38bdf8;
             --primary-hover: #0ea5e9;
             --accent-glow: rgba(56, 189, 248, 0.3);
             --text-light: #f8fafc;
@@ -22,51 +19,18 @@
             --success: #10b981;
         }
 
-        /* Definisi Tema Warna per Mata Pelajaran */
-        body.theme-fisika {
-            --bg-color-1: #1a1a1a; --bg-color-2: #333333; /* Abu-abu Atom */
-            --primary-color: #ff3e3e; --accent-glow: rgba(255, 62, 62, 0.3); /* Merah Energi */
-        }
-        body.theme-biologi {
-            --bg-color-1: #052e16; --bg-color-2: #14532d; /* Hijau Hutan Tua */
-            --primary-color: #4ade80; --accent-glow: rgba(74, 222, 128, 0.3); /* Hijau Daun */
-        }
-        body.theme-kimia {
-            --bg-color-1: #2e1065; --bg-color-2: #4c1d95; /* Ungu Reaksi Tua */
-            --primary-color: #a78bfa; --accent-glow: rgba(167, 139, 250, 0.3); /* Ungu Muda */
-        }
-        body.theme-matematika {
-            --bg-color-1: #450a0a; --bg-color-2: #7f1d1d; /* Merah Marun Tua */
-            --primary-color: #fb923c; --accent-glow: rgba(251, 146, 60, 0.3); /* Oranye Logika */
-        }
-        body.theme-sejarah {
-            --bg-color-1: #422006; --bg-color-2: #713f12; /* Cokelat Dokumen Tua */
-            --primary-color: #e9c46a; --accent-glow: rgba(233, 196, 106, 0.3); /* Emas Kuno */
-        }
-        body.theme-geografi {
-            --bg-color-1: #0c4a6e; --bg-color-2: #075985; /* Biru Samudra Tua */
-            --primary-color: #22d3ee; --accent-glow: rgba(34, 211, 238, 0.3); /* Biru Langit */
-        }
-        body.theme-ekonomi {
-            --bg-color-1: #14532d; --bg-color-2: #166534; /* Hijau Uang Tua */
-            --primary-color: #fbbf24; --accent-glow: rgba(251, 191, 36, 0.3); /* Kuning Emas */
-        }
-        body.theme-sosiologi {
-            --bg-color-1: #701a75; --bg-color-2: #86198f; /* Magenta Masyarakat Tua */
-            --primary-color: #f472b6; --accent-glow: rgba(244, 114, 182, 0.3); /* Pink */
-        }
-        body.theme-indo, body.theme-sunda, body.theme-jawa {
-            --bg-color-1: #78350f; --bg-color-2: #92400e; /* Cokelat Batik Tua */
-            --primary-color: #a16207; --accent-glow: rgba(161, 98, 7, 0.3); /* Cokelat Muda */
-        }
-        body.theme-inggris, body.theme-jepang, body.theme-china, body.theme-jerman {
-            --bg-color-1: #1e1b4b; --bg-color-2: #312e81; /* Biru Global Tua */
-            --primary-color: #818cf8; --accent-glow: rgba(129, 140, 248, 0.3); /* Biru Indigo */
-        }
+        /* Variasi Tema per Mata Pelajaran */
+        body.theme-fisika { --bg-color-1: #1a1a1a; --primary-color: #ff3e3e; --accent-glow: rgba(255, 62, 62, 0.3); }
+        body.theme-biologi { --bg-color-1: #052e16; --primary-color: #4ade80; --accent-glow: rgba(74, 222, 128, 0.3); }
+        body.theme-kimia { --bg-color-1: #2e1065; --primary-color: #a78bfa; --accent-glow: rgba(167, 139, 250, 0.3); }
+        body.theme-matematika { --bg-color-1: #450a0a; --primary-color: #fb923c; --accent-glow: rgba(251, 146, 60, 0.3); }
+        body.theme-sejarah { --bg-color-1: #422006; --primary-color: #e9c46a; --accent-glow: rgba(233, 196, 106, 0.3); }
+        body.theme-geografi { --bg-color-1: #0c4a6e; --primary-color: #22d3ee; --accent-glow: rgba(34, 211, 238, 0.3); }
+        body.theme-ekonomi { --bg-color-1: #14532d; --primary-color: #fbbf24; --accent-glow: rgba(251, 191, 36, 0.3); }
+        body.theme-sosiologi { --bg-color-1: #701a75; --primary-color: #f472b6; --accent-glow: rgba(244, 114, 182, 0.3); }
+        body.theme-indo, body.theme-sunda, body.theme-jawa { --bg-color-1: #78350f; --primary-color: #f59e0b; --accent-glow: rgba(245, 158, 11, 0.3); }
+        body.theme-inggris, body.theme-jepang, body.theme-china, body.theme-jerman { --bg-color-1: #1e1b4b; --primary-color: #818cf8; --accent-glow: rgba(129, 140, 248, 0.3); }
 
-        /* ========================================================= */
-        /* 2. CSS DASAR & RESET                                      */
-        /* ========================================================= */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -82,24 +46,22 @@
             overflow-x: hidden;
             position: relative;
             touch-action: manipulation;
-            user-select: none;
-            transition: background-color 0.8s ease;
+            transition: background-color 0.5s ease;
         }
 
-        /* 3. Canvas Latar Belakang Animasi Edukatif */
         #bgCanvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1; /* Di belakang konten */
-            pointer-events: none; /* Sentuhan tembus ke tombol */
+            z-index: 1;
+            pointer-events: none;
         }
 
         .container {
             position: relative;
-            z-index: 2; /* Di depan canvas */
+            z-index: 2;
             max-width: 850px;
             margin: 0 auto;
             padding: 15px;
@@ -109,10 +71,9 @@
             justify-content: center;
         }
 
-        /* Header Watermark */
         .header-brand {
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .watermark {
@@ -122,87 +83,66 @@
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 700;
-            letter-spacing: 0.5px;
             box-shadow: 0 4px 15px var(--accent-glow);
-            margin-bottom: 6px;
-            transition: all 0.5s ease;
+            margin-bottom: 4px;
         }
 
         .motto {
             font-style: italic;
             color: #94a3b8;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
-        /* Kartu Utama */
         .card {
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             padding: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
-            transition: background 0.5s ease, border 0.5s ease;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
         }
 
         .title {
             text-align: center;
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             margin-bottom: 15px;
-            background: linear-gradient(to right, var(--primary-color), var(--text-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            transition: all 0.5s ease;
+            color: var(--primary-color);
+            font-weight: 800;
         }
 
-        /* Grid Pilihan Pelajaran */
         .category-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
             gap: 10px;
             margin-bottom: 15px;
-            max-height: 280px;
+            max-height: 260px;
             overflow-y: auto;
-            padding-right: 5px;
+            padding-right: 4px;
         }
-
-        /* Scrollbar styling */
-        .category-grid::-webkit-scrollbar { width: 5px; }
-        .category-grid::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
-        .category-grid::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 5px; }
 
         .cat-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
-            padding: 10px 5px;
+            border-radius: 12px;
+            padding: 10px 4px;
             color: white;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 6px;
-            outline: none;
-            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+            user-select: none;
         }
 
-        .cat-btn i {
-            font-size: 1.4rem;
-            color: var(--primary-color);
-            transition: color 0.5s ease;
-        }
+        .cat-btn i { font-size: 1.3rem; color: var(--primary-color); }
 
         .cat-btn.selected {
             background: var(--accent-glow);
             border-color: var(--primary-color);
-            box-shadow: 0 0 12px var(--accent-glow);
-            transform: translateY(-2px);
-        }
-
-        /* Mode Selector */
-        .mode-section {
-            margin-top: 10px;
-            text-align: center;
+            box-shadow: 0 0 10px var(--accent-glow);
         }
 
         .mode-options {
@@ -214,7 +154,6 @@
 
         .mode-btn {
             flex: 1;
-            max-width: 180px;
             padding: 10px;
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid rgba(255, 255, 255, 0.1);
@@ -222,8 +161,6 @@
             color: white;
             cursor: pointer;
             font-weight: bold;
-            outline: none;
-            transition: all 0.3s ease;
         }
 
         .mode-btn.selected {
@@ -235,24 +172,20 @@
         .btn-action {
             display: flex;
             gap: 10px;
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
         .btn-start {
             flex: 2;
             padding: 14px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            background: var(--primary-color);
             color: var(--bg-color-1);
             border: none;
             border-radius: 12px;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            outline: none;
-            transition: all 0.3s ease;
         }
-
-        .btn-start:active { transform: scale(0.97); }
 
         .btn-info {
             flex: 1;
@@ -260,5 +193,220 @@
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
-            border-
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .question-box {
+            font-size: 1.05rem;
+            margin-bottom: 18px;
+            line-height: 1.5;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.25);
+            padding: 15px;
+            border-radius: 14px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .opt-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 15px;
+            border-radius: 12px;
+            color: white;
+            font-size: 0.95rem;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .opt-btn:active {
+            background: var(--accent-glow);
+            border-color: var(--primary-color);
+        }
+
+        .essay-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .essay-input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            user-select: text !important;
+            -webkit-user-select: text !important;
+        }
+
+        .essay-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .reaction-emoji { font-size: 4.5rem; margin-bottom: 10px; }
+        .reaction-text { font-size: 1.3rem; font-weight: bold; margin-bottom: 15px; text-align: center; }
+
+        .hidden { display: none !important; }
+
+        @media (min-width: 600px) {
+            .options-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bgCanvas"></canvas>
+
+    <div class="container">
+        <div class="header-brand">
+            <div class="watermark"><i class="fa-solid fa-graduation-cap"></i> Anung anindito.sman1cijeruk</div>
+            <div class="motto">"belajar untuk hidup, hidup untuk belajar"</div>
+        </div>
+
+        <div id="menuScreen" class="card">
+            <h1 class="title">Kuis Pembelajaran SMA</h1>
+            <p style="text-align: center; margin-bottom: 10px; color: #cbd5e1; font-size:0.85rem;">Pilih Mata Pelajaran:</p>
+            
+            <div class="category-grid" id="categoryGrid">
+                <div class="cat-btn selected" data-cat="informatika" data-theme="informatika"><i class="fa-solid fa-laptop-code"></i><span>Informatika</span></div>
+                <div class="cat-btn" data-cat="biologi" data-theme="biologi"><i class="fa-solid fa-dna"></i><span>Biologi</span></div>
+                <div class="cat-btn" data-cat="kimia" data-theme="kimia"><i class="fa-solid fa-flask"></i><span>Kimia</span></div>
+                <div class="cat-btn" data-cat="fisika" data-theme="fisika"><i class="fa-solid fa-atom"></i><span>Fisika</span></div>
+                <div class="cat-btn" data-cat="matematika" data-theme="matematika"><i class="fa-solid fa-calculator"></i><span>Matematika</span></div>
+                <div class="cat-btn" data-cat="ekonomi" data-theme="ekonomi"><i class="fa-solid fa-chart-line"></i><span>Ekonomi</span></div>
+                <div class="cat-btn" data-cat="geografi" data-theme="geografi"><i class="fa-solid fa-earth-americas"></i><span>Geografi</span></div>
+                <div class="cat-btn" data-cat="sosiologi" data-theme="sosiologi"><i class="fa-solid fa-users"></i><span>Sosiologi</span></div>
+                <div class="cat-btn" data-cat="sejarah" data-theme="sejarah"><i class="fa-solid fa-landmark"></i><span>Sejarah</span></div>
+                <div class="cat-btn" data-cat="indo" data-theme="indo"><i class="fa-solid fa-book"></i><span>B. Indonesia</span></div>
+                <div class="cat-btn" data-cat="inggris" data-theme="inggris"><i class="fa-solid fa-language"></i><span>B. Inggris</span></div>
+                <div class="cat-btn" data-cat="sunda" data-theme="sunda"><i class="fa-solid fa-feather-pointed"></i><span>B. Sunda</span></div>
+                <div class="cat-btn" data-cat="jawa" data-theme="jawa"><i class="fa-solid fa-scroll"></i><span>B. Jawa</span></div>
+                <div class="cat-btn" data-cat="jepang" data-theme="jepang"><i class="fa-solid fa-torii-gate"></i><span>B. Jepang</span></div>
+                <div class="cat-btn" data-cat="china" data-theme="china"><i class="fa-solid fa-dragon"></i><span>Mandarin</span></div>
+                <div class="cat-btn" data-cat="jerman" data-theme="jerman"><i class="fa-solid fa-beer-mug-empty"></i><span>B. Jerman</span></div>
+            </div>
+
+            <div class="mode-options">
+                <button class="mode-btn selected" data-mode="pg">Pilihan Ganda</button>
+                <button class="mode-btn" data-mode="uraian">Isian Uraian</button>
+            </div>
+
+            <div class="btn-action">
+                <button class="btn-start" id="btnStartGame">Mulai Belajar <i class="fa-solid fa-play"></i></button>
+            </div>
+        </div>
+
+        <div id="quizScreen" class="card hidden">
+            <div class="quiz-header">
+                <button id="btnBack" style="background:none; border:none; color:white; cursor:pointer; font-weight:bold;">
+                    <i class="fa-solid fa-arrow-left"></i> Menu
+                </button>
+                <div class="badge" id="levelBadge">Level 1/20</div>
+                <div class="badge" id="questionNumBadge">Soal 1/10</div>
+            </div>
+
+            <div class="question-box" id="questionText">Pertanyaan muncul di sini...</div>
+
+            <div class="options-grid" id="pgOptions"></div>
+
+            <div class="essay-box hidden" id="essayOptions">
+                <input type="text" id="essayInput" class="essay-input" placeholder="Ketik jawaban Anda..." autocomplete="off">
+                <button class="btn-start" id="btnSubmitEssay">Kirim Jawaban <i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="reactionOverlay">
+        <div class="reaction-emoji" id="reactionEmoji">😊</div>
+        <div class="reaction-text" id="reactionText">Jawaban Benar!</div>
+        <button class="btn-start" id="btnNextLevel" style="max-width: 200px;">Lanjut <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
         
+        // Data Pertanyaan
+        const questionsData = {
+            informatika: [
+                { q: "Struktur data LIFO (Last In First Out) adalah?", opts: ["Stack", "Queue", "Array", "Tree"], a: "Stack" },
+                { q: "Simbol belah ketupat pada flowchart menunjukkan?", opts: ["Keputusan", "Input/Output", "Proses", "Start"], a: "Keputusan" },
+                { q: "Bahasa pemrograman populer untuk AI?", opts: ["Python", "HTML", "CSS", "Pascal"], a: "Python" }
+            ],
+            fisika: [
+                { q: "Satuan Internasional (SI) untuk Kuat Arus Listrik adalah?", opts: ["Ampere", "Volt", "Watt", "Joule"], a: "Ampere" },
+                { q: "Hukum II Newton merumuskan hubungan antara gaya, massa, dan?", opts: ["Percepatan", "Kecepatan", "Jarak", "Waktu"], a: "Percepatan" }
+            ],
+            biologi: [
+                { q: "Organel sel penghasil energi ATP adalah?", opts: ["Mitokondria", "Ribosom", "Lisosom", "Kloroplas"], a: "Mitokondria" },
+                { q: "Proses pembuatan makanan pada tumbuhan hijau?", opts: ["Fotosintesis", "Respirasi", "Transpirasi", "Osmosis"], a: "Fotosintesis" }
+            ],
+            sunda: [
+                { q: "Ragam basa anu digunakeun ka jalma anu leuwih kolot nyaeta?", opts: ["Basa Lemes", "Basa Loma", "Basa Kasar", "Basa Cohag"], a: "Basa Lemes" }
+            ],
+            inggris: [
+                { q: "Choose the correct past form of 'Go':", opts: ["Went", "Gone", "Going", "Goes"], a: "Went" }
+            ]
+        };
+
+        // Canvas Latar Belakang Ringan (Anti-Lag)
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let currentTheme = 'informatika';
+
+        const symbolsMap = {
+            informatika: ['0', '1', '{ }', '< >', ';'],
+            fisika: ['F=ma', 'λ', 'Ω', '⚡', '⚛️'],
+    
