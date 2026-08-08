@@ -56,6 +56,9 @@
             <div class="cat-btn" data-cat="kimia"><span>🧪</span><span>Kimia</span></div>
             <div class="cat-btn" data-cat="fisika"><span>⚛️</span><span>Fisika</span></div>
             <div class="cat-btn" data-cat="matematika"><span>📐</span><span>Matematika</span></div>
+            <div class="cat-btn" data-cat="ekonomi"><span>📈</span><span>Ekonomi</span></div>
+            <div class="cat-btn" data-cat="informatika"><span>💻</span><span>Informatika</span></div>
+            <div class="cat-btn" data-cat="indo"><span>📖</span><span>B. Indonesia</span></div>
             <div class="cat-btn" data-cat="inggris"><span>🗣️</span><span>B. Inggris</span></div>
             <div class="cat-btn" data-cat="jepang"><span>⛩️</span><span>B. Jepang</span></div>
             <div class="cat-btn" data-cat="jerman"><span>🍺</span><span>B. Jerman</span></div>
@@ -126,8 +129,11 @@
         fisika: ['E=mc²', 'F=ma', 'Ω', 'λ', '⚛', 'Hz'],
         kimia: ['H₂O', 'CO₂', 'pH', 'NaCl', '🧪'],
         biologi: ['🧬', 'DNA', 'ATP', 'Cell', '🌿'],
+        ekonomi: ['$', 'Rp', '%', 'Chart', 'P', 'Q'],
+        informatika: ['💻', '</>', '0101', 'Algorithm', 'CPU'],
+        indo: ['A-Z', 'SPOK', 'Puisi', 'Kamus'],
         inggris: ['Grammar', 'Verb', 'Noun', 'English'],
-        jepang: ['⛩️', 'あ', 'カ', 'Kanji', 'Sakura'],
+        jepang: ['⛩️', 'あ', 'カ', 'Kanji'],
         jerman: ['🍺', 'Deutsch', 'Ich', 'Gut'],
         spanyol: ['💃', 'Hola', 'Amigo', 'Sol'],
         china: ['🐉', '漢', 'Pinyin', 'NiHao']
@@ -186,6 +192,21 @@
             { level: 1, q: 'Hasil 2^3 + 3^2 adalah?', opts: ['12', '17', '15'], a: '17' },
             { level: 2, q: 'Akar dari x^2 - 5x + 6 = 0 adalah?', opts: ['2 dan 3', '-2 dan -3', '1 dan 6'], a: '2 dan 3' },
             { level: 3, q: 'Turunan pertama dari f(x) = 3x^2 + 4x?', opts: ['6x + 4', '3x + 4', '6x'], a: '6x + 4' }
+        ],
+        ekonomi: [
+            { level: 1, q: 'Masalah pokok ekonomi klasik meliputi?', opts: ['Produksi, Distribusi, Konsumsi', 'Pasar, Uang, Bank', 'Inflasi, Pengangguran'], a: 'Produksi, Distribusi, Konsumsi' },
+            { level: 2, q: 'Jika harga barang naik, jumlah permintaan cenderung?', opts: ['Turun', 'Naik', 'Tetap'], a: 'Turun' },
+            { level: 3, q: 'Kebijakan pemerintah menurunkan suku bunga disebut?', opts: ['Moneter Ekspansif', 'Moneter Kontraktif', 'Fiskal Diskresi'], a: 'Moneter Ekspansif' }
+        ],
+        informatika: [
+            { level: 1, q: 'Otak dari sebuah komputer adalah?', opts: ['RAM', 'CPU', 'Harddisk'], a: 'CPU' },
+            { level: 2, q: 'Urutan langkah logis penyelesaian masalah disebut?', opts: ['Algoritma', 'Struktur Data', 'Array'], a: 'Algoritma' },
+            { level: 3, q: 'Bahasa pemrogramaan yang berjalan langsung di browser?', opts: ['JavaScript', 'Python', 'C++'], a: 'JavaScript' }
+        ],
+        indo: [
+            { level: 1, q: 'Gagasan utama dalam suatu paragraf disebut?', opts: ['Ide pokok', 'Kalimat penjelas', 'Kesimpulan'], a: 'Ide pokok' },
+            { level: 2, q: 'Kata penghubung antar kalimat dinamakan?', opts: ['Konjungsi', 'Nomina', 'Adjektiva'], a: 'Konjungsi' },
+            { level: 3, q: 'Teks yang menjelaskan proses terjadinya fenomena alam?', opts: ['Eksplanasi', 'Prosedur', 'Laporan Observasi'], a: 'Eksplanasi' }
         ],
         inggris: [
             { level: 1, q: 'Past tense of "Go"?', opts: ['Went', 'Gone', 'Goes'], a: 'Went' },
@@ -301,7 +322,7 @@
                     currentLevel++;
                     loadQuestion();
                 };
-            } else {
+      } else {
                 btnNext.textContent = 'Selamat! Kembali ke Menu';
                 btnNext.onclick = function() {
                     modal.classList.add('hidden');
@@ -330,4 +351,3 @@
 </script>
 </body>
 </html>
-
