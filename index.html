@@ -135,6 +135,7 @@
             font-weight: 600;
             text-align: center;
             user-select: none;
+            transition: all 0.2s ease;
         }
 
         .cat-btn i { font-size: 1.3rem; color: var(--primary-color); }
@@ -161,6 +162,7 @@
             color: white;
             cursor: pointer;
             font-weight: bold;
+            transition: all 0.2s ease;
         }
 
         .mode-btn.selected {
@@ -185,18 +187,11 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
+            transition: transform 0.1s ease;
         }
 
-        .btn-info {
-            flex: 1;
-            padding: 14px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            cursor: pointer;
+        .btn-start:active {
+            transform: scale(0.98);
         }
 
         .quiz-header {
@@ -245,6 +240,7 @@
             font-size: 0.95rem;
             cursor: pointer;
             text-align: left;
+            transition: all 0.2s ease;
         }
 
         .opt-btn:active {
@@ -377,7 +373,7 @@
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         
-        // Data Pertanyaan
+        // Data Bank Soal Lengkap
         const questionsData = {
             informatika: [
                 { q: "Struktur data LIFO (Last In First Out) adalah?", opts: ["Stack", "Queue", "Array", "Tree"], a: "Stack" },
@@ -390,17 +386,52 @@
             ],
             biologi: [
                 { q: "Organel sel penghasil energi ATP adalah?", opts: ["Mitokondria", "Ribosom", "Lisosom", "Kloroplas"], a: "Mitokondria" },
-                { q: "Proses pembuatan makanan pada tumbuhan hijau?", opts: ["Fotosintesis", "Respirasi", "Transpirasi", "Osmosis"], a: "Fotosintesis" }
+                { q: "Proses pembuatan makanan pada tumbuhan hijau dinamakan?", opts: ["Fotosintesis", "Respirasi", "Transpirasi", "Osmosis"], a: "Fotosintesis" }
+            ],
+            kimia: [
+                { q: "Simbol unsur kimia untuk Emas dalam tabel periodik adalah?", opts: ["Au", "Ag", "Fe", "Cu"], a: "Au" },
+                { q: "Nilai pH untuk larutan netral adalah?", opts: ["7", "0", "14", "1"], a: "7" }
+            ],
+            matematika: [
+                { q: "Hasil dari logaritma ²log 16 adalah?", opts: ["4", "2", "3", "8"], a: "4" },
+                { q: "Akar-akar dari persamaan kuadrat x² - 5x + 6 = 0 adalah?", opts: ["2 dan 3", "-2 dan -3", "1 dan 6", "-1 dan -6"], a: "2 dan 3" }
+            ],
+            ekonomi: [
+                { q: "Hukum permintaan menyatakan jika harga naik maka jumlah barang yang diminta akan?", opts: ["Turun", "Naik", "Tetap", "Tak Terhingga"], a: "Turun" }
+            ],
+            geografi: [
+                { q: "Lapisan udara yang menyelimuti bumi disebut?", opts: ["Atmosfer", "Litosfer", "Hidrosfer", "Biosfer"], a: "Atmosfer" }
+            ],
+            sosiologi: [
+                { q: "Proses penyesuaian unsur-unsur yang berbeda dalam masyarakat dinamakan?", opts: ["Integrasi", "Konflik", "Interaksi", "Isolasi"], a: "Integrasi" }
+            ],
+            sejarah: [
+                { q: "Teks Proklamasi Kemerdekaan Indonesia dibacakan pada tanggal?", opts: ["17 Agustus 1945", "18 Agustus 1945", "10 November 1945", "28 Oktober 1928"], a: "17 Agustus 1945" }
+            ],
+            indo: [
+                { q: "Gagasan utama dalam sebuah paragraf dinamakan?", opts: ["Ide Pokok", "Kalimat Penjelas", "Kesimpulan", "Tema"], a: "Ide Pokok" }
+            ],
+            inggris: [
+                { q: "Choose the correct past form of 'Go':", opts: ["Went", "Gone", "Going", "Goes"], a: "Went" }
             ],
             sunda: [
                 { q: "Ragam basa anu digunakeun ka jalma anu leuwih kolot nyaeta?", opts: ["Basa Lemes", "Basa Loma", "Basa Kasar", "Basa Cohag"], a: "Basa Lemes" }
             ],
-            inggris: [
-                { q: "Choose the correct past form of 'Go':", opts: ["Went", "Gone", "Going", "Goes"], a: "Went" }
+            jawa: [
+                { q: "Tembung ingkang digunakake nalika guneman karo wong sing luwih tuwa yaiku?", opts: ["Krama Alus", "Ngoko Lugu", "Ngoko Alus", "Krama Lugu"], a: "Krama Alus" }
+            ],
+            jepang: [
+                { q: "Salam 'Selamat Pagi' dalam bahasa Jepang adalah?", opts: ["Ohayou Gozaimasu", "Konnichiwa", "Konbanwa", "Oyasumi"], a: "Ohayou Gozaimasu" }
+            ],
+            china: [
+                { q: "Kata 'Terima Kasih' dalam Bahasa Mandarin adalah?", opts: ["Xièxie", "Nǐ hǎo", "Zàijiàn", "Dabuqi"], a: "Xièxie" }
+            ],
+            jerman: [
+                { q: "Kata 'Selamat Siang / Halo' dalam Bahasa Jerman adalah?", opts: ["Guten Tag", "Guten Morgen", "Guten Abend", "Danke"], a: "Guten Tag" }
             ]
         };
 
-        // Canvas Latar Belakang Ringan (Anti-Lag)
+        // Canvas Animasi Latar Belakang
         const canvas = document.getElementById('bgCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -409,4 +440,44 @@
         const symbolsMap = {
             informatika: ['0', '1', '{ }', '< >', ';'],
             fisika: ['F=ma', 'λ', 'Ω', '⚡', '⚛️'],
-    
+            biologi: ['🧬', '🌿', '🧫', '🔬'],
+            kimia: ['H₂O', '🧪', '⚗️', 'pH'],
+            matematika: ['π', '√x', '∫', '∞'],
+            sejarah: ['📜', '👑', '🏛️'],
+            geografi: ['🌍', '🌋', '🧭'],
+            ekonomi: ['📈', '💰', '💵'],
+            sosiologi: ['👥', '🤝'],
+            indo: ['📖', '✍️'],
+            inggris: ['A', 'B', '💬'],
+            sunda: ['🍃', '🪕'],
+            jawa: ['📜', '🪕'],
+            jepang: ['あ', '🌸'],
+            china: ['你', '🐉'],
+            jerman: ['🇩🇪', '🍺']
+        };
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 12 + 10;
+                this.speedX = (Math.random() - 0.5) * 0.8;
+                this.speedY = (Math.random() - 0.5) * 0.8;
+                this.opacity = Math.random() * 0.3 + 0.1;
+                const list = symbolsMap[currentTheme] || ['?'];
+                this.text = list[Math.floor(Math.random() * list.length)];
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+            }
+  
