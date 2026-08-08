@@ -1,22 +1,10 @@
-<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aplikasi Kuis Pembelajaran SMA - Anung Anindito</title>
+    <title>Aplikasi Kuis Pembelajaran SMA</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --bg-dark: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.95);
-            --text-light: #f8fafc;
-        }
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -26,8 +14,8 @@
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
+            background: #69c3e8;
+            color: #f8fafc;
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
@@ -35,21 +23,71 @@
             user-select: none;
         }
 
-        /* 1. Canvas Animasi Latar Belakang Utama */
-        #bgCanvas {
+        /* ========================================================= */
+        /* 1. ANIMASI BACKGROUND (LANGIT, AWAN & GUNUNG)             */
+        /* ========================================================= */
+        #bgContainer {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
+            inset: 0;
+            z-index: 1; /* Di bawah semua menu */
+            pointer-events: none; /* MEMASTIKAN SENTUHAN/KLIK TIDAK TERHALANG */
+            overflow: hidden;
         }
 
+        #sky {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(#69c3e8, #dff6ff 72%);
+            transition: background 1.4s ease;
+        }
+
+        #sun {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            right: 10%;
+            top: 8%;
+            background: #ffd94d;
+            box-shadow: 0 0 40px #ffea85;
+        }
+
+        /* Animasi Awan Berjalan Melintas Layar */
+        .cloud {
+            position: absolute;
+            font-size: 55px;
+            opacity: 0.65;
+            animation: cloudMove 34s linear infinite;
+            pointer-events: none;
+        }
+        .c1 { top: 10%; left: -20%; }
+        .c2 { top: 25%; left: 40%; animation-duration: 45s; }
+        .c3 { top: 45%; left: -10%; animation-duration: 50s; }
+
+        @keyframes cloudMove {
+            0% { transform: translateX(-20vw); }
+            100% { transform: translateX(120vw); }
+        }
+
+        /* Ilustrasi Gunung di Bagian Bawah */
+        #mountains {
+            position: absolute;
+            left: -10%;
+            bottom: 0%;
+            width: 120%;
+            height: 25%;
+            background: #789c68;
+            clip-path: polygon(0 100%, 0 62%, 12% 32%, 23% 58%, 36% 15%, 51% 60%, 63% 28%, 78% 57%, 91% 18%, 100% 50%, 100% 100%);
+            opacity: 0.8;
+        }
+
+        /* ========================================================= */
+        /* 2. LAYOUT KONTEN & CARD (ANTI-STUCK Z-INDEX)              */
+        /* ========================================================= */
         .container {
             position: relative;
-            z-index: 2;
-            max-width: 850px;
+            z-index: 10; /* Dipastikan di atas background agar bisa di-klik */
+            max-width: 800px;
             margin: 0 auto;
             padding: 15px;
             min-height: 100vh;
@@ -58,47 +96,45 @@
             justify-content: center;
         }
 
-        /* Header Watermark */
         .header-brand {
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .watermark {
             display: inline-block;
-            background: linear-gradient(135deg, #6366f1, #a855f7);
+            background: #24333b;
+            color: #ffd94d;
             padding: 6px 16px;
             border-radius: 20px;
             font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
-            margin-bottom: 6px;
+            font-weight: 800;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-bottom: 4px;
         }
 
         .motto {
             font-style: italic;
-            color: #94a3b8;
-            font-size: 0.9rem;
+            color: #24333b;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
 
-        /* Kartu Utama */
         .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
             padding: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+            color: #1e293b;
         }
 
         .title {
             text-align: center;
             font-size: 1.8rem;
             margin-bottom: 15px;
-            background: linear-gradient(to right, #38bdf8, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #24333b;
+            font-weight: 900;
         }
 
         /* Grid Pilihan Pelajaran */
@@ -107,167 +143,111 @@
             grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
             gap: 10px;
             margin-bottom: 15px;
-            max-height: 280px;
+            max-height: 260px;
             overflow-y: auto;
-            padding-right: 5px;
+            padding: 5px;
         }
 
         .cat-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: #edf2f4;
+            border: 2px solid transparent;
             border-radius: 14px;
             padding: 10px 5px;
-            color: white;
+            color: #24333b;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 6px;
-            outline: none;
+            font-weight: bold;
+            font-size: 0.85rem;
         }
 
-        .cat-btn i { font-size: 1.4rem; color: #38bdf8; }
+        .cat-btn i { font-size: 1.3rem; color: #ff9800; }
 
         .cat-btn.selected {
-            background: rgba(99, 102, 241, 0.3);
-            border-color: var(--primary);
-            box-shadow: 0 0 12px rgba(79, 70, 229, 0.4);
+            border-color: #ffb51b;
+            background: #fff4d3;
+            box-shadow: 0 4px 0 #d8b45c;
         }
 
         /* Mode Selector */
-        .mode-section {
-            margin-top: 10px;
-            text-align: center;
-        }
-
         .mode-options {
             display: flex;
             justify-content: center;
             gap: 10px;
-            margin: 10px 0;
+            margin: 10px 0 15px 0;
         }
 
         .mode-btn {
             flex: 1;
-            max-width: 180px;
             padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: #edf2f4;
+            border: 2px solid transparent;
             border-radius: 12px;
-            color: white;
+            color: #24333b;
             cursor: pointer;
             font-weight: bold;
-            outline: none;
         }
 
         .mode-btn.selected {
-            background: var(--primary);
-            border-color: var(--primary);
+            background: #293b49;
+            color: white;
         }
 
         .btn-action {
             display: flex;
             gap: 10px;
-            margin-top: 15px;
         }
 
         .btn-start {
             flex: 2;
             padding: 14px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-            color: white;
+            background: #ffb51b;
+            color: #342400;
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-size: 1rem;
-            font-weight: bold;
+            font-weight: 900;
             cursor: pointer;
-            outline: none;
+            box-shadow: 0 4px #c68300;
         }
 
-        .btn-info {
-            flex: 1;
-            padding: 14px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            cursor: pointer;
-            outline: none;
+        .btn-start:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px #c68300;
         }
 
-        .quiz-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .badge {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 6px 12px;
-            border-radius: 16px;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-
-        .lives { color: var(--danger); }
-
-        /* 2. ANIMASI KHUSUS DI BELAKANG KOTAK PERTANYAAN */
+        /* ANIMASI BORDER & GLOW BELAKANG PERTANYAAN */
         .question-wrapper {
             position: relative;
             margin-bottom: 20px;
-            border-radius: 16px;
-            overflow: hidden;
-            padding: 3px; /* border gradient animated */
-            background: linear-gradient(125deg, #4f46e5, #38bdf8, #ec4899, #10b981);
-            background-size: 300% 300%;
-            animation: glowBorder 6s ease infinite;
+            border-radius: 18px;
+            padding: 4px;
+            background: linear-gradient(135deg, #ffb51b, #69c3e8, #4f7339);
+            background-size: 200% 200%;
+            animation: gradientBorder 4s ease infinite;
         }
 
-        @keyframes glowBorder {
+        @keyframes gradientBorder {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
         .question-box {
-            position: relative;
-            z-index: 2;
+            background: #ffffff;
+            color: #1e293b;
             font-size: 1.1rem;
+            font-weight: 700;
             line-height: 1.5;
             text-align: center;
-            min-height: 90px;
+            min-height: 85px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(15, 23, 42, 0.92);
-            padding: 18px;
+            padding: 15px;
             border-radius: 14px;
-        }
-
-        /* Ambient Glow di belakang pertanyaan */
-        .question-box::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 80%;
-            height: 80%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(0,0,0,0) 70%);
-            transform: translate(-50%, -50%);
-            z-index: -1;
-            animation: pulseGlow 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes pulseGlow {
-            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.4; }
-            100% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.9; }
         }
 
         .options-grid {
@@ -277,44 +257,28 @@
         }
 
         .opt-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #edf2f4;
+            border: 2px solid #dcdfe1;
             padding: 12px 15px;
             border-radius: 12px;
-            color: white;
+            color: #24333b;
             font-size: 0.95rem;
+            font-weight: 600;
             cursor: pointer;
             text-align: left;
-            outline: none;
-            transition: transform 0.1s;
         }
 
         .opt-btn:active {
-            transform: scale(0.98);
+            background: #fff4d3;
+            border-color: #ffb51b;
         }
 
-        .essay-box {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .essay-input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            background: rgba(0, 0, 0, 0.25);
-            color: white;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        /* Overlay & Modal */
+        /* Modal Popup */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
             z-index: 100;
             display: flex;
             flex-direction: column;
@@ -332,19 +296,7 @@
         }
 
         .reaction-emoji { font-size: 4.5rem; margin-bottom: 10px; }
-        .reaction-text { font-size: 1.3rem; font-weight: bold; margin-bottom: 15px; text-align: center; }
-
-        .info-card {
-            background: #1e293b;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
-            padding: 20px;
-            max-width: 500px;
-            width: 100%;
-            color: #cbd5e1;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
+        .reaction-text { font-size: 1.3rem; font-weight: bold; margin-bottom: 15px; text-align: center; color: white; }
 
         .hidden { display: none !important; }
 
@@ -355,7 +307,15 @@
 </head>
 <body>
 
-    <canvas id="bgCanvas"></canvas>
+    <div id="bgContainer">
+        <div id="sky">
+            <div id="sun"></div>
+            <div class="cloud c1">☁️</div>
+            <div class="cloud c2">☁️</div>
+            <div class="cloud c3">☁️</div>
+        </div>
+        <div id="mountains"></div>
+    </div>
 
     <div class="container">
         <div class="header-brand">
@@ -366,7 +326,7 @@
         <div id="menuScreen" class="card">
             <h1 class="title">Kuis Pembelajaran SMA</h1>
             
-            <p style="text-align: center; margin-bottom: 10px; color: #cbd5e1; font-size:0.9rem;">Pilih Mata Pelajaran (16 Mapel):</p>
+            <p style="text-align: center; margin-bottom: 10px; font-weight:bold; color: #475569;">Pilih Mata Pelajaran:</p>
             
             <div class="category-grid" id="categoryGrid">
                 <div class="cat-btn selected" data-cat="informatika"><i class="fa-solid fa-laptop-code"></i><span>Informatika</span></div>
@@ -376,19 +336,149 @@
                 <div class="cat-btn" data-cat="matematika"><i class="fa-solid fa-calculator"></i><span>Matematika</span></div>
                 <div class="cat-btn" data-cat="ekonomi"><i class="fa-solid fa-chart-line"></i><span>Ekonomi</span></div>
                 <div class="cat-btn" data-cat="geografi"><i class="fa-solid fa-earth-americas"></i><span>Geografi</span></div>
-                <div class="cat-btn" data-cat="sosiologi"><i class="fa-solid fa-users"></i><span>Sosiologi</span></div>
-                <div class="cat-btn" data-cat="sejarah"><i class="fa-solid fa-landmark"></i><span>Sejarah</span></div>
                 <div class="cat-btn" data-cat="indo"><i class="fa-solid fa-book"></i><span>B. Indonesia</span></div>
-                <div class="cat-btn" data-cat="inggris"><i class="fa-solid fa-language"></i><span>B. Inggris</span></div>
-                <div class="cat-btn" data-cat="pkn"><i class="fa-solid fa-scale-balanced"></i><span>PKN</span></div>
-                <div class="cat-btn" data-cat="sunda"><i class="fa-solid fa-feather-pointed"></i><span>B. Sunda</span></div>
-                <div class="cat-btn" data-cat="jepang"><i class="fa-solid fa-torii-gate"></i><span>B. Jepang</span></div>
-                <div class="cat-btn" data-cat="china"><i class="fa-solid fa-dragon"></i><span>Mandarin</span></div>
-                <div class="cat-btn" data-cat="germany"><i class="fa-solid fa-beer-mug-empty"></i><span>B. Jerman</span></div>
             </div>
 
-            <div class="mode-section">
-                <p style="color: #cbd5e1; font-size:0.9rem;">Pilih Mode Kuis:</p>
-                <div class="mode-options">
-                    <button class="mode-btn selected" data-mode="pg">Pilihan Ganda</button>
-                    
+            <div class="mode-options">
+                <button class="mode-btn selected" data-mode="pg">Pilihan Ganda</button>
+                <button class="mode-btn" data-mode="uraian">Isian Uraian</button>
+            </div>
+
+            <div class="btn-action">
+                <button class="btn-start" id="btnStartGame">Mulai Belajar <i class="fa-solid fa-play"></i></button>
+            </div>
+        </div>
+
+        <div id="quizScreen" class="card hidden">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <button id="btnBack" style="background:none; border:none; color:#24333b; cursor:pointer; font-weight:bold;">
+                    <i class="fa-solid fa-arrow-left"></i> Menu Utama
+                </button>
+                <span id="levelBadge" style="font-weight:800; background:#edf2f4; padding:5px 12px; border-radius:12px;">Level 1/20</span>
+                <span id="questionNumBadge" style="font-weight:800; background:#edf2f4; padding:5px 12px; border-radius:12px;">Soal 1/10</span>
+            </div>
+
+            <div class="question-wrapper">
+                <div class="question-box" id="questionText">
+                    Pertanyaan akan muncul di sini...
+                </div>
+            </div>
+
+            <div class="options-grid" id="pgOptions"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="reactionOverlay">
+        <div class="reaction-emoji" id="reactionEmoji">😊</div>
+        <div class="reaction-text" id="reactionText">Jawaban Benar!</div>
+        <button class="btn-start" id="btnNextLevel" style="max-width: 200px;">Lanjut <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        // FUNGSI PENANGAN KLIK AMAN UNTUK WEBVIEW ANDROID
+        function bindClick(element, callback) {
+            if (!element) return;
+            element.addEventListener('click', function(e) {
+                e.preventDefault();
+                callback.call(this, e);
+            });
+        }
+
+        const questionsData = {
+            informatika: [
+                { q: "Struktur data LIFO (Last In First Out) adalah?", opts: ["Stack", "Queue", "Array", "Tree"], a: "Stack" },
+                { q: "Simbol belah ketupat pada flowchart menunjukkan?", opts: ["Keputusan", "Input/Output", "Proses", "Start"], a: "Keputusan" },
+                { q: "Bahasa pemrograman populer untuk AI & Data Science?", opts: ["Python", "HTML", "CSS", "Pascal"], a: "Python" }
+            ],
+            biologi: [
+                { q: "Organel sel penghasil energi ATP adalah?", opts: ["Mitokondria", "Ribosom", "Lisosom", "Kloroplas"], a: "Mitokondria" },
+                { q: "Proses pembuatan makanan pada tumbuhan hijau?", opts: ["Fotosintesis", "Respirasi", "Transpirasi", "Osmosis"], a: "Fotosintesis" }
+            ]
+        };
+
+        let currentCat = 'informatika';
+        let currentQIndex = 0;
+
+        // Pilihan Kategori
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+            bindClick(btn, function() {
+                document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                currentCat = this.dataset.cat;
+            });
+        });
+
+        // Pilihan Mode
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            bindClick(btn, function() {
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        const menuScreen = document.getElementById('menuScreen');
+        const quizScreen = document.getElementById('quizScreen');
+
+        bindClick(document.getElementById('btnStartGame'), function() {
+            menuScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            currentQIndex = 0;
+            loadQuestion();
+        });
+
+        bindClick(document.getElementById('btnBack'), function() {
+            quizScreen.classList.add('hidden');
+            menuScreen.classList.remove('hidden');
+        });
+
+        function loadQuestion() {
+            const list = questionsData[currentCat] || questionsData['informatika'];
+            const qObj = list[currentQIndex];
+
+            document.getElementById('questionNumBadge').innerText = `Soal ${currentQIndex + 1}/${list.length}`;
+            document.getElementById('questionText').innerText = qObj.q;
+
+            const optsGrid = document.getElementById('pgOptions');
+            optsGrid.innerHTML = '';
+
+            qObj.opts.forEach(opt => {
+                const b = document.createElement('button');
+                b.className = 'opt-btn';
+                b.innerText = opt;
+                bindClick(b, function() {
+                    checkAnswer(opt, qObj.a);
+                });
+                optsGrid.appendChild(b);
+            });
+        }
+
+        function checkAnswer(userOpt, correctOpt) {
+            const isCorrect = userOpt === correctOpt;
+            const overlay = document.getElementById('reactionOverlay');
+            document.getElementById('reactionEmoji').innerText = isCorrect ? '😊' : '😢';
+            document.getElementById('reactionText').innerText = isCorrect ? 'Jawaban Benar! 🎉' : `Salah! Jawaban: ${correctOpt}`;
+            
+            overlay.classList.add('active');
+        }
+
+        bindClick(document.getElementById('btnNextLevel'), function() {
+            document.getElementById('reactionOverlay').classList.remove('active');
+            const list = questionsData[currentCat] || questionsData['informatika'];
+            currentQIndex++;
+            
+            if (currentQIndex < list.length) {
+                loadQuestion();
+            } else {
+                alert("Selamat, Anda telah menyelesaikan kuis ini!");
+                quizScreen.classList.add('hidden');
+                menuScreen.classList.remove('hidden');
+            }
+        });
+    });
+    </script>
+</body>
+</html>
+
+    
