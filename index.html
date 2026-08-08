@@ -3,9 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Kuis SMA - Anung Anindito</title>
 
 <style>
+:root{
+    --bg:#0f172a;
+    --card:#1e293b;
+    --primary:#6366f1;
+    --primary2:#4f46e5;
+    --success:#10b981;
+    --danger:#ef4444;
+    --text:#f8fafc;
+    --muted:#cbd5e1;
+}
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -13,40 +25,33 @@
     font-family:Arial,Helvetica,sans-serif;
 }
 
-:root{
-    --primary:#6366f1;
-    --primary2:#4f46e5;
-    --success:#10b981;
-    --danger:#ef4444;
-    --bg:#0f172a;
-    --card:#1e293b;
-}
-
 body{
     min-height:100vh;
+    color:var(--text);
     background:
-        radial-gradient(circle at top left,#312e81,transparent 35%),
-        radial-gradient(circle at bottom right,#164e63,transparent 35%),
+        radial-gradient(circle at 10% 10%,#312e81,transparent 30%),
+        radial-gradient(circle at 90% 90%,#164e63,transparent 30%),
         var(--bg);
-    color:white;
-    overflow-x:hidden;
 }
 
-#bgCanvas{
-    position:fixed;
-    inset:0;
-    z-index:0;
-    pointer-events:none;
+button{
+    font-family:inherit;
 }
+
+.hidden{
+    display:none !important;
+}
+
+/* =========================
+   LAYOUT
+========================= */
 
 .container{
-    position:relative;
-    z-index:2;
     width:100%;
     max-width:1000px;
+    min-height:100vh;
     margin:auto;
     padding:20px;
-    min-height:100vh;
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -57,123 +62,130 @@ body{
     margin-bottom:20px;
 }
 
-.watermark{
+.brand-name{
     display:inline-block;
-    padding:8px 18px;
+    padding:9px 18px;
     border-radius:30px;
     background:linear-gradient(135deg,#6366f1,#a855f7);
     font-weight:bold;
-    margin-bottom:8px;
+    box-shadow:0 8px 25px rgba(99,102,241,.3);
 }
 
 .motto{
+    margin-top:8px;
     color:#94a3b8;
     font-style:italic;
 }
 
 .card{
-    background:rgba(30,41,59,.92);
+    background:rgba(30,41,59,.94);
     border:1px solid rgba(255,255,255,.1);
     border-radius:24px;
     padding:28px;
     box-shadow:0 20px 50px rgba(0,0,0,.4);
-    backdrop-filter:blur(15px);
 }
 
-.hidden{
-    display:none!important;
-}
+/* =========================
+   MENU
+========================= */
 
 .title{
     text-align:center;
-    font-size:2.2rem;
-    margin-bottom:10px;
+    font-size:clamp(1.7rem,5vw,2.5rem);
+    margin-bottom:8px;
     background:linear-gradient(90deg,#38bdf8,#818cf8);
     -webkit-background-clip:text;
+    background-clip:text;
     color:transparent;
 }
 
 .subtitle{
     text-align:center;
-    color:#cbd5e1;
-    margin-bottom:20px;
+    color:var(--muted);
+    margin-bottom:22px;
+}
+
+.section-title{
+    margin-bottom:12px;
+    color:#e2e8f0;
+    font-weight:bold;
 }
 
 /* SUBJECT */
 
-.category-grid{
+.subject-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
-    gap:12px;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
     max-height:330px;
     overflow-y:auto;
-    padding:5px;
+    padding:4px;
 }
 
-.cat-btn{
+.subject{
     min-height:95px;
-    border:2px solid rgba(255,255,255,.1);
+    border-radius:15px;
+    border:2px solid rgba(255,255,255,.08);
     background:rgba(255,255,255,.05);
-    border-radius:16px;
     color:white;
     cursor:pointer;
-    transition:.25s;
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
-    gap:8px;
+    gap:7px;
+    transition:.2s;
 }
 
-.cat-btn:hover{
+.subject:hover{
     transform:translateY(-3px);
     background:rgba(99,102,241,.2);
 }
 
-.cat-btn.selected{
+.subject.selected{
+    border-color:var(--primary);
     background:rgba(99,102,241,.3);
-    border-color:#6366f1;
-    box-shadow:0 0 20px rgba(99,102,241,.3);
+    box-shadow:0 0 18px rgba(99,102,241,.3);
 }
 
-.cat-icon{
+.subject-icon{
     font-size:28px;
 }
 
 /* MODE */
 
-.mode-section{
-    margin-top:20px;
+.mode-container{
+    margin-top:22px;
     text-align:center;
 }
 
-.mode-options{
+.mode-buttons{
     display:flex;
     gap:12px;
     justify-content:center;
-    margin-top:12px;
+    margin-top:10px;
 }
 
-.mode-btn{
+.mode-button{
     flex:1;
-    max-width:250px;
+    max-width:260px;
     padding:13px;
+    border-radius:12px;
     border:2px solid rgba(255,255,255,.1);
     background:rgba(255,255,255,.05);
-    border-radius:12px;
     color:white;
-    cursor:pointer;
     font-weight:bold;
+    cursor:pointer;
 }
 
-.mode-btn.selected{
+.mode-button.selected{
     background:var(--primary);
     border-color:var(--primary);
 }
 
 /* BUTTON */
 
-.actions{
+.action-buttons{
     display:flex;
     gap:12px;
     margin-top:20px;
@@ -184,9 +196,9 @@ body{
     border-radius:14px;
     padding:15px;
     color:white;
-    cursor:pointer;
-    font-weight:bold;
     font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
     transition:.2s;
 }
 
@@ -197,6 +209,7 @@ body{
 .btn-primary{
     flex:2;
     background:linear-gradient(135deg,var(--primary),var(--primary2));
+    box-shadow:0 8px 20px rgba(79,70,229,.3);
 }
 
 .btn-secondary{
@@ -204,13 +217,16 @@ body{
     background:rgba(255,255,255,.08);
 }
 
-/* QUIZ */
+/* =========================
+   QUIZ
+========================= */
 
-.quiz-header{
+.quiz-top{
     display:flex;
-    justify-content:space-between;
     align-items:center;
+    justify-content:space-between;
     gap:10px;
+    flex-wrap:wrap;
     margin-bottom:20px;
     padding-bottom:15px;
     border-bottom:1px solid rgba(255,255,255,.1);
@@ -220,29 +236,32 @@ body{
     padding:8px 13px;
     border-radius:20px;
     background:rgba(255,255,255,.08);
-}
-
-.lives{
-    color:#ef4444;
+    font-weight:bold;
 }
 
 .score{
-    color:#fbbf24;
+    color:#facc15;
+}
+
+.lives{
+    color:#fb7185;
 }
 
 .question{
-    min-height:120px;
-    background:rgba(0,0,0,.2);
-    border-radius:16px;
-    padding:20px;
+    min-height:130px;
     display:flex;
-    justify-content:center;
     align-items:center;
+    justify-content:center;
     text-align:center;
-    font-size:1.25rem;
+    padding:22px;
+    border-radius:16px;
+    background:rgba(0,0,0,.2);
+    font-size:1.2rem;
     line-height:1.6;
     margin-bottom:20px;
 }
+
+/* OPTIONS */
 
 .options{
     display:grid;
@@ -251,13 +270,14 @@ body{
 }
 
 .option{
-    padding:16px;
-    background:rgba(255,255,255,.05);
-    border:1px solid rgba(255,255,255,.1);
-    color:white;
+    padding:17px;
     border-radius:13px;
-    cursor:pointer;
+    border:1px solid rgba(255,255,255,.1);
+    background:rgba(255,255,255,.05);
+    color:white;
     text-align:left;
+    cursor:pointer;
+    font-size:15px;
     transition:.2s;
 }
 
@@ -266,9 +286,7 @@ body{
     border-color:#6366f1;
 }
 
-.option:disabled{
-    cursor:not-allowed;
-}
+/* ESSAY */
 
 .essay{
     display:flex;
@@ -281,9 +299,9 @@ body{
     padding:16px;
     border-radius:12px;
     border:2px solid rgba(255,255,255,.1);
+    outline:none;
     background:#0f172a;
     color:white;
-    outline:none;
     font-size:16px;
 }
 
@@ -291,38 +309,34 @@ body{
     border-color:#6366f1;
 }
 
-/* MODAL */
+/* =========================
+   MODAL
+========================= */
 
 .overlay{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.82);
     z-index:100;
     display:flex;
-    justify-content:center;
     align-items:center;
+    justify-content:center;
     padding:20px;
-    opacity:0;
-    visibility:hidden;
-    transition:.25s;
-}
-
-.overlay.active{
-    opacity:1;
-    visibility:visible;
+    background:rgba(0,0,0,.85);
 }
 
 .modal{
     width:100%;
     max-width:500px;
+    max-height:85vh;
+    overflow:auto;
     background:#1e293b;
-    padding:30px;
+    border:1px solid rgba(255,255,255,.1);
     border-radius:22px;
+    padding:28px;
     text-align:center;
-    box-shadow:0 20px 50px rgba(0,0,0,.5);
 }
 
-.emoji{
+.modal-emoji{
     font-size:70px;
     margin-bottom:10px;
 }
@@ -332,38 +346,46 @@ body{
 }
 
 .modal p{
-    color:#cbd5e1;
+    color:var(--muted);
     line-height:1.6;
     margin-bottom:20px;
 }
 
-.info{
-    max-height:80vh;
-    overflow-y:auto;
+.info-modal{
     text-align:left;
 }
 
-.info h2{
+.info-modal h2{
     color:#38bdf8;
-    margin-bottom:12px;
 }
 
-.info h3{
+.info-modal h3{
     margin-top:18px;
-    margin-bottom:7px;
+    margin-bottom:8px;
 }
 
-.info p,
-.info li{
-    color:#cbd5e1;
+.info-modal p,
+.info-modal li{
+    color:var(--muted);
     line-height:1.6;
 }
 
-.info ul{
+.info-modal ul{
     margin-left:20px;
 }
 
-@media(max-width:650px){
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:800px){
+
+    .subject-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+
+@media(max-width:550px){
 
     .container{
         padding:12px;
@@ -373,25 +395,22 @@ body{
         padding:18px;
     }
 
-    .title{
-        font-size:1.7rem;
+    .subject-grid{
+        grid-template-columns:repeat(2,1fr);
+        max-height:300px;
     }
 
     .options{
         grid-template-columns:1fr;
     }
 
-    .mode-options,
-    .actions{
+    .mode-buttons,
+    .action-buttons{
         flex-direction:column;
     }
 
-    .mode-btn{
+    .mode-button{
         max-width:none;
-    }
-
-    .quiz-header{
-        flex-wrap:wrap;
     }
 }
 </style>
@@ -399,150 +418,213 @@ body{
 
 <body>
 
-<canvas id="bgCanvas"></canvas>
-
 <div class="container">
 
-    <!-- BRAND -->
+    <!-- =========================
+         BRAND
+    ========================== -->
+
     <div class="brand">
-        <div class="watermark">
+
+        <div class="brand-name">
             🎓 Anung Anindito • SMAN 1 Cijeruk
         </div>
 
         <div class="motto">
             "Belajar untuk hidup, hidup untuk belajar"
         </div>
+
     </div>
 
 
-    <!-- MENU -->
-    <section id="menuScreen" class="card">
+    <!-- =========================
+         HALAMAN UTAMA
+    ========================== -->
+
+    <main id="homePage" class="card">
 
         <h1 class="title">
             🧠 Kuis Pengetahuan SMA
         </h1>
 
         <p class="subtitle">
-            Pilih mata pelajaran untuk mulai belajar
+            Uji pengetahuanmu dengan soal bertingkat!
         </p>
 
-        <div class="category-grid" id="categoryGrid"></div>
 
-        <div class="mode-section">
+        <div class="section-title">
+            📚 Pilih Mata Pelajaran
+        </div>
 
-            <p>Pilih Mode Kuis</p>
+        <div
+            id="subjectGrid"
+            class="subject-grid">
+        </div>
 
-            <div class="mode-options">
+
+        <div class="mode-container">
+
+            <div class="section-title">
+                🎮 Pilih Mode Kuis
+            </div>
+
+            <div class="mode-buttons">
 
                 <button
-                    class="mode-btn selected"
-                    data-mode="pg">
+                    id="pgMode"
+                    class="mode-button selected"
+                    type="button">
+
                     Pilihan Ganda
+
                 </button>
 
                 <button
-                    class="mode-btn"
-                    data-mode="uraian">
+                    id="essayMode"
+                    class="mode-button"
+                    type="button">
+
                     Uraian / Isian
+
                 </button>
 
             </div>
 
         </div>
 
-        <div class="actions">
+
+        <div class="action-buttons">
 
             <button
-                id="btnStart"
-                class="btn btn-primary">
-                🚀 Mulai Belajar
+                id="startButton"
+                class="btn btn-primary"
+                type="button">
+
+                🚀 MULAI BELAJAR
+
             </button>
 
             <button
-                id="btnInfo"
-                class="btn btn-secondary">
+                id="infoButton"
+                class="btn btn-secondary"
+                type="button">
+
                 ℹ️ Bantuan
+
             </button>
 
         </div>
 
-    </section>
+    </main>
 
 
-    <!-- QUIZ -->
-    <section id="quizScreen" class="card hidden">
+    <!-- =========================
+         HALAMAN KUIS
+    ========================== -->
 
-        <div class="quiz-header">
+    <main
+        id="quizPage"
+        class="card hidden">
+
+        <div class="quiz-top">
 
             <button
-                id="btnHome"
-                class="btn btn-secondary">
+                id="homeButton"
+                class="btn btn-secondary"
+                type="button">
+
                 🏠 Home
+
             </button>
 
             <div
                 id="levelBadge"
                 class="badge">
+
                 Level 1
+
             </div>
 
             <div
                 id="scoreBadge"
                 class="badge score">
+
                 ⭐ 0
+
             </div>
 
             <div
                 id="livesBadge"
                 class="badge lives">
+
                 ❤️❤️❤️
+
             </div>
 
         </div>
 
-        <div
-            id="questionText"
-            class="question">
-            Memuat soal...
-        </div>
 
         <div
-            id="optionsBox"
+            id="question"
+            class="question">
+
+            Memuat pertanyaan...
+
+        </div>
+
+
+        <!-- PILIHAN GANDA -->
+
+        <div
+            id="options"
             class="options">
         </div>
 
+
+        <!-- URAIAN -->
+
         <div
-            id="essayBox"
+            id="essayArea"
             class="essay hidden">
 
             <input
                 id="essayInput"
                 type="text"
-                placeholder="Ketik jawaban kamu...">
+                placeholder="Ketik jawaban kamu di sini..."
+                autocomplete="off">
 
             <button
-                id="btnSubmit"
-                class="btn btn-primary">
-                Kirim Jawaban
+                id="submitEssay"
+                class="btn btn-primary"
+                type="button">
+
+                ✅ Kirim Jawaban
+
             </button>
 
         </div>
 
-    </section>
+    </main>
 
 </div>
 
 
-<!-- REACTION -->
+<!-- =========================
+     MODAL REAKSI
+========================= -->
 
-<div id="reactionOverlay" class="overlay">
+<div
+    id="reactionModal"
+    class="overlay hidden">
 
     <div class="modal">
 
         <div
             id="reactionEmoji"
-            class="emoji">
+            class="modal-emoji">
+
             😊
+
         </div>
 
         <h2 id="reactionTitle">
@@ -550,13 +632,16 @@ body{
         </h2>
 
         <p id="reactionMessage">
-            Bagus!
+            Hebat!
         </p>
 
         <button
-            id="btnContinue"
-            class="btn btn-primary">
+            id="continueButton"
+            class="btn btn-primary"
+            type="button">
+
             Lanjut
+
         </button>
 
     </div>
@@ -564,49 +649,99 @@ body{
 </div>
 
 
-<!-- INFO -->
+<!-- =========================
+     MODAL INFO
+========================= -->
 
-<div id="infoOverlay" class="overlay">
+<div
+    id="infoModal"
+    class="overlay hidden">
 
-    <div class="modal info">
+    <div class="modal info-modal">
 
-        <h2>📚 Tentang Aplikasi</h2>
+        <h2>
+            📚 Tentang Aplikasi
+        </h2>
 
         <p>
-            Aplikasi ini merupakan media latihan belajar interaktif
-            untuk siswa SMA.
+            Aplikasi Kuis Pengetahuan SMA adalah media
+            belajar interaktif untuk latihan berbagai
+            mata pelajaran tingkat SMA.
         </p>
 
-        <h3>🎮 Cara Bermain</h3>
+        <h3>
+            🎮 Cara Bermain
+        </h3>
 
         <ul>
-            <li>Pilih mata pelajaran.</li>
-            <li>Pilih mode Pilihan Ganda atau Uraian.</li>
-            <li>Tekan Mulai Belajar.</li>
-            <li>Jawab soal sampai Level 3.</li>
+
+            <li>
+                Pilih mata pelajaran.
+            </li>
+
+            <li>
+                Pilih mode Pilihan Ganda atau Uraian.
+            </li>
+
+            <li>
+                Tekan tombol Mulai Belajar.
+            </li>
+
+            <li>
+                Jawab soal sampai Level 3.
+            </li>
+
         </ul>
 
-        <h3>❤️ Sistem Nyawa</h3>
+        <h3>
+            ❤️ Sistem Nyawa
+        </h3>
 
         <ul>
-            <li>Memiliki 3 nyawa.</li>
-            <li>Jawaban salah mengurangi 1 nyawa.</li>
-            <li>Jika nyawa habis, permainan kembali ke Level 1.</li>
+
+            <li>
+                Pilihan Ganda memiliki 3 nyawa.
+            </li>
+
+            <li>
+                Jawaban salah mengurangi satu nyawa.
+            </li>
+
+            <li>
+                Jika nyawa habis, permainan diulang
+                dari Level 1.
+            </li>
+
         </ul>
 
-        <h3>🏆 Level</h3>
+        <h3>
+            🏆 Level
+        </h3>
 
         <ul>
-            <li>Level 1 = Dasar</li>
-            <li>Level 2 = Menengah</li>
-            <li>Level 3 = HOTS</li>
+
+            <li>
+                Level 1 = Dasar
+            </li>
+
+            <li>
+                Level 2 = Menengah
+            </li>
+
+            <li>
+                Level 3 = HOTS
+            </li>
+
         </ul>
 
         <button
-            id="btnCloseInfo"
+            id="closeInfo"
             class="btn btn-primary"
-            style="width:100%;margin-top:20px;">
+            style="width:100%;margin-top:20px;"
+            type="button">
+
             Tutup
+
         </button>
 
     </div>
@@ -616,511 +751,402 @@ body{
 
 <script>
 
-/* =========================================
+/* =====================================================
+   DATA MATA PELAJARAN
+===================================================== */
+
+const subjects = [
+
+    {
+        id:"biologi",
+        name:"Biologi",
+        icon:"🧬"
+    },
+
+    {
+        id:"kimia",
+        name:"Kimia",
+        icon:"🧪"
+    },
+
+    {
+        id:"fisika",
+        name:"Fisika",
+        icon:"⚛️"
+    },
+
+    {
+        id:"matematika",
+        name:"Matematika",
+        icon:"📐"
+    },
+
+    {
+        id:"ekonomi",
+        name:"Ekonomi",
+        icon:"📈"
+    },
+
+    {
+        id:"geografi",
+        name:"Geografi",
+        icon:"🌍"
+    },
+
+    {
+        id:"sosiologi",
+        name:"Sosiologi",
+        icon:"👥"
+    },
+
+    {
+        id:"sejarah",
+        name:"Sejarah",
+        icon:"📜"
+    },
+
+    {
+        id:"indonesia",
+        name:"B. Indonesia",
+        icon:"📖"
+    },
+
+    {
+        id:"inggris",
+        name:"B. Inggris",
+        icon:"🇬🇧"
+    },
+
+    {
+        id:"pkn",
+        name:"PKN",
+        icon:"⚖️"
+    },
+
+    {
+        id:"sunda",
+        name:"B. Sunda",
+        icon:"🍃"
+    },
+
+    {
+        id:"jepang",
+        name:"B. Jepang",
+        icon:"🌸"
+    },
+
+    {
+        id:"mandarin",
+        name:"Mandarin",
+        icon:"🐉"
+    },
+
+    {
+        id:"jerman",
+        name:"B. Jerman",
+        icon:"🇩🇪"
+    }
+
+];
+
+
+/* =====================================================
    DATA SOAL
-========================================= */
+===================================================== */
 
 const quizData = {
 
 biologi:[
-{
-level:1,
-q:"Organel sel yang berfungsi sebagai tempat respirasi sel adalah?",
-opts:["Ribosom","Mitokondria","Lisosom","Nukleus"],
-a:"Mitokondria"
-},
-{
-level:2,
-q:"Pada fase mitosis ketika kromosom berjajar di bidang ekuator disebut?",
-opts:["Profase","Metafase","Anafase","Telofase"],
-a:"Metafase"
-},
-{
-level:3,
-q:"Persilangan AaBb × AaBb menghasilkan rasio fenotipe klasik?",
-opts:["3 : 1","9 : 3 : 3 : 1","1 : 2 : 1","1 : 1"],
-a:"9 : 3 : 3 : 1"
-}
+    {
+        level:1,
+        question:"Organel sel yang menjadi tempat utama respirasi sel adalah?",
+        options:[
+            "Ribosom",
+            "Mitokondria",
+            "Lisosom",
+            "Kloroplas"
+        ],
+        answer:"Mitokondria"
+    },
+
+    {
+        level:2,
+        question:"Pada pembelahan mitosis, kromosom berjajar di bidang ekuator pada fase?",
+        options:[
+            "Profase",
+            "Metafase",
+            "Anafase",
+            "Telofase"
+        ],
+        answer:"Metafase"
+    },
+
+    {
+        level:3,
+        question:"Persilangan AaBb × AaBb menghasilkan rasio fenotipe klasik?",
+        options:[
+            "3 : 1",
+            "9 : 3 : 3 : 1",
+            "1 : 2 : 1",
+            "1 : 1"
+        ],
+        answer:"9 : 3 : 3 : 1"
+    }
 ],
 
 kimia:[
-{
-level:1,
-q:"Unsur dengan nomor atom 6 adalah?",
-opts:["Oksigen","Karbon","Nitrogen","Hidrogen"],
-a:"Karbon"
-},
-{
-level:2,
-q:"Jika pH suatu larutan adalah 3, maka konsentrasi ion H+ adalah?",
-opts:["10⁻³ M","10⁻⁷ M","10⁻¹⁴ M","3 M"],
-a:"10⁻³ M"
-},
-{
-level:3,
-q:"Menurut teori Bronsted-Lowry, basa adalah zat yang?",
-opts:[
-"Menerima proton",
-"Memberikan proton",
-"Menghasilkan elektron",
-"Menerima neutron"
-],
-a:"Menerima proton"
-}
+    {
+        level:1,
+        question:"Unsur dengan nomor atom 6 adalah?",
+        options:[
+            "Oksigen",
+            "Karbon",
+            "Nitrogen",
+            "Hidrogen"
+        ],
+        answer:"Karbon"
+    },
+
+    {
+        level:2,
+        question:"Jika pH larutan = 3, konsentrasi H+ adalah?",
+        options:[
+            "10⁻³ M",
+            "10⁻⁷ M",
+            "10⁻¹⁴ M",
+            "3 M"
+        ],
+        answer:"10⁻³ M"
+    },
+
+    {
+        level:3,
+        question:"Menurut teori Bronsted-Lowry, basa adalah zat yang?",
+        options:[
+            "Menerima proton",
+            "Memberikan proton",
+            "Menerima neutron",
+            "Menghasilkan elektron"
+        ],
+        answer:"Menerima proton"
+    }
 ],
 
 fisika:[
-{
-level:1,
-q:"Satuan SI untuk gaya adalah?",
-opts:["Joule","Watt","Newton","Pascal"],
-a:"Newton"
-},
-{
-level:2,
-q:"Benda bermassa 2 kg bergerak dengan kecepatan 4 m/s. Energi kinetiknya?",
-opts:["8 J","16 J","32 J","4 J"],
-a:"16 J"
-},
-{
-level:3,
-q:"Jika jarak dua muatan dibuat menjadi 2 kali semula, gaya Coulomb menjadi?",
-opts:["2 kali","4 kali","1/2 kali","1/4 kali"],
-a:"1/4 kali"
-}
+    {
+        level:1,
+        question:"Satuan SI untuk gaya adalah?",
+        options:[
+            "Joule",
+            "Watt",
+            "Newton",
+            "Pascal"
+        ],
+        answer:"Newton"
+    },
+
+    {
+        level:2,
+        question:"Benda bermassa 2 kg bergerak dengan kecepatan 4 m/s. Energi kinetiknya adalah?",
+        options:[
+            "4 J",
+            "8 J",
+            "16 J",
+            "32 J"
+        ],
+        answer:"16 J"
+    },
+
+    {
+        level:3,
+        question:"Jika jarak dua muatan menjadi dua kali lipat, gaya Coulomb menjadi?",
+        options:[
+            "2 kali",
+            "4 kali",
+            "1/2 kali",
+            "1/4 kali"
+        ],
+        answer:"1/4 kali"
+    }
 ],
 
 matematika:[
-{
-level:1,
-q:"Berapakah hasil dari 2³ + 3²?",
-opts:["12","17","15","18"],
-a:"17"
-},
-{
-level:2,
-q:"Akar-akar x² - 5x + 6 = 0 adalah?",
-opts:["2 dan 3","1 dan 6","-2 dan -3","3 dan 4"],
-a:"2 dan 3"
-},
-{
-level:3,
-q:"Jika f(x) = 3x² + 4x - 5, maka f'(x) adalah?",
-opts:["6x + 4","3x + 4","6x² + 4","6x - 5"],
-a:"6x + 4"
-}
+    {
+        level:1,
+        question:"Berapakah hasil dari 2³ + 3²?",
+        options:[
+            "12",
+            "15",
+            "17",
+            "18"
+        ],
+        answer:"17"
+    },
+
+    {
+        level:2,
+        question:"Akar-akar persamaan x² - 5x + 6 = 0 adalah?",
+        options:[
+            "1 dan 6",
+            "2 dan 3",
+            "-2 dan -3",
+            "3 dan 4"
+        ],
+        answer:"2 dan 3"
+    },
+
+    {
+        level:3,
+        question:"Jika f(x)=3x²+4x−5, maka turunan pertamanya adalah?",
+        options:[
+            "3x + 4",
+            "6x + 4",
+            "6x² + 4",
+            "6x − 5"
+        ],
+        answer:"6x + 4"
+    }
 ],
 
 ekonomi:[
-{
-level:1,
-q:"Masalah pokok ekonomi klasik meliputi?",
-opts:[
-"Produksi, distribusi, konsumsi",
-"Inflasi, pajak, ekspor",
-"Bank, pasar, uang",
-"Produksi, inflasi, pajak"
-],
-a:"Produksi, distribusi, konsumsi"
-},
-{
-level:2,
-q:"Jika harga barang naik, jumlah barang yang diminta biasanya?",
-opts:["Naik","Turun","Tetap","Tidak berubah"],
-a:"Turun"
-},
-{
-level:3,
-q:"Kebijakan menurunkan suku bunga untuk meningkatkan jumlah uang beredar disebut?",
-opts:[
-"Moneter ekspansif",
-"Moneter kontraktif",
-"Fiskal",
-"Proteksi"
-],
-a:"Moneter ekspansif"
-}
+    {
+        level:1,
+        question:"Masalah pokok ekonomi klasik meliputi?",
+        options:[
+            "Produksi, distribusi, konsumsi",
+            "Inflasi, pajak, ekspor",
+            "Bank, pasar, uang",
+            "Produksi, inflasi, pajak"
+        ],
+        answer:"Produksi, distribusi, konsumsi"
+    },
+
+    {
+        level:2,
+        question:"Jika harga barang naik, jumlah barang yang diminta biasanya?",
+        options:[
+            "Naik",
+            "Turun",
+            "Tetap",
+            "Tidak terbatas"
+        ],
+        answer:"Turun"
+    },
+
+    {
+        level:3,
+        question:"Kebijakan moneter untuk meningkatkan jumlah uang beredar disebut?",
+        options:[
+            "Moneter ekspansif",
+            "Moneter kontraktif",
+            "Fiskal kontraktif",
+            "Proteksi"
+        ],
+        answer:"Moneter ekspansif"
+    }
 ],
 
 geografi:[
-{
-level:1,
-q:"Lapisan udara yang menyelimuti bumi disebut?",
-opts:["Litosfer","Atmosfer","Hidrosfer","Biosfer"],
-a:"Atmosfer"
-},
-{
-level:2,
-q:"Skala peta 1 : 100.000 berarti 1 cm pada peta sama dengan?",
-opts:["100 km","10 km","1 km","100 m"],
-a:"1 km"
-},
-{
-level:3,
-q:"Fenomena El Nino biasanya menyebabkan Indonesia mengalami?",
-opts:[
-"Curah hujan meningkat",
-"Kekeringan",
-"Musim salju",
-"Gempa bumi"
-],
-a:"Kekeringan"
-}
+    {
+        level:1,
+        question:"Lapisan udara yang menyelimuti bumi disebut?",
+        options:[
+            "Litosfer",
+            "Atmosfer",
+            "Hidrosfer",
+            "Biosfer"
+        ],
+        answer:"Atmosfer"
+    },
+
+    {
+        level:2,
+        question:"Skala 1 : 100.000 berarti 1 cm pada peta mewakili?",
+        options:[
+            "100 km",
+            "10 km",
+            "1 km",
+            "100 m"
+        ],
+        answer:"1 km"
+    },
+
+    {
+        level:3,
+        question:"Fenomena El Nino biasanya menyebabkan Indonesia mengalami?",
+        options:[
+            "Kekeringan",
+            "Musim salju",
+            "Curah hujan ekstrem sepanjang tahun",
+            "Gempa bumi"
+        ],
+        answer:"Kekeringan"
+    }
 ],
 
 sosiologi:[
-{
-level:1,
-q:"Proses seseorang mempelajari nilai dan norma masyarakat disebut?",
-opts:["Sosialisasi","Asimilasi","Konflik","Mobilitas"],
-a:"Sosialisasi"
-},
-{
-level:2,
-q:"Kerja sama beberapa kelompok atau organisasi untuk mencapai tujuan tertentu disebut?",
-opts:["Koalisi","Konflik","Persaingan","Kontravensi"],
-a:"Koalisi"
-},
-{
-level:3,
-q:"Perubahan sosial yang berlangsung secara lambat disebut?",
-opts:["Revolusi","Evolusi","Konflik","Disintegrasi"],
-a:"Evolusi"
-}
+    {
+        level:1,
+        question:"Proses seseorang mempelajari nilai dan norma masyarakat disebut?",
+        options:[
+            "Sosialisasi",
+            "Konflik",
+            "Asimilasi",
+            "Mobilitas"
+        ],
+        answer:"Sosialisasi"
+    },
+
+    {
+        level:2,
+        question:"Kerja sama beberapa organisasi untuk mencapai tujuan tertentu disebut?",
+        options:[
+            "Koalisi",
+            "Konflik",
+            "Kontravensi",
+            "Persaingan"
+        ],
+        answer:"Koalisi"
+    },
+
+    {
+        level:3,
+        question:"Perubahan sosial yang berlangsung secara lambat disebut?",
+        options:[
+            "Revolusi",
+            "Evolusi",
+            "Konflik",
+            "Disintegrasi"
+        ],
+        answer:"Evolusi"
+    }
 ],
 
 sejarah:[
-{
-level:1,
-q:"Tokoh yang mengetik naskah Proklamasi adalah?",
-opts:["Sayuti Melik","Sukarni","Ahmad Soebardjo","B.M. Diah"],
-a:"Sayuti Melik"
-},
-{
-level:2,
-q:"Cultuurstelsel diperkenalkan oleh?",
-opts:["Daendels","Raffles","Van den Bosch","J.P. Coen"],
-a:"Van den Bosch"
-},
-{
-level:3,
-q:"Garis demarkasi yang muncul setelah Perjanjian Renville dikenal sebagai?",
-opts:[
-"Garis Van Mook",
-"Garis Khatulistiwa",
-"Garis Curzon",
-"Garis Wallace"
-],
-a:"Garis Van Mook"
-}
-],
+    {
+        level:1,
+        question:"Tokoh yang mengetik naskah Proklamasi Kemerdekaan Indonesia adalah?",
+        options:[
+            "Sayuti Melik",
+            "Sukarni",
+            "Ahmad Soebardjo",
+            "B.M. Diah"
+        ],
+        answer:"Sayuti Melik"
+    },
 
-indo:[
-{
-level:1,
-q:"Gagasan utama dalam sebuah paragraf disebut?",
-opts:["Ide pokok","Kalimat penjelas","Judul","Majas"],
-a:"Ide pokok"
-},
-{
-level:2,
-q:"Manakah kata baku yang benar?",
-opts:["Apotik","Apotek","Apotikh","Apotique"],
-a:"Apotek"
-},
-{
-level:3,
-q:"Majas yang membandingkan dua hal secara langsung disebut?",
-opts:["Metafora","Personifikasi","Hiperbola","Litotes"],
-a:"Metafora"
-}
-],
+    {
+        level:2,
+        question:"Cultuurstelsel atau Tanam Paksa diperkenalkan oleh?",
+        options:[
+            "Daendels",
+            "Raffles",
+            "Van den Bosch",
+            "J.P. Coen"
+        ],
+        answer:"Van den Bosch"
+    },
 
-inggris:[
-{
-level:1,
-q:'What is the synonym of "Happy"?',
-opts:["Sad","Joyful","Angry","Tired"],
-a:"Joyful"
-},
-{
-level:2,
-q:"If I ... enough money, I would buy a laptop.",
-opts:["have","had","has","will have"],
-a:"had"
-},
-{
-level:3,
-q:'Choose the correct passive voice: "The chef prepares the dinner."',
-opts:[
-"The dinner is prepared by the chef",
-"The dinner was prepared by the chef",
-"The chef prepared the dinner",
-"The dinner has prepared"
-],
-a:"The dinner is prepared by the chef"
-}
-],
-
-pkn:[
-{
-level:1,
-q:"Konstitusi tertulis Indonesia adalah?",
-opts:["Pancasila","UUD 1945","GBHN","TAP MPR"],
-a:"UUD 1945"
-},
-{
-level:2,
-q:"Lembaga yang menguji UU terhadap UUD 1945 adalah?",
-opts:[
-"Mahkamah Agung",
-"Mahkamah Konstitusi",
-"DPR",
-"Komisi Yudisial"
-],
-a:"Mahkamah Konstitusi"
-},
-{
-level:3,
-q:"Sistem pemerintahan Indonesia adalah?",
-opts:["Parlementer","Presidensial","Monarki","Federal"],
-a:"Presidensial"
-}
-],
-
-sunda:[
-{
-level:1,
-q:'Basa Sunda "makan" pikeun diri sorangan nyaéta?',
-opts:["Tuang","Neda","Dahar","Nyatu"],
-a:"Neda"
-},
-{
-level:2,
-q:"Karya sastra Sunda berbentuk puisi yang tidak terikat pupuh disebut?",
-opts:["Sajak","Guguritan","Dongeng","Carita"],
-a:"Sajak"
-},
-{
-level:3,
-q:'Babasan "Leuleus awak" memiliki arti?',
-opts:["Rajin bekerja","Pemarah","Pemalu","Pemalas"],
-a:"Rajin bekerja"
-}
-],
-
-jepang:[
-{
-level:1,
-q:"Ucapan sebelum makan dalam Bahasa Jepang adalah?",
-opts:["Itadakimasu","Sayonara","Konnichiwa","Arigatou"],
-a:"Itadakimasu"
-},
-{
-level:2,
-q:"Partikel yang digunakan untuk menandai topik adalah?",
-opts:["を","は","に","で"],
-a:"は"
-},
-{
-level:3,
-q:"Bentuk lampau positif dari Tabemasu adalah?",
-opts:["Tabemasen","Tabemashita","Taberu","Tabemasen deshita"],
-a:"Tabemashita"
-}
-],
-
-china:[
-{
-level:1,
-q:'Bahasa Mandarin dari "Terima Kasih" adalah?',
-opts:["Ni hao","Xiexie","Zaijian","Laoshi"],
-a:"Xiexie"
-},
-{
-level:2,
-q:"Sebutan untuk guru dalam Bahasa Mandarin?",
-opts:["Laoshi","Xuesheng","Pengyou","Yisheng"],
-a:"Laoshi"
-},
-{
-level:3,
-q:'Akhiran untuk membuat bentuk jamak "Wo" menjadi "Kami/Kita" adalah?',
-opts:["De","Men","Le","Guo"],
-a:"Men"
-}
-],
-
-germany:[
-{
-level:1,
-q:'Ucapan "Selamat Tinggal" formal dalam Bahasa Jerman?',
-opts:["Tschüss","Auf Wiedersehen","Danke","Hallo"],
-a:"Auf Wiedersehen"
-},
-{
-level:2,
-q:'Konjugasi "Lernen" untuk "Du" adalah?',
-opts:["Lerne","Lernst","Lernt","Lernen"],
-a:"Lernst"
-},
-{
-level:3,
-q:'Possessivpronomen "My" untuk kata benda maskulin tunggal adalah?',
-opts:["Mein","Meine","Meines","Meinem"],
-a:"Mein"
-}
-]
-
-};
-
-
-/* =========================================
-   SUBJECT LIST
-========================================= */
-
-const subjects = [
-["biologi","🧬","Biologi"],
-["kimia","🧪","Kimia"],
-["fisika","⚛️","Fisika"],
-["matematika","📐","Matematika"],
-["ekonomi","📈","Ekonomi"],
-["geografi","🌍","Geografi"],
-["sosiologi","👥","Sosiologi"],
-["sejarah","📜","Sejarah"],
-["indo","📖","B. Indonesia"],
-["inggris","🇬🇧","B. Inggris"],
-["pkn","⚖️","PKN"],
-["sunda","🍃","B. Sunda"],
-["jepang","🌸","B. Jepang"],
-["china","🐉","Mandarin"],
-["germany","🇩🇪","B. Jerman"]
-];
-
-const categoryGrid =
-document.getElementById("categoryGrid");
-
-subjects.forEach((subject,index)=>{
-
-    const btn=document.createElement("button");
-
-    btn.className="cat-btn";
-
-    if(index===0)
-        btn.classList.add("selected");
-
-    btn.dataset.cat=subject[0];
-
-    btn.innerHTML=`
-        <span class="cat-icon">${subject[1]}</span>
-        <span>${subject[2]}</span>
-    `;
-
-    btn.addEventListener("click",()=>{
-
-        document
-        .querySelectorAll(".cat-btn")
-        .forEach(b=>b.classList.remove("selected"));
-
-        btn.classList.add("selected");
-
-        currentCategory=subject[0];
-
-        initParticles();
-
-    });
-
-    categoryGrid.appendChild(btn);
-
-});
-
-
-/* =========================================
-   STATE
-========================================= */
-
-let currentCategory="biologi";
-let currentMode="pg";
-let currentLevel=1;
-let lives=3;
-let score=0;
-let activeQuestion=null;
-let gameOver=false;
-
-
-/* =========================================
-   ELEMENT
-========================================= */
-
-const menuScreen=
-document.getElementById("menuScreen");
-
-const quizScreen=
-document.getElementById("quizScreen");
-
-const reactionOverlay=
-document.getElementById("reactionOverlay");
-
-const questionText=
-document.getElementById("questionText");
-
-const optionsBox=
-document.getElementById("optionsBox");
-
-const essayBox=
-document.getElementById("essayBox");
-
-const essayInput=
-document.getElementById("essayInput");
-
-
-/* =========================================
-   MODE
-========================================= */
-
-document.querySelectorAll(".mode-btn")
-.forEach(btn=>{
-
-    btn.addEventListener("click",()=>{
-
-        document
-        .querySelectorAll(".mode-btn")
-        .forEach(b=>b.classList.remove("selected"));
-
-        btn.classList.add("selected");
-
-        currentMode=btn.dataset.mode;
-
-    });
-
-});
-
-
-/* =========================================
-   START
-========================================= */
-
-document
-.getElementById("btnStart")
-.addEventListener("click",startGame);
-
-
-function startGame(){
-
-    currentLevel=1;
-    lives=3;
-    score=0;
-    gameOver=false;
-
-    menuScreen.classList.add("hidden");
-    quizScreen.classList.remove("hidden");
-
-    loadQuestion();
-}
-
-
-/* =========================================
-   LOAD QUESTION
-========================================= */
-
-function loadQuestion(){
+    {
+        level:3,
+ 
