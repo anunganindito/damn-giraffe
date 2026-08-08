@@ -2,17 +2,14 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aplikasi Kuis Pengetahuan SMA - Cross Platform</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Pengetahuan SMA - Anung Anindito</title>
     <style>
         :root {
             --primary: #4f46e5;
             --primary-hover: #4338ca;
-            --success: #10b981;
-            --danger: #ef4444;
             --bg-dark: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.92);
+            --card-bg: rgba(30, 41, 59, 0.95);
             --text-light: #f8fafc;
         }
 
@@ -20,9 +17,8 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent; /* Mencegah highlight biru di iOS/Android */
-            user-select: none; /* Mencegah seleksi teks saat ditekan lama di HP */
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -31,10 +27,9 @@
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
-            touch-action: manipulation;
         }
 
-        /* Canvas Latar Belakang Animasi */
+        /* Latar Belakang Animasi Fisika/Sains */
         #bgCanvas {
             position: fixed;
             top: 0;
@@ -48,7 +43,7 @@
         .container {
             position: relative;
             z-index: 2;
-            max-width: 800px;
+            max-width: 750px;
             margin: 0 auto;
             padding: 15px;
             min-height: 100vh;
@@ -57,11 +52,9 @@
             justify-content: center;
         }
 
-        /* Branding Header */
         .header-brand {
             text-align: center;
             margin-bottom: 15px;
-            animation: fadeInDown 0.6s ease;
         }
 
         .watermark {
@@ -71,7 +64,6 @@
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 700;
-            letter-spacing: 0.5px;
             box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
             margin-bottom: 6px;
         }
@@ -80,78 +72,57 @@
             font-style: italic;
             color: #94a3b8;
             font-size: 0.95rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        /* Card Container */
         .card {
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             padding: 20px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            animation: fadeInUp 0.6s ease;
         }
 
         .title {
             text-align: center;
             font-size: 1.8rem;
             margin-bottom: 15px;
-            background: linear-gradient(to right, #38bdf8, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #38bdf8;
         }
 
-        /* Grid Mata Pelajaran */
         .category-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 8px;
             margin-bottom: 15px;
-            max-height: 280px;
+            max-height: 250px;
             overflow-y: auto;
             padding-right: 4px;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .category-grid::-webkit-scrollbar {
-            width: 4px;
-        }
-        .category-grid::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.2);
-            border-radius: 10px;
         }
 
         .cat-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
+            border-radius: 12px;
             padding: 10px 4px;
             color: white;
             cursor: pointer;
-            transition: all 0.2s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             font-size: 0.85rem;
+            transition: 0.2s;
         }
 
-        .cat-btn i {
-            font-size: 1.4rem;
-            color: #38bdf8;
+        .cat-btn .icon {
+            font-size: 1.3rem;
         }
 
-        .cat-btn:active, .cat-btn.selected {
+        .cat-btn.selected {
             background: rgba(99, 102, 241, 0.4);
             border-color: var(--primary);
-            transform: scale(0.97);
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
         }
 
-        /* Mode Option */
         .mode-section {
             margin-top: 10px;
             text-align: center;
@@ -174,16 +145,13 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 0.9rem;
-            transition: 0.2s;
         }
 
         .mode-btn.selected {
             background: var(--primary);
             border-color: var(--primary);
-            box-shadow: 0 0 12px rgba(79, 70, 229, 0.5);
         }
 
-        /* Primary Action Buttons */
         .btn-action {
             display: flex;
             gap: 10px;
@@ -193,15 +161,13 @@
         .btn-start {
             flex: 2;
             padding: 14px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            background: var(--primary);
             color: white;
             border: none;
             border-radius: 12px;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.2s;
-            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
         }
 
         .btn-info {
@@ -214,14 +180,8 @@
             font-size: 0.9rem;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.2s;
         }
 
-        .btn-start:active, .btn-info:active {
-            transform: scale(0.96);
-        }
-
-        /* Quiz UI */
         .quiz-header {
             display: flex;
             justify-content: space-between;
@@ -239,11 +199,6 @@
             font-weight: 600;
         }
 
-        .lives {
-            color: var(--danger);
-            font-size: 1.1rem;
-        }
-
         .question-box {
             font-size: 1.1rem;
             margin-bottom: 20px;
@@ -256,8 +211,6 @@
             background: rgba(0,0,0,0.25);
             padding: 15px;
             border-radius: 14px;
-            border: 1px solid rgba(255,255,255,0.05);
-            user-select: text;
         }
 
         .options-grid {
@@ -268,8 +221,6 @@
 
         @media (min-width: 600px) {
             .options-grid { grid-template-columns: 1fr 1fr; }
-            .title { font-size: 2.2rem; }
-            .category-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
         }
 
         .opt-btn {
@@ -281,12 +232,10 @@
             font-size: 0.95rem;
             cursor: pointer;
             text-align: left;
-            transition: 0.2s;
         }
 
-        .opt-btn:active {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: #38bdf8;
+        .opt-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .essay-box {
@@ -297,21 +246,15 @@
 
         .essay-input {
             width: 100%;
-            padding: 12px 15px;
+            padding: 12px;
             border-radius: 10px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
             color: white;
             font-size: 1rem;
             outline: none;
-            user-select: text;
         }
 
-        .essay-input:focus {
-            border-color: var(--primary);
-        }
-
-        /* Modal Popups */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -324,7 +267,7 @@
             padding: 20px;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.25s ease;
+            transition: opacity 0.2s ease;
         }
 
         .modal-overlay.active {
@@ -333,13 +276,12 @@
         }
 
         .reaction-emoji {
-            font-size: 5.5rem;
+            font-size: 5rem;
             margin-bottom: 10px;
-            animation: bounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .reaction-text {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: bold;
             margin-bottom: 15px;
             text-align: center;
@@ -347,81 +289,49 @@
 
         .info-card {
             background: #1e293b;
-            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 16px;
             padding: 20px;
             max-width: 500px;
             width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
             color: #cbd5e1;
             font-size: 0.9rem;
             line-height: 1.5;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .info-card h2 {
-            color: #38bdf8;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 6px;
-        }
-
-        .info-card ul {
-            margin-left: 18px;
-            margin-bottom: 10px;
         }
 
         .hidden { display: none !important; }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes bounce {
-            0% { transform: scale(0); }
-            50% { transform: scale(1.15); }
-            100% { transform: scale(1); }
-        }
     </style>
 </head>
 <body>
+
 <canvas id="bgCanvas"></canvas>
 
 <div class="container">
     <div class="header-brand">
-        <div class="watermark"><i class="fa-solid fa-graduation-cap"></i> Anung anindito.sman1cijeruk</div>
+        <div class="watermark">🎓 Anung anindito.sman1cijeruk</div>
         <div class="motto">"belajar untuk hidup, hidup untuk belajar"</div>
     </div>
 
     <div id="menuScreen" class="card">
-        <h1 class="title">Aplikasi Kuis Pengetahuan SMA</h1>
+        <h1 class="title">Kuis Pengetahuan SMA</h1>
         
         <p style="text-align: center; margin-bottom: 10px; color: #cbd5e1; font-size: 0.9rem;">Pilih Mata Pelajaran:</p>
         
         <div class="category-grid" id="categoryGrid">
-            <div class="cat-btn selected" data-cat="biologi"><i class="fa-solid fa-dna"></i><span>Biologi</span></div>
-            <div class="cat-btn" data-cat="kimia"><i class="fa-solid fa-flask"></i><span>Kimia</span></div>
-            <div class="cat-btn" data-cat="fisika"><i class="fa-solid fa-atom"></i><span>Fisika</span></div>
-            <div class="cat-btn" data-cat="matematika"><i class="fa-solid fa-calculator"></i><span>Matematika</span></div>
-            <div class="cat-btn" data-cat="ekonomi"><i class="fa-solid fa-chart-line"></i><span>Ekonomi</span></div>
-            <div class="cat-btn" data-cat="geografi"><i class="fa-solid fa-earth-americas"></i><span>Geografi</span></div>
-            <div class="cat-btn" data-cat="sosiologi"><i class="fa-solid fa-users"></i><span>Sosiologi</span></div>
-            <div class="cat-btn" data-cat="sejarah"><i class="fa-solid fa-landmark"></i><span>Sejarah</span></div>
-            <div class="cat-btn" data-cat="indo"><i class="fa-solid fa-book"></i><span>B. Indonesia</span></div>
-            <div class="cat-btn" data-cat="inggris"><i class="fa-solid fa-language"></i><span>B. Inggris</span></div>
-            <div class="cat-btn" data-cat="pkn"><i class="fa-solid fa-scale-balanced"></i><span>PKN</span></div>
-            <div class="cat-btn" data-cat="sunda"><i class="fa-solid fa-feather-pointed"></i><span>B. Sunda</span></div>
-            <div class="cat-btn" data-cat="jepang"><i class="fa-solid fa-torii-gate"></i><span>B. Jepang</span></div>
-            <div class="cat-btn" data-cat="china"><i class="fa-solid fa-dragon"></i><span>Mandarin</span></div>
-            <div class="cat-btn" data-cat="germany"><i class="fa-solid fa-beer-mug-empty"></i><span>B. Jerman</span></div>
+            <div class="cat-btn selected" data-cat="biologi"><span class="icon">🧬</span><span>Biologi</span></div>
+            <div class="cat-btn" data-cat="kimia"><span class="icon">🧪</span><span>Kimia</span></div>
+            <div class="cat-btn" data-cat="fisika"><span class="icon">⚛️</span><span>Fisika</span></div>
+            <div class="cat-btn" data-cat="matematika"><span class="icon">📐</span><span>Matematika</span></div>
+            <div class="cat-btn" data-cat="ekonomi"><span class="icon">📈</span><span>Ekonomi</span></div>
+            <div class="cat-btn" data-cat="geografi"><span class="icon">🌍</span><span>Geografi</span></div>
+            <div class="cat-btn" data-cat="sosiologi"><span class="icon">👥</span><span>Sosiologi</span></div>
+            <div class="cat-btn" data-cat="sejarah"><span class="icon">🏛️</span><span>Sejarah</span></div>
+            <div class="cat-btn" data-cat="indo"><span class="icon">📖</span><span>B. Indonesia</span></div>
+            <div class="cat-btn" data-cat="inggris"><span class="icon">🗣️</span><span>B. Inggris</span></div>
+            <div class="cat-btn" data-cat="pkn"><span class="icon">⚖️</span><span>PKN</span></div>
+            <div class="cat-btn" data-cat="sunda"><span class="icon">🪶</span><span>B. Sunda</span></div>
+            <div class="cat-btn" data-cat="jepang"><span class="icon">⛩️</span><span>B. Jepang</span></div>
+            <div class="cat-btn" data-cat="china"><span class="icon">🐉</span><span>Mandarin</span></div>
+            <div class="cat-btn" data-cat="germany"><span class="icon">🍺</span><span>B. Jerman</span></div>
         </div>
 
         <div class="mode-section">
@@ -433,28 +343,28 @@
         </div>
 
         <div class="btn-action">
-            <button class="btn-start" id="btnStartGame">Mulai Belajar <i class="fa-solid fa-play"></i></button>
-            <button class="btn-info" id="btnShowInfo"><i class="fa-solid fa-circle-info"></i> Bantuan</button>
+            <button class="btn-start" id="btnStartGame">Mulai Belajar ▶</button>
+            <button class="btn-info" id="btnShowInfo">ℹ Bantuan</button>
         </div>
     </div>
 
     <div id="quizScreen" class="card hidden">
         <div class="quiz-header">
             <button id="btnBack" style="background:none; border:none; color:white; cursor:pointer; font-size:1rem;">
-                <i class="fa-solid fa-arrow-left"></i> Menu
+                ← Menu
             </button>
-            <div class="badge" id="levelBadge">Level 1 (Mudah)</div>
-            <div class="badge lives" id="livesBadge"><i class="fa-solid fa-heart"></i> <i class="fa-solid fa-heart"></i> <i class="fa-solid fa-heart"></i></div>
+            <div class="badge" id="levelBadge">Level 1</div>
+            <div class="badge" id="livesBadge" style="color: #ef4444;">❤️ ❤️ ❤️</div>
         </div>
 
         <div class="question-box" id="questionText">
-            Pertanyaan dimuat...
+            Pertanyaan...
         </div>
 
         <div class="options-grid" id="pgOptions"></div>
 
         <div class="essay-box hidden" id="essayOptions">
-            <input type="text" id="essayAnswer" class="essay-input" placeholder="Ketik jawaban Anda di sini..." autocomplete="off">
+            <input type="text" id="essayAnswer" class="essay-input" placeholder="Ketik jawaban Anda..." autocomplete="off">
             <button class="btn-start" id="btnSubmitEssay">Kirim Jawaban</button>
         </div>
     </div>
@@ -463,55 +373,86 @@
 <div class="modal-overlay" id="reactionOverlay">
     <div class="reaction-emoji" id="reactionEmoji">😊</div>
     <div class="reaction-text" id="reactionText">Jawaban Benar!</div>
-    <button class="btn-start" id="btnNextLevel" style="max-width: 220px;">Lanjut <i class="fa-solid fa-arrow-right"></i></button>
+    <button class="btn-start" id="btnNextLevel" style="max-width: 220px;">Lanjut →</button>
 </div>
 
 <div class="modal-overlay" id="infoOverlay">
     <div class="info-card">
-        <h2><i class="fa-solid fa-graduation-cap"></i> Tentang Aplikasi</h2>
-        <p>Aplikasi Kuis Pembelajaran SMA Dikembangkan oleh <strong>Anung Anindito (SMAN 1 Cijeruk)</strong>.</p>
-        <p style="margin-top: 5px;">Motto: <em>"belajar untuk hidup, hidup untuk belajar"</em></p>
-
-        <h2 style="margin-top:15px;"><i class="fa-solid fa-mobile-screen-button"></i> Kompatibilitas Lintas Perangkat</h2>
-        <ul>
-            <li><strong>Android & iOS:</strong> Dapat disimpan ke Layar Utama (*Add to Home Screen*) lewat menu browser.</li>
-            <li><strong>PC / Laptop:</strong> Kompatibel dengan semua jenis keyboard dan resolusi layar monitor.</li>
-        </ul>
-
-        <button class="btn-start" id="btnCloseInfo" style="margin-top:15px; width:100%;">Tutup</button>
+        <h2 style="color: #38bdf8; margin-bottom: 10px;">Tentang Aplikasi</h2>
+        <p>Aplikasi Kuis Pembelajaran SMA dikembangkan oleh <strong>Anung Anindito (SMAN 1 Cijeruk)</strong>.</p>
+        <p style="margin-top: 10px;">Motto: <em>"belajar untuk hidup, hidup untuk belajar"</em></p>
+        <button class="btn-start" id="btnCloseInfo" style="margin-top:20px; width:100%;">Tutup</button>
     </div>
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        /* === DATA KUIS PERIKSAAN === */
+    // Memastikan seluruh dokumen siap
+    window.onload = function() {
         const quizData = {
             biologi: [
                 { level: 1, q: 'Organel sel yang dijuluki "The Powerhouse of Cell" tempat respirasi sel berlangsung adalah?', opts: ['Mitokondria', 'Ribosom', 'Lisosom', 'Kloroplas'], a: 'Mitokondria' },
                 { level: 2, q: 'Fase pembelahan mitosis di mana kromosom berderet sejajar di bidang ekuator adalah?', opts: ['Profase', 'Metafase', 'Anafase', 'Telofase'], a: 'Metafase' },
-                { level: 3, q: 'Pada persilangan dihibrid heterozigot sempurna (AaBb x AaBb), rasio fenotip hasil keturunannya adalah?', opts: ['3:1', '9:3:3:1', '1:2:1', '12:3:1'], a: '9:3:3:1' }
+                { level: 3, q: 'Pada persilangan dihibrid heterozigot sempurna (AaBb x AaBb), rasio fenotipnya adalah?', opts: ['3:1', '9:3:3:1', '1:2:1', '12:3:1'], a: '9:3:3:1' }
             ],
             kimia: [
                 { level: 1, q: 'Unsur dengan nomor atom 6 dalam tabel periodik adalah?', opts: ['Oksigen', 'Karbon', 'Nitrogen', 'Hidrogen'], a: 'Karbon' },
-                { level: 2, q: 'Berapakah konsentrasi ion H+ dalam larutan asam dengan nilai pH = 3?', opts: ['10⁻³ M', '10⁻⁷ M', '10⁻¹⁴ M', '3 M'], a: '10⁻³ M' },
-                { level: 3, q: 'Menurut teori Bronsted-Lowry, senyawa yang bertindak sebagai basa adalah senyawa yang?', opts: ['Menerima proton (H+)', 'Memberikan proton (H+)', 'Menghasilkan ion OH-', 'Menerima pasangan elektron'], a: 'Menerima proton (H+)' }
+                { level: 2, q: 'Berapakah konsentrasi ion H+ dalam larutan asam dengan nilai pH = 3?', opts: ['10^-3 M', '10^-7 M', '10^-14 M', '3 M'], a: '10^-3 M' },
+                { level: 3, q: 'Menurut teori Bronsted-Lowry, senyawa yang bertindak sebagai basa adalah?', opts: ['Menerima proton (H+)', 'Memberikan proton (H+)', 'Menghasilkan OH-', 'Menerima elektron'], a: 'Menerima proton (H+)' }
             ],
             fisika: [
                 { level: 1, q: 'Satuan Internasional (SI) untuk mengukur Gaya adalah?', opts: ['Joule', 'Watt', 'Newton', 'Pascal'], a: 'Newton' },
-                { level: 2, q: 'Benda bermassa 2 kg bergerak dengan kecepatan 4 m/s. Energi kinetik benda tersebut adalah?', opts: ['8 Joule', '16 Joule', '32 Joule', '4 Joule'], a: '16 Joule' },
-                { level: 3, q: 'Dua muatan terpisah sejauh r. Jika jarak antarmuatan dijadikan 2x semula, gaya Coulomb-nya menjadi?', opts: ['2 kali semula', '4 kali semula', '1/2 kali semula', '1/4 kali semula'], a: '1/4 kali semula' }
+                { level: 2, q: 'Benda bermassa 2 kg bergerak dengan kecepatan 4 m/s. Energi kinetiknya adalah?', opts: ['8 Joule', '16 Joule', '32 Joule', '4 Joule'], a: '16 Joule' },
+                { level: 3, q: 'Dua muatan terpisah sejauh r. Jika jarak dijadikan 2x semula, gaya Coulomb menjadi?', opts: ['2x semula', '4x semula', '1/2x semula', '1/4x semula'], a: '1/4x semula' }
             ],
             matematika: [
-                { level: 1, q: 'Berapakah hasil dari 2³ + 3² ?', opts: ['12', '17', '15', '18'], a: '17' },
-                { level: 2, q: 'Akar-akar dari persamaan kuadrat x² - 5x + 6 = 0 adalah?', opts: ['2 dan 3', '-2 dan -3', '1 dan 6', '-1 dan -6'], a: '2 dan 3' },
-                { level: 3, q: 'Jika f(x) = 3x² + 4x - 5, maka turunan pertama f\'(x) adalah?', opts: ['6x + 4', '3x + 4', '6x² + 4', '6x - 5'], a: '6x + 4' }
+                { level: 1, q: 'Berapakah hasil dari 2^3 + 3^2 ?', opts: ['12', '17', '15', '18'], a: '17' },
+                { level: 2, q: 'Akar-akar dari persamaan kuadrat x^2 - 5x + 6 = 0 adalah?', opts: ['2 dan 3', '-2 dan -3', '1 dan 6', '-1 dan -6'], a: '2 dan 3' },
+                { level: 3, q: 'Jika f(x) = 3x^2 + 4x - 5, maka turunan pertama f\'(x) adalah?', opts: ['6x + 4', '3x + 4', '6x^2 + 4', '6x - 5'], a: '6x + 4' }
             ],
             ekonomi: [
                 { level: 1, q: 'Masalah pokok ekonomi klasik meliputi kegiatan?', opts: ['Produksi, Distribusi, Konsumsi', 'Apa, Bagaimana, Untuk siapa', 'Inflasi, Pengangguran, Ekspor', 'Pasar, Uang, Bank'], a: 'Produksi, Distribusi, Konsumsi' },
-                { level: 2, q: 'Hukum permintaan menyatakan bahwa jika harga suatu barang naik, maka jumlah barang yang diminta akan?', opts: ['Naik', 'Turun', 'Tetap', 'Tidak terhingga'], a: 'Turun' },
-                { level: 3, q: 'Kebijakan pemerintah menurunkan suku bunga bank untuk menambah jumlah uang beredar dinamakan kebijakan?', opts: ['Fiskal Moneter', 'Moneter Ekspansif', 'Moneter Kontraktif', 'Fiskal Diskresi'], a: 'Moneter Ekspansif' }
+                { level: 2, q: 'Jika harga barang naik, maka jumlah barang yang diminta akan?', opts: ['Naik', 'Turun', 'Tetap', 'Tidak terhingga'], a: 'Turun' },
+                { level: 3, q: 'Kebijakan menurunkan suku bunga bank untuk menambah jumlah uang beredar disebut?', opts: ['Fiskal Moneter', 'Moneter Ekspansif', 'Moneter Kontraktif', 'Fiskal Diskresi'], a: 'Moneter Ekspansif' }
             ],
             geografi: [
                 { level: 1, q: 'Lapisan udara yang menyelimuti bumi disebut?', opts: ['Litosfer', 'Hidrosfer', 'Atmosfer', 'Biosfer'], a: 'Atmosfer' },
                 { level: 2, q: 'Skala peta 1 : 100.000 artinya 1 cm pada peta mewakili jarak sebenarnya sejauh?', opts: ['100 km', '10 km', '1 km', '100 meter'], a: '1 km' },
-                { level: 3, q: 'Fenomena El Nino di Samudra Pasifik mengakibatkan sebagian besar wilayah Indonesia mengalami?', opts: ['Curah hujan
+                { level: 3, q: 'Fenomena El Nino di Samudra Pasifik mengakibatkan Indonesia mengalami?', opts: ['Curah hujan tinggi', 'Kekeringan panjang', 'Badai salju', 'Tsunami'], a: 'Kekeringan panjang' }
+            ],
+            sosiologi: [
+                { level: 1, q: 'Proses sosialisasi pertama dan utama individu terjadi di lingkungan?', opts: ['Sekolah', 'Keluarga', 'Masyarakat', 'Teman Sebaya'], a: 'Keluarga' },
+                { level: 2, q: 'Perubahan sosial yang terjadi secara lambat dan waktu lama dinamakan?', opts: ['Revolusi', 'Evolusi', 'Inovasi', 'Modernisasi'], a: 'Evolusi' },
+                { level: 3, q: 'Sikap menilai kebudayaan lain menggunakan ukuran kebudayaannya sendiri disebut?', opts: ['Etnosentrisme', 'Relativisme', 'Asimilasi', 'Pluralisme'], a: 'Etnosentrisme' }
+            ],
+            sejarah: [
+                { level: 1, q: 'Teks Proklamasi Kemerdekaan Indonesia dibacakan pada tanggal?', opts: ['17 Agustus 1945', '18 Agustus 1945', '10 November 1945', '28 Oktober 1928'], a: '17 Agustus 1945' },
+                { level: 2, q: 'Candi Borobudur merupakan peninggalan bersejarah dari dinasti?', opts: ['Sanjaya', 'Syailendra', 'Isyana', 'Majapahit'], a: 'Syailendra' },
+                { level: 3, q: 'Sistem Tanam Paksa (Cultuurstelsel) diperkenalkan oleh Gubernur Jenderal?', opts: ['Van den Bosch', 'Raffles', 'Daendels', 'J.P. Coen'], a: 'Van den Bosch' }
+            ],
+            indo: [
+                { level: 1, q: 'Gagasan utama yang menjadi inti pembicaraan dalam sebuah paragraf disebut?', opts: ['Ide pokok', 'Kalimat penjelas', 'Kesimpulan', 'Sinopsis'], a: 'Ide pokok' },
+                { level: 2, q: 'Kata yang digunakan untuk menghubungkan dua klausa atau kalimat disebut?', opts: ['Konjungsi', 'Nomina', 'Verba', 'Adjektiva'], a: 'Konjungsi' },
+                { level: 3, q: 'Teks yang berisi uraian proses terjadinya suatu fenomena alam/sosial disebut?', opts: ['Eksplanasi', 'Laporan Observasi', 'Prosedur', 'Eksposisi'], a: 'Eksplanasi' }
+            ],
+            inggris: [
+                { level: 1, q: 'What is the simple past tense of the verb "Go"?', opts: ['Went', 'Gone', 'Going', 'Goes'], a: 'Went' },
+                { level: 2, q: 'Complete: "If I _____ a doctor, I would help sick people."', opts: ['am', 'was', 'were', 'had been'], a: 'were' },
+                { level: 3, q: 'Passive form of: "They are building a new bridge"?', opts: ['A new bridge was built', 'A new bridge is being built', 'A new bridge has been built', 'A new bridge is built'], a: 'A new bridge is being built' }
+            ],
+            pkn: [
+                { level: 1, q: 'Pancasila secara sah disahkan sebagai dasar negara pada tanggal?', opts: ['1 Juni 1945', '17 Agustus 1945', '18 Agustus 1945', '22 Juni 1945'], a: '18 Agustus 1945' },
+                { level: 2, q: 'Lembaga yang berwenang menguji undang-undang terhadap UUD 1945 adalah?', opts: ['Mahkamah Agung', 'Mahkamah Konstitusi', 'Komisi Yudisial', 'DPR'], a: 'Mahkamah Konstitusi' },
+                { level: 3, q: 'Sistem pemerintahan Indonesia menurut UUD 1945 adalah?', opts: ['Presidensial', 'Parlementer', 'Monarki', 'Semipresidensial'], a: 'Presidensial' }
+            ],
+            sunda: [
+                { level: 1, q: 'Kecap "Wilujeng enjing" dina basa Sunda hartina yaiku?', opts: ['Selamat pagi', 'Selamat siang', 'Selamat malam', 'Selamat datang'], a: 'Selamat pagi' },
+                { level: 2, q: 'Carita rekaan anu ukuranna pondok sarta ngandung unsur pamohalan disebut?', opts: ['Dongeng', 'Novel', 'Carpon', 'Sajak'], a: 'Dongeng' },
+                { level: 3, q: 'Unsur tatakrama basa Sunda pikeun ngahormatan batur nyaeta basa?', opts: ['Loma', 'Lemes', 'Kasar', 'Sedeng'], a: 'Lemes' }
+            ],
+            jepang: [
+                { level: 1, q: 'Ungkapan salam "Selamat Pagi" dalam bahasa Jepang adalah?', opts: ['Konnichiwa', 'Ohayou Gozaimasu', 'Konbanwa', 'Arigatou'], a: 'Ohayou Gozaimasu' },
+                { level: 2, q: 'Huruf Jepang khusus untuk menuliskan kata serapan bahasa asing adalah?', opts: ['Hiragana', 'Katakana', 'Kanji', 'Romaji'], a: 'Katakana' },
+                { level: 3, q: 'Partikel penanda objek penderita kata kerja transitif adalah?', opts: ['Wa', 'Ga', 'Wo / O', 'Ni'], a: 'Wo / O' }
+            ],
+            china: [
+                { level: 1, q: 'Pengucapan salam "Halo / Apa kabar" dalam Bahasa Mandarin adalah?
