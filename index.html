@@ -13,7 +13,7 @@
             --danger: #ef4444;
             --warning: #f59e0b;
             --bg-dark: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.9);
+            --card-bg: rgba(30, 41, 59, 0.92);
             --text-light: #f8fafc;
         }
 
@@ -140,10 +140,10 @@
         }
 
         .cat-btn:hover, .cat-btn.selected {
-            background: rgba(99, 102, 241, 0.25);
+            background: rgba(99, 102, 241, 0.35);
             border-color: var(--primary);
             transform: translateY(-4px);
-            box-shadow: 0 8px 18px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 8px 18px rgba(79, 70, 229, 0.4);
         }
 
         /* Mode Selector */
@@ -247,9 +247,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0,0,0,0.2);
-            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            padding: 18px;
             border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
         /* Pilihan Ganda & Uraian */
@@ -272,7 +273,8 @@
         }
 
         .opt-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #38bdf8;
         }
 
         .essay-box {
@@ -457,7 +459,7 @@
 <div class="modal-overlay" id="reactionOverlay">
     <div class="reaction-emoji" id="reactionEmoji">😊</div>
     <div class="reaction-text" id="reactionText">Jawaban Benar!</div>
-    <button class="btn-start" id="btnNextLevel" style="max-width: 220px;">Lanjut <i class="fa-solid fa-arrow-right"></i></button>
+    <button class="btn-start" id="btnNextLevel" style="max-width: 240px;">Lanjut <i class="fa-solid fa-arrow-right"></i></button>
 </div>
 
 <div class="modal-overlay" id="infoOverlay">
@@ -470,14 +472,14 @@
         <ul>
             <li>Tersedia <strong>3 Kesempatan (Nyawa ❤️)</strong>.</li>
             <li>Jika jawaban <strong>Benar</strong> (😊): Naik ke Level berikutnya.</li>
-            <li>Jika jawaban <strong>Salah</strong> (😢): Nyawa berkurang 1 dan Anda tetap berada di level yang sama hingga bisa menjawab dengan benar.</li>
-            <li>Jika nyawa habis (3x salah), Anda harus mengulang dari Level 1.</li>
+            <li>Jika jawaban <strong>Salah</strong> (😢): Nyawa berkurang 1 dan Anda tetap berada di level yang sama.</li>
+            <li>Jika nyawa habis, kuis diulang dari Level 1.</li>
         </ul>
 
         <h3>2. Mode Uraian / Isian</h3>
         <ul>
             <li>Ketikkan jawaban langsung pada kolom teks yang disediakan.</li>
-            <li>Mode ini tidak memakai batas nyawa sehingga bebas untuk berlatih mandiri.</li>
+            <li>Mode ini tidak memiliki batas nyawa untuk latihan mandiri.</li>
         </ul>
 
         <h3>3. Tingkat Kesulitan</h3>
@@ -492,24 +494,14 @@
 </div>
 
 <script>
-    /* === DATA PERTANYAAN PEMBELAJARAN SMA LENGKAP & BERTINGKAT === */
+    /* === DATA PERTANYAAN PEMBELAJARAN SMA BERTINGKAT === */
     const quizData = {
         biologi: [
-            { level: 1, type: 'pg', q: 'Organel sel yang dijuluki "The Powerhouse of Cell" tempat respirasi sel berlangsung adalah?', opts: ['Mitokondria', 'Ribosom', 'Lisosom', 'Kloroplas'], a: 'Mitokondria' },
-            { level: 2, type: 'pg', q: 'Fase pembelahan mitosis di mana kromosom berderet di bidang ekuator adalah?', opts: ['Profase', 'Metafase', 'Anafase', 'Telofase'], a: 'Metafase' },
-            { level: 3, type: 'pg', q: 'Pada persilangan dihibrid heterozigot sempurna (AaBb x AaBb), berapa rasio fenotip hasil keturunannya?', opts: ['3:1', '9:3:3:1', '1:2:1', '12:3:1'], a: '9:3:3:1' }
+            { level: 1, q: 'Organel sel yang dijuluki "The Powerhouse of Cell" tempat respirasi sel berlangsung adalah?', opts: ['Mitokondria', 'Ribosom', 'Lisosom', 'Kloroplas'], a: 'Mitokondria' },
+            { level: 2, q: 'Fase pembelahan mitosis di mana kromosom berderet sejajar di bidang ekuator adalah?', opts: ['Profase', 'Metafase', 'Anafase', 'Telofase'], a: 'Metafase' },
+            { level: 3, q: 'Pada persilangan dihibrid heterozigot sempurna (AaBb x AaBb), rasio fenotip hasil keturunannya adalah?', opts: ['3:1', '9:3:3:1', '1:2:1', '12:3:1'], a: '9:3:3:1' }
         ],
         kimia: [
-            { level: 1, type: 'pg', q: 'Unsur dengan nomor atom 6 dalam tabel periodik adalah?', opts: ['Oksigen', 'Karbon', 'Nitrogen', 'Hidrogen'], a: 'Karbon' },
-            { level: 2, type: 'pg', q: 'Berapakah konsentrasi ion H+ dalam larutan asam dengan nilai pH = 3?', opts: ['10⁻³ M', '10⁻⁷ M', '10⁻¹⁴ M', '3 M'], a: '10⁻³ M' },
-            { level: 3, type: 'pg', q: 'Menurut teori asam-basa Bronsted-Lowry, senyawa yang bertindak sebagai basa adalah senyawa yang?', opts: ['Menerima donor proton (H+)', 'Memberikan proton (H+)', 'Menghasilkan ion OH-', 'Menerima pasangan elektron'], a: 'Menerima donor proton (H+)' }
-        ],
-        fisika: [
-            { level: 1, type: 'pg', q: 'Satuan Internasional (SI) untuk mengukur gaya adalah?', opts: ['Joule', 'Watt', 'Newton', 'Pascal'], a: 'Newton' },
-            { level: 2, type: 'pg', q: 'Benda bermassa 2 kg bergerak dengan kecepatan 4 m/s. Energi kinetik benda tersebut adalah?', opts: ['8 Joule', '16 Joule', '32 Joule', '4 Joule'], a: '16 Joule' },
-            { level: 3, type: 'pg', q: 'Dua buah muatan terpisah sejauh r. Jika jarak antarmuatan dijadikan 2x semula, gaya Coulomb-nya menjadi?', opts: ['2 kali semula', '4 kali semula', '1/2 kali semula', '1/4 kali semula'], a: '1/4 kali semula' }
-        ],
-        matematika: [
-            { level: 1, type: 'pg', q: 'Berapakah hasil dari 2³ + 3² ?', opts: ['12', '17', '15', '18'], a: '17' },
-            { level: 2, type: 'pg', q: 'Akar-akar dari persamaan kuadrat x² - 5x + 6 =
-                                                                                             
+            { level: 1, q: 'Unsur dengan nomor atom 6 dalam tabel periodik adalah?', opts: ['Oksigen', 'Karbon', 'Nitrogen', 'Hidrogen'], a: 'Karbon' },
+            { level: 2, q: 'Berapakah konsentrasi ion H+ dalam larutan asam dengan nilai pH
+    
