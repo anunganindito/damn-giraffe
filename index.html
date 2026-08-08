@@ -3,154 +3,534 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BRAINWASH — Belajar, Belajar untuk Hidup</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Aplikasi Belajar Interaktif SMA (20 Level) - Anung Anindito</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-dark: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.92);
+            --text-light: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Canvas Latar Belakang Dinamis */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Header Watermark & Motto */
+        .header-brand {
+            text-align: center;
+            margin-bottom: 20px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .watermark {
+            display: inline-block;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            margin-bottom: 8px;
+        }
+
+        .motto {
+            font-style: italic;
+            color: #94a3b8;
+            font-size: 1.1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* Kartu Tampilan Utama */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Grid Pilihan Pelajaran (16 Mapel) */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+            max-height: 340px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .category-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+        .category-grid::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+        }
+
+        .cat-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 12px 6px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cat-btn i {
+            font-size: 1.6rem;
+            color: #38bdf8;
+        }
+
+        .cat-btn:hover, .cat-btn.selected {
+            background: rgba(99, 102, 241, 0.25);
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 18px rgba(79, 70, 229, 0.3);
+        }
+
+        /* Mode Selector */
+        .mode-section {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .mode-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 12px 0;
+        }
+
+        .mode-btn {
+            flex: 1;
+            max-width: 200px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .mode-btn.selected {
+            background: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(79, 70, 229, 0.5);
+        }
+
+        /* Button Action */
+        .btn-action {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-start {
+            flex: 2;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-info {
+            flex: 1;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-start:hover, .btn-info:hover {
+            transform: scale(1.02);
+        }
+
+        /* HUD Kuis */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            width: 10%;
+            transition: width 0.3s ease;
+        }
+
+        .lives {
+            color: var(--danger);
+            font-size: 1.2rem;
+        }
+
+        .question-box {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.25);
+            padding: 18px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Pilihan Ganda & Uraian */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .opt-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 20px;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: left;
+            transition: 0.2s;
+        }
+
+        .opt-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #38bdf8;
+        }
+
+        .essay-box {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .essay-input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            font-size: 1.1rem;
+            outline: none;
+        }
+
+        .essay-input:focus {
+            border-color: var(--primary);
+        }
+
+        /* Overlay Animasi Reaksi & Modal Bantuan */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .reaction-emoji {
+            font-size: 6.5rem;
+            margin-bottom: 15px;
+            animation: bounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .reaction-text {
+            font-size: 1.7rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .info-card {
+            background: #1e293b;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .info-card h2 {
+            color: #38bdf8;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+        }
+
+        .info-card h3 {
+            color: white;
+            margin: 14px 0 6px;
+        }
+
+        .info-card ul {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .hidden { display: none !important; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 600px) {
+            .options-grid { grid-template-columns: 1fr; }
+            .title { font-size: 1.6rem; }
+            .category-grid { grid-template-columns: repeat(2, 1fr); }
+            .btn-action { flex-direction: column; }
+        }
+    </style>
 </head>
-<body data-subject="default">
+<body>
 
-    <div id="bg-animation" class="bg-container"></div>
+    <canvas id="bgCanvas"></canvas>
 
-    <div class="app-container">
-        <header>
-            <div class="logo-area" onclick="navigateTo('home')">
-                <span class="logo-text">BRAINWASH</span>
+    <div class="container">
+        <div class="header-brand">
+            <div class="watermark"><i class="fa-solid fa-graduation-cap"></i> Anung anindito.sman1cijeruk</div>
+            <div class="motto">"belajar untuk hidup, hidup untuk belajar"</div>
+        </div>
+
+        <div id="menuScreen" class="card">
+            <h1 class="title">Aplikasi Kuis Pembelajaran SMA (20 Level)</h1>
+            
+            <p style="text-align: center; margin-bottom: 15px; color: #cbd5e1;">Pilih Mata Pelajaran (16 Pelajaran):</p>
+            
+            <div class="category-grid" id="categoryGrid">
+                <div class="cat-btn selected" data-cat="informatika"><i class="fa-solid fa-laptop-code"></i><span>Informatika</span></div>
+                <div class="cat-btn" data-cat="biologi"><i class="fa-solid fa-dna"></i><span>Biologi</span></div>
+                <div class="cat-btn" data-cat="kimia"><i class="fa-solid fa-flask"></i><span>Kimia</span></div>
+                <div class="cat-btn" data-cat="fisika"><i class="fa-solid fa-atom"></i><span>Fisika</span></div>
+                <div class="cat-btn" data-cat="matematika"><i class="fa-solid fa-calculator"></i><span>Matematika</span></div>
+                <div class="cat-btn" data-cat="ekonomi"><i class="fa-solid fa-chart-line"></i><span>Ekonomi</span></div>
+                <div class="cat-btn" data-cat="geografi"><i class="fa-solid fa-earth-americas"></i><span>Geografi</span></div>
+                <div class="cat-btn" data-cat="sosiologi"><i class="fa-solid fa-users"></i><span>Sosiologi</span></div>
+                <div class="cat-btn" data-cat="sejarah"><i class="fa-solid fa-landmark"></i><span>Sejarah</span></div>
+                <div class="cat-btn" data-cat="indo"><i class="fa-solid fa-book"></i><span>B. Indonesia</span></div>
+                <div class="cat-btn" data-cat="inggris"><i class="fa-solid fa-language"></i><span>B. Inggris</span></div>
+                <div class="cat-btn" data-cat="pkn"><i class="fa-solid fa-scale-balanced"></i><span>PKN</span></div>
+                <div class="cat-btn" data-cat="sunda"><i class="fa-solid fa-feather-pointed"></i><span>B. Sunda</span></div>
+                <div class="cat-btn" data-cat="jepang"><i class="fa-solid fa-torii-gate"></i><span>B. Jepang</span></div>
+                <div class="cat-btn" data-cat="china"><i class="fa-solid fa-dragon"></i><span>Mandarin</span></div>
+                <div class="cat-btn" data-cat="germany"><i class="fa-solid fa-beer-mug-empty"></i><span>B. Jerman</span></div>
             </div>
-            <nav id="nav-controls">
-                <button class="nav-btn" onclick="navigateTo('home')">🏠 Home</button>
-                <button class="nav-btn" onclick="toggleSound()" id="sound-btn">🔊 Efek: ON</button>
-            </nav>
-        </header>
 
-        <main id="main-content">
-
-            <section id="screen-home" class="screen active">
-                <div class="hero">
-                    <h1 class="title-glitch">BRAINWASH</h1>
-                    <p class="subtitle">"Asah Otakmu. Uji Pengetahuanmu."</p>
-                    <p class="motto">"Belajar, Belajar untuk Hidup."</p>
-                    <a href="#subjects-section" class="btn-primary start-btn">🚀 MULAI KUIS</a>
+            <div class="mode-section">
+                <p style="color: #cbd5e1;">Pilih Mode Kuis:</p>
+                <div class="mode-options">
+                    <button class="mode-btn selected" data-mode="pg">Pilihan Ganda</button>
+                    <button class="mode-btn" data-mode="uraian">Uraian / Isian</button>
                 </div>
-
-                <div id="subjects-section" class="subjects-wrapper">
-                    <h2>Pilih Mata Pelajaran SMA</h2>
-                    <div class="grid-cards" id="sma-subjects">
-                        </div>
-
-                    <h2>Bahasa Asing</h2>
-                    <div class="grid-cards" id="lang-subjects">
-                        </div>
-                </div>
-            </section>
-
-            <section id="screen-mode" class="screen">
-                <h2 class="section-title">PILIH MODE KUIS</h2>
-                <p id="selected-subject-label" class="subject-tag"></p>
-
-                <div class="mode-grid">
-                    <div class="mode-card" onclick="selectMode('pg')">
-                        <div class="mode-icon">🔘</div>
-                        <h3>PILHAN GANDA</h3>
-                        <p>Pilih jawaban yang paling tepat dari pilihan A, B, C, atau D.</p>
-                    </div>
-                    <div class="mode-card" onclick="selectMode('essay')">
-                        <div class="mode-icon">📝</div>
-                        <h3>MODE URAIAN</h3>
-                        <p>Ketik dan masukkan jawabanmu secara eksplisit.</p>
-                    </div>
-                </div>
-                <button class="btn-secondary" onclick="navigateTo('home')">← Kembali ke Selection</button>
-            </section>
-
-            <section id="screen-quiz" class="screen">
-                <div class="quiz-header">
-                    <div class="hud-item">
-                        <span class="hud-label">LEVEL:</span>
-                        <span id="hud-level" class="hud-val">1</span>
-                    </div>
-                    <div class="hud-item">
-                        <span id="hud-lives" class="lives-container">❤️ ❤️ ❤️</span>
-                    </div>
-                    <div class="hud-item">
-                        <span class="hud-label">SKOR:</span>
-                        <span id="hud-score" class="hud-val">0</span>
-                    </div>
-                </div>
-
-                <div class="progress-bar-container">
-                    <div id="progress-bar" class="progress-bar-fill"></div>
-                </div>
-
-                <div class="quiz-card">
-                    <div class="quiz-meta">
-                        <span id="quiz-subject-badge" class="badge">Informatika</span>
-                        <span id="quiz-question-num" class="badge-num">SOAL 01/10</span>
-                    </div>
-
-                    <div id="question-text" class="question-text">
-                        Pertanyaan akan muncul di sini...
-                    </div>
-
-                    <div id="options-container" class="options-grid"></div>
-
-                    <div id="essay-container" class="essay-box hidden">
-                        <input type="text" id="essay-input" placeholder="Ketik jawabanmu di sini..." autocomplete="off">
-                        <button class="btn-primary" onclick="submitEssay()">SUBMIT JAWABAN</button>
-                    </div>
-
-                    <div id="feedback-box" class="feedback-box hidden">
-                        <div id="feedback-status" class="feedback-status"></div>
-                        <div id="feedback-explanation" class="feedback-explanation"></div>
-                        <button id="next-btn" class="btn-primary" onclick="nextQuestion()">Lanjut →</button>
-                    </div>
-                </div>
-            </section>
-
-            <section id="screen-result" class="screen">
-                <div class="result-card">
-                    <h1 id="result-title">🎉 KUIS SELESAI!</h1>
-                    <div class="result-score-big">
-                        <span>SKOR AKHIR</span>
-                        <h2 id="result-score">0</h2>
-                    </div>
-
-                    <div class="stats-grid">
-                        <div class="stat-box">
-                            <span class="stat-label">Benar</span>
-                            <span id="stat-correct" class="stat-val text-success">0</span>
-                        </div>
-                        <div class="stat-box">
-                            <span class="stat-label">Salah</span>
-                            <span id="stat-wrong" class="stat-val text-danger">0</span>
-                        </div>
-                        <div class="stat-box">
-                            <span class="stat-label">Akurasi</span>
-                            <span id="stat-accuracy" class="stat-val">0%</span>
-                        </div>
-                        <div class="stat-box">
-                            <span class="stat-label">Level Tertinggi</span>
-                            <span id="stat-level" class="stat-val">LEVEL 1</span>
-                        </div>
-                    </div>
-
-                    <div class="result-actions">
-                        <button class="btn-primary" onclick="restartQuiz()">🔄 MAIN LAGI</button>
-                        <button class="btn-secondary" onclick="navigateTo('home')">📚 PILIH MAPEL</button>
-                    </div>
-                </div>
-            </section>
-
-        </main>
-
-        <footer>
-            <div class="watermark">
-                <span>BRAINWASH v1.0</span> • 
-                <strong>Anung Anindito — SMAN 1 Cijeruk</strong>
             </div>
-        </footer>
+
+            <div class="btn-action">
+                <button class="btn-start" id="btnStartGame">Mulai Belajar <i class="fa-solid fa-play"></i></button>
+                <button class="btn-info" id="btnShowInfo"><i class="fa-solid fa-circle-info"></i> Bantuan & Info</button>
+            </div>
+        </div>
+
+        <div id="quizScreen" class="card hidden">
+            <div class="quiz-header">
+                <button id="btnBack" style="background:none; border:none; color:white; cursor:pointer; font-size:1.1rem;">
+                    <i class="fa-solid fa-arrow-left"></i> Menu Utama
+                </button>
+                <div class="badge" id="levelBadge">Level 1/20</div>
+                <div class="badge" id="questionNumBadge">Soal 1/10</div>
+                <div class="badge lives" id="livesBadge"><i class="fa-solid fa-heart"></i> <i class="fa-solid fa-heart"></i> <i class="fa-solid fa-heart"></i></div>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
+
+            <div class="question-box" id="questionText">
+                Pertanyaan akan muncul di sini...
+            </div>
+
+            <div class="options-grid" id="pgOptions"></div>
+
+            <div class="essay-box hidden" id="essayOptions">
+                <input type="text" id="essayAnswer" class="essay-input" placeholder="Ketik jawaban Anda di sini..." autocomplete="off">
+                <button class="btn-start" id="btnSubmitEssay">Kirim Jawaban</button>
+            </div>
+        </div>
     </div>
 
-    <script src="script.js"></script>
-</body>
-                                                                                    </html>
-                                                                                    
+    <div class="modal-overlay" id="reactionOverlay">
+        <div class="reaction-emoji" id="reactionEmoji">😊</div>
+        <div class="reaction-text" id="reactionText">Jawaban Benar!</div>
+        <button class="btn-start" id="btnNextLevel" style="max-width: 240px;">Lanjut <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <div class="modal-overlay" id="infoOverlay">
+        <div class="info-card">
+            <h2><i class="fa-solid fa-graduation-cap"></i> Tentang Aplikasi</h2>
+            <p>Aplikasi Kuis Pembelajaran Interaktif dikembangkan oleh <strong>Anung Anindito (SMAN 1 Cijeruk)</strong>. Berlandaskan motto <em>"belajar untuk hidup, hidup untuk belajar"</em>, aplikasi ini menyediakan 16 bidang ilmu (termasuk Informatika dan Bahasa Asing) dengan total <strong>20 Level & 200 Soal per Mata Pelajaran</strong>.</p>
+
+            <h2><i class="fa-solid fa-gamepad"></i> Aturan & Cara Bermain</h2>
+            <h3>1. Struktur Level & Soal</h3>
+            <ul>
+                <li>Terdapat <strong>20 Level Tantangan</strong> dalam setiap pelajaran.</li>
+                <li>Setiap level berisi <strong>10 Pertanyaan</strong> (Total 200 soal per pelajaran).</li>
+                <li>Tingkat kesulitan bertahap dari Level 1 (Dasar) hingga Level 20 (Super HOTS / Olimpiade).</li>
+            </ul>
+
+            <h3>2. Mode Permainan</h3>
+            <ul>
+                <li><strong>Mode Pilihan Ganda:</strong> Dibekali 3 Nyawa (❤️). Jawaban benar menambah poin progress. Jawaban salah menguraikan nyawa.</li>
+                <li><strong>Mode Uraian/Isian:</strong> Mengetikkan jawaban secara presisi tanpa batas nyawa untuk latihan bebas.</li>
+            </ul>
+
+            <button class="btn-start" id="btnCloseInfo" style="margin-top:20px; width:100%;">Tutup Menu Bantuan</button>
+        </div>
+    </div>
+
+    <script>
+        /* === GENERATOR BANK SOAL DINAMIS BERJENJANG (16 MAPEL x 20 LEVEL x 10 SOAL = 3,200 SOAL) === */
+        
+        const subjectMeta = {
+            informatika: {
+                name: "Informatika",
+                topics: [
+                    "Berpikir Komputasional & Algoritma", "Konstruksi Pemrograman Python/C++", "Struktur Data & Graf", 
+                    "Jaringan Komputer & IP Address", "Sistem Basis Data (SQL)", "Keamanan Siber & Enkripsi", 
+                    "Kecerdasan Buatan & Machine Learning", "Kompleksitas Algoritma (Big O)"
+                ]
+            },
+            biologi: { name: "Biologi", topics: ["Biologi Sel", "Genetika & DNA", "Metabolisme & Enzim", "Anatomi Manusia", "Ekologi", "Bioteknologi"] },
+            kimia: { name: "Kimia", topics: ["Struktur Atom", "Ikatan Kimia", "Stoikiometri", "Termokimia", "Asam Basa", "Elektrokimia"] },
+            fisika: { name: "Fisika", topics: ["Kinematika", "Dinamika Newton", "Termodinamika", "Listrik Magnet", "Optika", "Fisika Modern"] },
+            matematika: { name: "Matematika", topics: ["Aljabar", "Fungsi Kuadrat", "Trigonometri", "Kalkulus & Turunan", "Matriks", "Probabilitas"] },
+            ekonomi: { name: "Ekonomi", topics: ["Kebutuhan & Kelangkaan", "Permintaan & Penawaran", "Akuntansi", "Kebijakan Moneter", "Perdagangan Internasional"] },
+            geografi: { name: "Geografi", topics: ["Lithosfer", "Atmosfer", "Penginderaan Jauh & SIG", "Oseanografi", "Interaksi Desa-Kota"] },
+            sosiologi: { name: "Sosiologi", topics: ["Interaksi Sosial", "Sosialisasi", "Deviasi Sosial", "Konflik & Integrasi", "Perubahan Sosial"] },
+            sejarah: { name: "Sejarah", topics: ["Praaksara", "Kerajaan Hindu-Buddha", "Kerajaan Islam", "Kolonialisme", "Proklamasi & Orde Baru"] },
+            indo: { name: "B. Indonesia", topics: ["Teks Laporan Hasil Observasi", "Teks Eksposisi", "Puisi & Majas", "PUEBI/EYD", "Karya Tulis Ilmiah"] },
+            inggris: { name: "B. Inggris", topics: ["Grammar & Tenses", "Reading Comprehension", "Passive Voice", "Conditional Sentences", "Vocabulary & Idiom"] },
+            pkn: { name: "PKN", topics: ["Pancasila", "UUD 1945", "Sistem Hukum & Peradilan", "HAM", "Demokrasi & Otonomi Daerah"] },
+            sunda: { name: "B. Sunda", topics: ["Ragam Basa", "Pupuh & Guguritan", "Pakeman Basa", "Sastra Sund
