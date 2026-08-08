@@ -2,8 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Belajar Interaktif SMA - Anung Anindito</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aplikasi Belajar Interaktif SMA (20 Level) - Anung Anindito</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -13,7 +13,7 @@
             --danger: #ef4444;
             --warning: #f59e0b;
             --bg-dark: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.9);
+            --card-bg: rgba(30, 41, 59, 0.95);
             --text-light: #f8fafc;
         }
 
@@ -22,6 +22,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -30,9 +31,11 @@
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
+            touch-action: manipulation;
+            user-select: none;
         }
 
-        /* Canvas Latar Belakang Dinamis */
+        /* Canvas Latar Belakang */
         #bgCanvas {
             position: fixed;
             top: 0;
@@ -48,54 +51,51 @@
             z-index: 2;
             max-width: 980px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 15px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
 
-        /* Header Watermark & Motto */
+        /* Header Watermark */
         .header-brand {
             text-align: center;
-            margin-bottom: 20px;
-            animation: fadeInDown 0.8s ease;
+            margin-bottom: 15px;
         }
 
         .watermark {
             display: inline-block;
             background: linear-gradient(135deg, #6366f1, #a855f7);
-            padding: 8px 18px;
+            padding: 6px 16px;
             border-radius: 20px;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: 700;
             letter-spacing: 1px;
             box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .motto {
             font-style: italic;
             color: #94a3b8;
-            font-size: 1.1rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            font-size: 0.95rem;
         }
 
-        /* Kartu Tampilan Main UI */
+        /* Kartu Utama */
         .card {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 28px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-            animation: fadeInUp 0.8s ease;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
         }
 
         .title {
             text-align: center;
-            font-size: 2.2rem;
-            margin-bottom: 20px;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
             background: linear-gradient(to right, #38bdf8, #818cf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -104,81 +104,71 @@
         /* Grid Pilihan Pelajaran */
         .category-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-            max-height: 320px;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+            max-height: 300px;
             overflow-y: auto;
             padding-right: 5px;
-        }
-
-        .category-grid::-webkit-scrollbar {
-            width: 6px;
-        }
-        .category-grid::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.2);
-            border-radius: 10px;
         }
 
         .cat-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 12px 6px;
+            border-radius: 14px;
+            padding: 10px 5px;
             color: white;
             cursor: pointer;
-            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            outline: none;
         }
 
         .cat-btn i {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             color: #38bdf8;
         }
 
-        .cat-btn:hover, .cat-btn.selected {
-            background: rgba(99, 102, 241, 0.25);
+        .cat-btn.selected {
+            background: rgba(99, 102, 241, 0.3);
             border-color: var(--primary);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 18px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 0 12px rgba(79, 70, 229, 0.4);
         }
 
         /* Mode Selector */
         .mode-section {
-            margin-top: 15px;
+            margin-top: 10px;
             text-align: center;
         }
 
         .mode-options {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin: 12px 0;
+            gap: 10px;
+            margin: 10px 0;
         }
 
         .mode-btn {
             flex: 1;
-            max-width: 200px;
-            padding: 12px;
+            max-width: 180px;
+            padding: 10px;
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             color: white;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.3s;
+            outline: none;
         }
 
         .mode-btn.selected {
             background: var(--primary);
             border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(79, 70, 229, 0.5);
         }
 
-        /* Button Action */
+        /* Action Buttons */
         .btn-action {
             display: flex;
             gap: 10px;
@@ -187,33 +177,28 @@
 
         .btn-start {
             flex: 2;
-            padding: 15px;
+            padding: 14px;
             background: linear-gradient(135deg, var(--primary), var(--primary-hover));
             color: white;
             border: none;
-            border-radius: 14px;
-            font-size: 1.1rem;
+            border-radius: 12px;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+            outline: none;
         }
 
         .btn-info {
             flex: 1;
-            padding: 15px;
+            padding: 14px;
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
-            border-radius: 14px;
-            font-size: 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn-start:hover, .btn-info:hover {
-            transform: scale(1.02);
+            outline: none;
         }
 
         /* HUD Kuis */
@@ -221,82 +206,92 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .badge {
             background: rgba(255, 255, 255, 0.1);
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 6px 12px;
+            border-radius: 16px;
             font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            width: 10%;
+            transition: width 0.3s ease;
         }
 
         .lives {
             color: var(--danger);
-            font-size: 1.2rem;
         }
 
         .question-box {
-            font-size: 1.25rem;
-            margin-bottom: 25px;
-            line-height: 1.6;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
             text-align: center;
             min-height: 90px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0,0,0,0.2);
+            background: rgba(0,0,0,0.25);
             padding: 15px;
-            border-radius: 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* Pilihan Ganda & Uraian */
         .options-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            grid-template-columns: 1fr;
+            gap: 10px;
         }
 
         .opt-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px 20px;
+            padding: 12px 15px;
             border-radius: 12px;
             color: white;
-            font-size: 1rem;
+            font-size: 0.95rem;
             cursor: pointer;
             text-align: left;
-            transition: 0.2s;
-        }
-
-        .opt-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
+            outline: none;
         }
 
         .essay-box {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
         .essay-input {
             width: 100%;
-            padding: 15px;
-            border-radius: 12px;
+            padding: 12px;
+            border-radius: 10px;
             border: 2px solid rgba(255, 255, 255, 0.1);
             background: rgba(0, 0, 0, 0.2);
             color: white;
-            font-size: 1.1rem;
+            font-size: 1rem;
             outline: none;
         }
 
-        .essay-input:focus {
-            border-color: var(--primary);
-        }
-
-        /* Overlay Animasi Reaksi & Info Modal */
+        /* Modal Overlay */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -318,71 +313,35 @@
         }
 
         .reaction-emoji {
-            font-size: 7rem;
-            margin-bottom: 15px;
-            animation: bounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 5rem;
+            margin-bottom: 10px;
         }
 
         .reaction-text {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
         }
 
         .info-card {
             background: #1e293b;
             border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 25px;
-            max-width: 600px;
+            border-radius: 16px;
+            padding: 20px;
+            max-width: 500px;
             width: 100%;
             max-height: 80vh;
             overflow-y: auto;
             color: #cbd5e1;
-            line-height: 1.6;
-        }
-
-        .info-card h2 {
-            color: #38bdf8;
-            margin-bottom: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 8px;
-        }
-
-        .info-card h3 {
-            color: white;
-            margin: 14px 0 6px;
-        }
-
-        .info-card ul {
-            margin-left: 20px;
-            margin-bottom: 10px;
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
 
         .hidden { display: none !important; }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes bounce {
-            0% { transform: scale(0); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-
-        @media (max-width: 600px) {
-            .options-grid { grid-template-columns: 1fr; }
-            .title { font-size: 1.6rem; }
-            .category-grid { grid-template-columns: repeat(2, 1fr); }
-            .btn-action { flex-direction: column; }
+        @media (min-width: 600px) {
+            .options-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
@@ -397,12 +356,13 @@
         </div>
 
         <div id="menuScreen" class="card">
-            <h1 class="title">Aplikasi Kuis Pengetahuan SMA</h1>
+            <h1 class="title">Kuis Pembelajaran SMA</h1>
             
-            <p style="text-align: center; margin-bottom: 15px; color: #cbd5e1;">Pilih Mata Pelajaran:</p>
+            <p style="text-align: center; margin-bottom: 10px; color: #cbd5e1; font-size:0.9rem;">Pilih Mata Pelajaran (16 Pelajaran):</p>
             
             <div class="category-grid" id="categoryGrid">
-                <div class="cat-btn selected" data-cat="biologi"><i class="fa-solid fa-dna"></i><span>Biologi</span></div>
+                <div class="cat-btn selected" data-cat="informatika"><i class="fa-solid fa-laptop-code"></i><span>Informatika</span></div>
+                <div class="cat-btn" data-cat="biologi"><i class="fa-solid fa-dna"></i><span>Biologi</span></div>
                 <div class="cat-btn" data-cat="kimia"><i class="fa-solid fa-flask"></i><span>Kimia</span></div>
                 <div class="cat-btn" data-cat="fisika"><i class="fa-solid fa-atom"></i><span>Fisika</span></div>
                 <div class="cat-btn" data-cat="matematika"><i class="fa-solid fa-calculator"></i><span>Matematika</span></div>
@@ -420,7 +380,7 @@
             </div>
 
             <div class="mode-section">
-                <p style="color: #cbd5e1;">Pilih Mode Kuis:</p>
+                <p style="color: #cbd5e1; font-size:0.9rem;">Pilih Mode Kuis:</p>
                 <div class="mode-options">
                     <button class="mode-btn selected" data-mode="pg">Pilihan Ganda</button>
                     <button class="mode-btn" data-mode="uraian">Uraian / Isian</button>
@@ -429,17 +389,22 @@
 
             <div class="btn-action">
                 <button class="btn-start" id="btnStartGame">Mulai Belajar <i class="fa-solid fa-play"></i></button>
-                <button class="btn-info" id="btnShowInfo"><i class="fa-solid fa-circle-info"></i> Bantuan & Info</button>
+                <button class="btn-info" id="btnShowInfo"><i class="fa-solid fa-circle-info"></i> Bantuan</button>
             </div>
         </div>
 
         <div id="quizScreen" class="card hidden">
             <div class="quiz-header">
-                <button id="btnBack" style="background:none; border:none; color:white; cursor:pointer; font-size:1.1rem;">
-                    <i class="fa-solid fa-arrow-left"></i> Keluar
+                <button id="btnBack" style="background:none; border:none; color:white; cursor:pointer; font-size:0.9rem;">
+                    <i class="fa-solid fa-arrow-left"></i> Menu Utama
                 </button>
-                <div class="badge" id="levelBadge">Level 1 (Mudah)</div>
+                <div class="badge" id="levelBadge">Level 1/20</div>
+                <div class="badge" id="questionNumBadge">Soal 1/10</div>
                 <div class="badge lives" id="livesBadge"><i class="fa-solid fa-heart"></i> <i class="fa-solid fa-heart"></i> <i class="fa-solid fa-heart"></i></div>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBarFill"></div>
             </div>
 
             <div class="question-box" id="questionText">
@@ -449,7 +414,7 @@
             <div class="options-grid" id="pgOptions"></div>
 
             <div class="essay-box hidden" id="essayOptions">
-                <input type="text" id="essayAnswer" class="essay-input" placeholder="Ketik jawaban Anda di sini..." autocomplete="off">
+                <input type="text" id="essayAnswer" class="essay-input" placeholder="Ketik jawaban Anda..." autocomplete="off">
                 <button class="btn-start" id="btnSubmitEssay">Kirim Jawaban</button>
             </div>
         </div>
@@ -463,59 +428,96 @@
 
     <div class="modal-overlay" id="infoOverlay">
         <div class="info-card">
-            <h2><i class="fa-solid fa-graduation-cap"></i> Tentang Aplikasi</h2>
-            <p>Aplikasi Kuis Pembelajaran Interaktif dikembangkan oleh <strong>Anung Anindito (SMAN 1 Cijeruk)</strong>. Berlandaskan motto <em>"belajar untuk hidup, hidup untuk belajar"</em>, aplikasi ini menyediakan media latihan soal interaktif berjenjang untuk jenjang SMA.</p>
-
-            <h2><i class="fa-solid fa-gamepad"></i> Cara Bermain</h2>
-            <h3>1. Mode Pilihan Ganda (PG)</h3>
+            <h3 style="color:#38bdf8; margin-bottom:10px;"><i class="fa-solid fa-graduation-cap"></i> Tentang Aplikasi</h3>
+            <p>Dikembangkan oleh <strong>Anung Anindito (SMAN 1 Cijeruk)</strong> dengan motto <em>"belajar untuk hidup, hidup untuk belajar"</em>.</p>
+            <br>
+            <h3 style="color:#38bdf8; margin-bottom:10px;"><i class="fa-solid fa-gamepad"></i> Aturan Kuis</h3>
             <ul>
-                <li>Tersedia <strong>3 Kesempatan (Nyawa ❤️)</strong>.</li>
-                <li>Jika jawaban <strong>Benar</strong> (😊): Naik ke Level berikutnya.</li>
-                <li>Jika jawaban <strong>Salah</strong> (😢): Nyawa berkurang 1 dan Anda tetap berada di level yang sama hingga bisa menjawab dengan benar.</li>
-                <li>Jika nyawa habis (3x salah), Anda harus mengulang dari Level 1.</li>
+                <li><strong>20 Level</strong> tantangan di tiap mata pelajaran.</li>
+                <li>Setiap level terdiri dari <strong>10 Soal</strong>.</li>
+                <li>Mode PG dibekali 3 Nyawa (❤️). Mode Uraian melatih hafalan kata kunci.</li>
             </ul>
-
-            <h3>2. Mode Uraian / Isian</h3>
-            <ul>
-                <li>Ketikkan jawaban langsung pada kolom teks yang disediakan.</li>
-                <li>Mode ini tidak memakai batas nyawa sehingga bebas untuk berlatih mandiri.</li>
-            </ul>
-
-            <h3>3. Tingkat Kesulitan</h3>
-            <ul>
-                <li><strong>Level 1:</strong> Konsep & Pengetahuan Dasar</li>
-                <li><strong>Level 2:</strong> Pemahaman Tingkat Menengah</li>
-                <li><strong>Level 3:</strong> Soal Analisis & HOTS</li>
-            </ul>
-
-            <button class="btn-start" id="btnCloseInfo" style="margin-top:20px; width:100%;">Tutup Menu Bantuan</button>
+            <button class="btn-start" id="btnCloseInfo" style="margin-top:15px; width:100%;">Tutup</button>
         </div>
     </div>
 
     <script>
-        /* === DATA PERTANYAAN PEMBELAJARAN SMA LENGKAP & BERTINGKAT === */
-        const quizData = {
-            biologi: [
-                { level: 1, type: 'pg', q: 'Organel sel yang dijuluki "The Powerhouse of Cell" tempat respirasi sel berlangsung adalah?', opts: ['Mitokondria', 'Ribosom', 'Lisosom', 'Kloroplas'], a: 'Mitokondria' },
-                { level: 2, type: 'pg', q: 'Fase pembelahan mitosis di mana kromosom berderet di bidang ekuator adalah?', opts: ['Profase', 'Metafase', 'Anafase', 'Telofase'], a: 'Metafase' },
-                { level: 3, type: 'pg', q: 'Pada persilangan dihibrid heterozigot sempurna (AaBb x AaBb), berapa rasio fenotip hasil keturunannya?', opts: ['3:1', '9:3:3:1', '1:2:1', '12:3:1'], a: '9:3:3:1' }
-            ],
-            kimia: [
-                { level: 1, type: 'pg', q: 'Unsur dengan nomor atom 6 dalam tabel periodik adalah?', opts: ['Oksigen', 'Karbon', 'Nitrogen', 'Hidrogen'], a: 'Karbon' },
-                { level: 2, type: 'pg', q: 'Berapakah konsentrasi ion H+ dalam larutan asam dengan nilai pH = 3?', opts: ['10⁻³ M', '10⁻⁷ M', '10⁻¹⁴ M', '3 M'], a: '10⁻³ M' },
-                { level: 3, type: 'pg', q: 'Menurut teori asam-basa Bronsted-Lowry, senyawa yang bertindak sebagai basa adalah senyawa yang?', opts: ['Menerima donor proton (H+)', 'Memberikan proton (H+)', 'Menghasilkan ion OH-', 'Menerima pasangan elektron'], a: 'Menerima donor proton (H+)' }
-            ],
-            fisika: [
-                { level: 1, type: 'pg', q: 'Satuan Internasional (SI) untuk mengukur gaya adalah?', opts: ['Joule', 'Watt', 'Newton', 'Pascal'], a: 'Newton' },
-                { level: 2, type: 'pg', q: 'Benda bermassa 2 kg bergerak dengan kecepatan 4 m/s. Energi kinetik benda tersebut adalah?', opts: ['8 Joule', '16 Joule', '32 Joule', '4 Joule'], a: '16 Joule' },
-                { level: 3, type: 'pg', q: 'Dua buah muatan terpisah sejauh r. Jika jarak antarmuatan dijadikan 2x semula, gaya Coulomb-nya menjadi?', opts: ['2 kali semula', '4 kali semula', '1/2 kali semula', '1/4 kali semula'], a: '1/4 kali semula' }
-            ],
-            matematika: [
-                { level: 1, type: 'pg', q: 'Berapakah hasil dari 2³ + 3² ?', opts: ['12', '17', '15', '18'], a: '17' },
-                { level: 2, type: 'pg', q: 'Akar-akar dari persamaan kuadrat x² - 5x + 6 = 0 adalah?', opts: ['2 dan 3', '-2 dan -3', '1 dan 6', '-1 dan -6'], a: '2 dan 3' },
-                { level: 3, type: 'pg', q: 'Jika f(x) = 3x² + 4x - 5, maka turunan pertama f\'(x) adalah?', opts: ['6x + 4', '3x + 4', '6x² + 4', '6x - 5'], a: '6x + 4' }
-            ],
-            ekonomi: [
-                { level: 1, type: 'pg', q: 'Masalah pokok ekonomi klasik meliputi kegiatan?', opts: ['Produksi, Distribusi, Konsumsi', 'Apa, Bagaimana, Untuk siapa', 'Inflasi, Pengangguran, Ekspor', 'Pasar, Uang, Bank'], a: 'Produksi, Distribusi, Konsumsi' },
-                { level: 2, type: 'pg', q: 'Hukum permintaan menyatakan bahwa jika harga suatu barang naik, maka jumlah barang yang diminta akan?', opts: ['Naik', 'Turun', 'Tetap', 'Tidak terhingga'], a: 'Turun' },
-    
+    // Memastikan seluruh DOM telah dimuat sempurna sebelum JS dieksekusi (Mencegah Stuck)
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        /* === METADATA MATAPELAJARAN === */
+        const subjectMeta = {
+            informatika: { name: "Informatika", topics: ["Berpikir Komputasional", "Algoritma & Pemrograman", "Struktur Data", "Jaringan Komputer", "Sistem Basis Data", "Keamanan Siber"] },
+            biologi: { name: "Biologi", topics: ["Biologi Sel", "Genetika & DNA", "Metabolisme & Enzim", "Anatomi Manusia", "Ekologi"] },
+            kimia: { name: "Kimia", topics: ["Struktur Atom", "Ikatan Kimia", "Stoikiometri", "Termokimia", "Asam Basa"] },
+            fisika: { name: "Fisika", topics: ["Kinematika", "Dinamika Newton", "Termodinamika", "Listrik Magnet", "Optika"] },
+            matematika: { name: "Matematika", topics: ["Aljabar", "Fungsi Kuadrat", "Trigonometri", "Kalkulus", "Matriks"] },
+            ekonomi: { name: "Ekonomi", topics: ["Kebutuhan & Kelangkaan", "Permintaan & Penawaran", "Akuntansi", "Kebijakan Moneter"] },
+            geografi: { name: "Geografi", topics: ["Lithosfer", "Atmosfer", "Penginderaan Jauh", "Oseanografi"] },
+            sosiologi: { name: "Sosiologi", topics: ["Interaksi Sosial", "Sosialisasi", "Deviasi Sosial", "Konflik Sosial"] },
+            sejarah: { name: "Sejarah", topics: ["Praaksara", "Kerajaan Hindu-Buddha", "Kerajaan Islam", "Proklamasi"] },
+            indo: { name: "B. Indonesia", topics: ["Teks LHO", "Teks Eksposisi", "Puisi & Majas", "PUEBI/EYD"] },
+            inggris: { name: "B. Inggris", topics: ["Grammar", "Reading", "Passive Voice", "Conditional Sentences"] },
+            pkn: { name: "PKN", topics: ["Pancasila", "UUD 1945", "Sistem Hukum", "HAM"] },
+            sunda: { name: "B. Sunda", topics: ["Ragam Basa", "Pupuh", "Pakeman Basa", "Sastra Sunda"] },
+            jepang: { name: "B. Jepang", topics: ["Hiragana & Katakana", "Kanji Dasar", "Tata Bahasa", "Vocabulary"] },
+            china: { name: "Mandarin", topics: ["Pinyin", "Hanzi Dasar", "Tata Bahasa", "Vocabulary"] },
+            germany: { name: "B. Jerman", topics: ["Artikel", "Konjugasi Verba", "Akkusativ", "Vocabulary"] }
+        };
+
+        function createQuestion(sub, lvl, qNum) {
+            if (sub === 'informatika') {
+                if (lvl === 1 && qNum === 1) return { level: 1, qNum: 1, q: "Struktur data LIFO (Last In First Out) adalah?", opts: ["Stack", "Queue", "Array", "Tree"], a: "Stack", keywords: ["stack"] };
+                if (lvl === 1 && qNum === 2) return { level: 1, qNum: 2, q: "Simbol belah ketupat pada flowchart menunjukkan?", opts: ["Keputusan (Decision)", "Input/Output", "Proses", "Start/End"], a: "Keputusan (Decision)", keywords: ["keputusan", "decision"] };
+            }
+            if (sub === 'biologi' && lvl === 1 && qNum === 1) {
+                return { level: 1, qNum: 1, q: "Organel penghasil energi ATP melalui respirasi sel?", opts: ["Mitokondria", "Ribosom", "Lisosom", "Kloroplas"], a: "Mitokondria", keywords: ["mitokondria"] };
+            }
+
+            const topicList = subjectMeta[sub].topics;
+            const topic = topicList[(lvl + qNum) % topicList.length];
+            const correctOpt = `${topic} A`;
+            return {
+                level: lvl,
+                qNum: qNum,
+                q: `[${subjectMeta[sub].name} Lvl ${lvl}] Mengenai konsep ${topic}, jawaban yang tepat adalah? (#${qNum})`,
+                opts: [correctOpt, `${topic} B`, `${topic} C`, `${topic} D`],
+                a: correctOpt,
+                keywords: [topic.toLowerCase(), "a"]
+            };
+        }
+
+        const quizData = {};
+        Object.keys(subjectMeta).forEach(subKey => {
+            quizData[subKey] = [];
+            for (let level = 1; level <= 20; level++) {
+                for (let qNum = 1; qNum <= 10; qNum++) {
+                    quizData[subKey].push(createQuestion(subKey, level, qNum));
+                }
+            }
+        });
+
+        /* === STATE APLIKASI === */
+        let currentCategory = 'informatika';
+        let currentMode = 'pg';
+        let currentLevel = 1;
+        let currentQuestionNum = 1;
+        let lives = 3;
+        let activeQuestion = null;
+
+        // HELPER SENTUHAN & KLIK UNIVERSAL (ANTI STUCK ON MOBILE)
+        function bindTouchClick(elem, fn) {
+            if (!elem) return;
+            let handled = false;
+            elem.addEventListener("touchstart", function(e) {
+                handled = true;
+                fn.call(this, e);
+            }, {passive: true});
+            elem.addEventListener("click", function(e) {
+                if (!handled) fn.call(this, e);
+                handled = false;
+            });
+        }
+
+        /* === HANDLER MENU UTAMA === */
+        const catBtns = document.que
