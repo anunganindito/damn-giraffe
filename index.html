@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aplikasi Kuis Pembelajaran SMA</title>
+    <title>Aplikasi Kuis Pembelajaran SMA - Anung Anindito</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -11,6 +11,7 @@
             --primary-hover: #4338ca;
             --success: #10b981;
             --danger: #ef4444;
+            --warning: #f59e0b;
             --bg-dark: #0f172a;
             --card-bg: rgba(30, 41, 59, 0.95);
             --text-light: #f8fafc;
@@ -29,12 +30,26 @@
             color: var(--text-light);
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
             touch-action: manipulation;
             user-select: none;
         }
 
+        /* 1. Canvas Animasi Latar Belakang Utama */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
         .container {
-            max-width: 800px;
+            position: relative;
+            z-index: 2;
+            max-width: 850px;
             margin: 0 auto;
             padding: 15px;
             min-height: 100vh;
@@ -43,6 +58,7 @@
             justify-content: center;
         }
 
+        /* Header Watermark */
         .header-brand {
             text-align: center;
             margin-bottom: 15px;
@@ -55,6 +71,7 @@
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 700;
+            letter-spacing: 0.5px;
             box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
             margin-bottom: 6px;
         }
@@ -65,8 +82,10 @@
             font-size: 0.9rem;
         }
 
+        /* Kartu Utama */
         .card {
             background: var(--card-bg);
+            backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             padding: 20px;
@@ -82,9 +101,10 @@
             -webkit-text-fill-color: transparent;
         }
 
+        /* Grid Pilihan Pelajaran */
         .category-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
             gap: 10px;
             margin-bottom: 15px;
             max-height: 280px;
@@ -103,6 +123,7 @@
             flex-direction: column;
             align-items: center;
             gap: 6px;
+            outline: none;
         }
 
         .cat-btn i { font-size: 1.4rem; color: #38bdf8; }
@@ -111,6 +132,37 @@
             background: rgba(99, 102, 241, 0.3);
             border-color: var(--primary);
             box-shadow: 0 0 12px rgba(79, 70, 229, 0.4);
+        }
+
+        /* Mode Selector */
+        .mode-section {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .mode-options {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .mode-btn {
+            flex: 1;
+            max-width: 180px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            outline: none;
+        }
+
+        .mode-btn.selected {
+            background: var(--primary);
+            border-color: var(--primary);
         }
 
         .btn-action {
@@ -129,6 +181,7 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
+            outline: none;
         }
 
         .btn-info {
@@ -141,6 +194,7 @@
             font-size: 0.9rem;
             font-weight: bold;
             cursor: pointer;
+            outline: none;
         }
 
         .quiz-header {
@@ -150,6 +204,8 @@
             margin-bottom: 12px;
             padding-bottom: 12px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .badge {
@@ -160,18 +216,58 @@
             font-size: 0.85rem;
         }
 
-        .question-box {
-            font-size: 1.1rem;
+        .lives { color: var(--danger); }
+
+        /* 2. ANIMASI KHUSUS DI BELAKANG KOTAK PERTANYAAN */
+        .question-wrapper {
+            position: relative;
             margin-bottom: 20px;
+            border-radius: 16px;
+            overflow: hidden;
+            padding: 3px; /* border gradient animated */
+            background: linear-gradient(125deg, #4f46e5, #38bdf8, #ec4899, #10b981);
+            background-size: 300% 300%;
+            animation: glowBorder 6s ease infinite;
+        }
+
+        @keyframes glowBorder {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .question-box {
+            position: relative;
+            z-index: 2;
+            font-size: 1.1rem;
             line-height: 1.5;
             text-align: center;
-            min-height: 80px;
+            min-height: 90px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0,0,0,0.25);
-            padding: 15px;
+            background: rgba(15, 23, 42, 0.92);
+            padding: 18px;
             border-radius: 14px;
+        }
+
+        /* Ambient Glow di belakang pertanyaan */
+        .question-box::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(0,0,0,0) 70%);
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            animation: pulseGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.4; }
+            100% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.9; }
         }
 
         .options-grid {
@@ -189,8 +285,32 @@
             font-size: 0.95rem;
             cursor: pointer;
             text-align: left;
+            outline: none;
+            transition: transform 0.1s;
         }
 
+        .opt-btn:active {
+            transform: scale(0.98);
+        }
+
+        .essay-box {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .essay-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.25);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        /* Overlay & Modal */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -214,6 +334,18 @@
         .reaction-emoji { font-size: 4.5rem; margin-bottom: 10px; }
         .reaction-text { font-size: 1.3rem; font-weight: bold; margin-bottom: 15px; text-align: center; }
 
+        .info-card {
+            background: #1e293b;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 20px;
+            max-width: 500px;
+            width: 100%;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
         .hidden { display: none !important; }
 
         @media (min-width: 600px) {
@@ -222,6 +354,8 @@
     </style>
 </head>
 <body>
+
+    <canvas id="bgCanvas"></canvas>
 
     <div class="container">
         <div class="header-brand">
@@ -232,7 +366,7 @@
         <div id="menuScreen" class="card">
             <h1 class="title">Kuis Pembelajaran SMA</h1>
             
-            <p style="text-align: center; margin-bottom: 10px; color: #cbd5e1; font-size:0.9rem;">Pilih Mata Pelajaran:</p>
+            <p style="text-align: center; margin-bottom: 10px; color: #cbd5e1; font-size:0.9rem;">Pilih Mata Pelajaran (16 Mapel):</p>
             
             <div class="category-grid" id="categoryGrid">
                 <div class="cat-btn selected" data-cat="informatika"><i class="fa-solid fa-laptop-code"></i><span>Informatika</span></div>
@@ -242,158 +376,19 @@
                 <div class="cat-btn" data-cat="matematika"><i class="fa-solid fa-calculator"></i><span>Matematika</span></div>
                 <div class="cat-btn" data-cat="ekonomi"><i class="fa-solid fa-chart-line"></i><span>Ekonomi</span></div>
                 <div class="cat-btn" data-cat="geografi"><i class="fa-solid fa-earth-americas"></i><span>Geografi</span></div>
+                <div class="cat-btn" data-cat="sosiologi"><i class="fa-solid fa-users"></i><span>Sosiologi</span></div>
+                <div class="cat-btn" data-cat="sejarah"><i class="fa-solid fa-landmark"></i><span>Sejarah</span></div>
                 <div class="cat-btn" data-cat="indo"><i class="fa-solid fa-book"></i><span>B. Indonesia</span></div>
+                <div class="cat-btn" data-cat="inggris"><i class="fa-solid fa-language"></i><span>B. Inggris</span></div>
+                <div class="cat-btn" data-cat="pkn"><i class="fa-solid fa-scale-balanced"></i><span>PKN</span></div>
+                <div class="cat-btn" data-cat="sunda"><i class="fa-solid fa-feather-pointed"></i><span>B. Sunda</span></div>
+                <div class="cat-btn" data-cat="jepang"><i class="fa-solid fa-torii-gate"></i><span>B. Jepang</span></div>
+                <div class="cat-btn" data-cat="china"><i class="fa-solid fa-dragon"></i><span>Mandarin</span></div>
+                <div class="cat-btn" data-cat="germany"><i class="fa-solid fa-beer-mug-empty"></i><span>B. Jerman</span></div>
             </div>
 
-            <div class="btn-action">
-                <button class="btn-start" id="btnStartGame">Mulai Belajar <i class="fa-solid fa-play"></i></button>
-            </div>
-        </div>
-
-        <div id="quizScreen" class="card hidden">
-            <div class="quiz-header">
-                <button id="btnBack" style="background:none; border:none; color:white; cursor:pointer; font-size:0.9rem;">
-                    <i class="fa-solid fa-arrow-left"></i> Menu Utama
-                </button>
-                <div class="badge" id="scoreBadge">Skor: 0</div>
-                <div class="badge" id="questionNumBadge">Soal 1/5</div>
-            </div>
-
-            <div class="question-box" id="questionText">
-                Pertanyaan...
-            </div>
-
-            <div class="options-grid" id="pgOptions"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="reactionOverlay">
-        <div class="reaction-emoji" id="reactionEmoji">😊</div>
-        <div class="reaction-text" id="reactionText">Jawaban Benar!</div>
-        <button class="btn-start" id="btnNextLevel" style="max-width: 220px;">Lanjut <i class="fa-solid fa-arrow-right"></i></button>
-    </div>
-
-    <script>
-    // Memastikan DOM siap sepenuhnya sebelum JS berjalan (Mencegah Stuck)
-    document.addEventListener("DOMContentLoaded", function() {
-        
-        // Safe LocalStorage Handler (Anti Crash)
-        function safeSetStorage(key, val) {
-            try { localStorage.setItem(key, val); } catch(e) {}
-        }
-        function safeGetStorage(key) {
-            try { return localStorage.getItem(key); } catch(e) { return null; }
-        }
-
-        const questionsData = {
-            informatika: [
-                { q: "Struktur data LIFO (Last In First Out) adalah?", opts: ["Stack", "Queue", "Array", "Tree"], a: "Stack" },
-                { q: "Simbol belah ketupat pada flowchart menunjukkan?", opts: ["Keputusan", "Input/Output", "Proses", "Start"], a: "Keputusan" },
-                { q: "Bahasa pemrograman yang sering digunakan untuk AI & Data Science?", opts: ["Python", "HTML", "CSS", "Pascal"], a: "Python" },
-                { q: "Komponen fisik komputer disebut?", opts: ["Hardware", "Software", "Brainware", "Firmware"], a: "Hardware" },
-                { q: "Satu byte terdiri dari berapa bit?", opts: ["8", "16", "32", "64"], a: "8" }
-            ],
-            biologi: [
-                { q: "Organel sel penghasil energi ATP adalah?", opts: ["Mitokondria", "Ribosom", "Lisosom", "Kloroplas"], a: "Mitokondria" },
-                { q: "Proses pembuatan makanan pada tumbuhan hijau disebut?", opts: ["Fotosintesis", "Respirasi", "Transpirasi", "Osmosis"], a: "Fotosintesis" },
-                { q: "Pembelahan sel yang menghasilkan sel anakan identik adalah?", opts: ["Mitosis", "Meiosis", "Amitosis", "Amitotik"], a: "Mitosis" },
-                { q: "Zat hijau daun disebut?", opts: ["Klorofil", "Karoten", "Xantofil", "Melanin"], a: "Klorofil" },
-                { q: "Penyusun utama dinding sel tumbuhan adalah?", opts: ["Selulosa", "Kitin", "Peptidoglikan", "Lignin"], a: "Selulosa" }
-            ]
-        };
-
-        let currentCat = 'informatika';
-        let currentQIndex = 0;
-        let score = 0;
-
-        // Universal Event Listener (Bisa Klik & Sentuh Layar HP)
-        function addTouchClick(elem, fn) {
-            if (!elem) return;
-            let handled = false;
-            elem.addEventListener("touchstart", function(e) {
-                handled = true;
-                fn.call(this, e);
-            }, {passive: true});
-            elem.addEventListener("click", function(e) {
-                if (!handled) fn.call(this, e);
-                handled = false;
-            });
-        }
-
-        // Pilihan Kategori
-        document.querySelectorAll('.cat-btn').forEach(btn => {
-            addTouchClick(btn, function() {
-                document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
-                this.classList.add('selected');
-                currentCat = this.dataset.cat;
-            });
-        });
-
-        const menuScreen = document.getElementById('menuScreen');
-        const quizScreen = document.getElementById('quizScreen');
-
-        addTouchClick(document.getElementById('btnStartGame'), function() {
-            menuScreen.classList.add('hidden');
-            quizScreen.classList.remove('hidden');
-            currentQIndex = 0;
-            score = 0;
-            loadQuestion();
-        });
-
-        addTouchClick(document.getElementById('btnBack'), function() {
-            quizScreen.classList.add('hidden');
-            menuScreen.classList.remove('hidden');
-        });
-
-        function loadQuestion() {
-            const list = questionsData[currentCat] || questionsData['informatika'];
-            const qObj = list[currentQIndex];
-
-            document.getElementById('questionNumBadge').innerText = `Soal ${currentQIndex + 1}/${list.length}`;
-            document.getElementById('scoreBadge').innerText = `Skor: ${score}`;
-            document.getElementById('questionText').innerText = qObj.q;
-
-            const optsGrid = document.getElementById('pgOptions');
-            optsGrid.innerHTML = '';
-
-            qObj.opts.forEach(opt => {
-                const b = document.createElement('button');
-                b.className = 'opt-btn';
-                b.innerText = opt;
-                addTouchClick(b, function() {
-                    checkAnswer(opt, qObj.a);
-                });
-                optsGrid.appendChild(b);
-            });
-        }
-
-        function checkAnswer(userOpt, correctOpt) {
-            const isCorrect = userOpt === correctOpt;
-            if (isCorrect) score += 20;
-
-            const overlay = document.getElementById('reactionOverlay');
-            document.getElementById('reactionEmoji').innerText = isCorrect ? '😊' : '😢';
-            document.getElementById('reactionText').innerText = isCorrect ? 'Jawaban Benar! 🎉' : `Salah! Jawaban: ${correctOpt}`;
-            document.getElementById('reactionText').style.color = isCorrect ? '#10b981' : '#ef4444';
-            
-            overlay.classList.add('active');
-        }
-
-        addTouchClick(document.getElementById('btnNextLevel'), function() {
-            document.getElementById('reactionOverlay').classList.remove('active');
-            const list = questionsData[currentCat] || questionsData['informatika'];
-            currentQIndex++;
-            
-            if (currentQIndex < list.length) {
-                loadQuestion();
-            } else {
-                alert(`Kuis Selesai! Total Skor Anda: ${score}`);
-                quizScreen.classList.add('hidden');
-                menuScreen.classList.remove('hidden');
-            }
-        });
-    });
-    </script>
-</body>
-    </html>
-
+            <div class="mode-section">
+                <p style="color: #cbd5e1; font-size:0.9rem;">Pilih Mode Kuis:</p>
+                <div class="mode-options">
+                    <button class="mode-btn selected" data-mode="pg">Pilihan Ganda</button>
+                    
